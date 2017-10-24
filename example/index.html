@@ -1,0 +1,35 @@
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
+<script src="../build/d3-simple-slider.js"></script>
+
+<body>
+  <p id="value">Move me</p>
+  <div id="value"></div>
+  <a id="setValue" href="#">Set value</a>
+  <a id="changeWidth" href="#">Change width</a>
+</body>
+
+<script>
+  var data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+  var slider = d3Slider.sliderHorizontal()
+    .domain(d3.extent(data))
+    .width(300)
+    .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .default(0.015)
+    .on('onchange', val => {
+      d3.select("p#value").text(d3.format('.2%')(val));
+    });
+
+  var g = d3.select("div#value").append("svg")
+    .attr("width", 500)
+    .attr("height", 100)
+    .append("g")
+    .attr("transform", "translate(30,30)");
+
+  g.call(slider);
+
+  d3.select("a#setValue").on("click", () => slider.value(0.01));
+  d3.select("a#changeWidth").on("click", () => g.call(slider.width(Math.floor(Math.random() * 500) + 200)));
+</script>

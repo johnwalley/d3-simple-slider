@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 function slider() {
   var value;
+  var defaultValue;
   var domain = [0, 100];
   var width = 100;
 
@@ -35,6 +36,7 @@ function slider() {
       .append('g')
       .attr('class', 'slider')
       .attr('cursor', 'ew-resize')
+      .attr('transform', 'translate(0,10)')
       .call(d3.drag()
         .on('start', dragstarted)
         .on('drag', dragged)
@@ -43,18 +45,17 @@ function slider() {
     sliderEnter.append('line')
       .attr('class', 'track')
       .attr('x1', 0)
-      .attr('y1', 3)
-      .attr('y2', 3)
+      .attr('y1', -7)
+      .attr('y2', -7)
       .attr('stroke', '#bbb')
       .attr('stroke-width', 6)
-      .attr('stroke-linecap', 'round')
-      .merge(slider.select('.track'));
+      .attr('stroke-linecap', 'round');
 
     sliderEnter.append('line')
       .attr('class', 'track-inset')
       .attr('x1', 0)
-      .attr('y1', 3)
-      .attr('y2', 3)
+      .attr('y1', -7)
+      .attr('y2', -7)
       .attr('stroke', '#eee')
       .attr('stroke-width', 4)
       .attr('stroke-linecap', 'round');
@@ -62,19 +63,29 @@ function slider() {
     sliderEnter.append('line')
       .attr('class', 'track-overlay')
       .attr('x1', 0)
-      .attr('y1', 3)
-      .attr('y2', 3)
+      .attr('y1', -7)
+      .attr('y2', -7)
       .attr('stroke', 'transparent')
       .attr('stroke-width', 40)
       .attr('stroke-linecap', 'round')
-      .merge(slider.select('.track-overlay'))
-      .attr('x2', scale.range()[1]);
+      .merge(slider.select('.track-overlay'));
 
-    sliderEnter.append('path')
-      .attr('class', 'handle')
+    var handleEnter = sliderEnter.append('g')
+      .attr('class', 'parameter-value')
+      .attr('transform', 'translate(' + scale(value) + ',-10)')
+      .style('font-size', 12)
+      .style('font-family', 'sans-serif')
+      .style('text-anchor', 'middle');
+
+    handleEnter.append('path')
       .attr('d', 'M-5.5,-2.5v10l6,5.5l6,-5.5v-10z')
       .attr('fill', 'white')
       .attr('stroke', '#777');
+
+    handleEnter.append('text')
+      .attr('y', 30)
+      .attr('dy', '.71em')
+      .text(tickFormat(value));
 
     context.select('.track')
       .attr('x2', scale.range()[1]);
@@ -88,15 +99,31 @@ function slider() {
     context.select('.axis').call(d3.axisBottom(scale).tickFormat(tickFormat).ticks(ticks));
 
     context.select('.axis')
-      .selectAll('text')
-      .attr('dy', '22px');
+      .attr('transform', 'translate(0,10)');
+
+    context.select('.axis').select('.domain').remove();
+
+    context.selectAll('.axis text')
+      .attr('fill', '#aaa')
+      .attr('y', 20)
+      .attr('dy', '.71em')
+      .style('text-anchor', 'middle');
+
+    context.selectAll('.axis line')
+      .attr('stroke', '#aaa');
+
+    context.select('.parameter-value')
+      .attr('transform', 'translate(' + scale(value) + ',' + -10 + ')');
+
+    fadeTickText();
 
     function dragstarted() {
       d3.select(this).raise().classed('active', true);
       var pos = scaleClamped(d3.event.x);
-      selection.select('.handle').attr('transform', 'translate(' + pos + ',' + 0 + ')');
+      selection.select('.parameter-value').attr('transform', 'translate(' + pos + ',' + -10 + ')');
 
       var newValue = scale.invert(pos);
+      selection.select('.parameter-value text').text(tickFormat(newValue));
       dispatch.call('start', slider, newValue);
 
       if (value !== newValue) {
@@ -105,8 +132,7 @@ function slider() {
       }
     }
 
-    var throttleUpdate = _.throttle(function (pos) {
-      var newValue = scale.invert(pos);
+    var throttleUpdate = _.throttle(function (newValue) {
       dispatch.call('drag', slider, newValue);
 
       if (value !== newValue) {
@@ -117,24 +143,46 @@ function slider() {
 
     function dragged() {
       var pos = scaleClamped(d3.event.x);
-      selection.select('.handle').attr('transform', 'translate(' + pos + ',' + 0 + ')');
+      selection.select('.parameter-value').attr('transform', 'translate(' + pos + ',' + -10 + ')');
 
-      throttleUpdate(pos);
+      fadeTickText();
+
+      var newValue = scale.invert(pos);
+      selection.select('.parameter-value text').text(tickFormat(newValue));
+
+      throttleUpdate(newValue);
     }
 
     function dragended() {
       d3.select(this).classed('active', false);
       var pos = scaleClamped(d3.event.x);
-      selection.select('.handle').attr('transform', 'translate(' + pos + ',' + 0 + ')');
+      selection.select('.parameter-value').attr('transform', 'translate(' + pos + ',' + -10 + ')');
 
       var newValue = scale.invert(pos);
+      selection.select('.parameter-value text').text(tickFormat(newValue));
       dispatch.call('end', slider, newValue);
+      value = newValue;
+      fadeTickText();
 
       if (value !== newValue) {
-        value = newValue;
         dispatch.call('onchange', slider, newValue);
       }
     }
+  }
+
+  function fadeTickText() {
+    var distances = [];
+
+    selection.selectAll('.axis .tick').each(function (d, i) {
+      distances.push(Math.abs(d - value));
+    });
+
+    var index = d3.scan(distances);
+
+    selection.selectAll('.axis .tick text')
+      .transition()
+      .duration(10)
+      .attr('opacity', function (d, i) { return i === index ? 0 : 1; });
   }
 
   slider.min = function (_) {
@@ -176,15 +224,24 @@ function slider() {
   slider.value = function (_) {
     if (!arguments.length) return value;
     var pos = scaleClamped(scale(_));
-    selection.select('.handle').transition().ease(d3.easeQuadOut).duration(200).attr('transform', 'translate(' + pos + ',' + 0 + ')');
+    selection.select('.parameter-value').transition().ease(d3.easeQuadOut).duration(200).attr('transform', 'translate(' + pos + ',' + -10 + ')');
 
     var newValue = scale.invert(pos);
+    selection.select('.parameter-value text').text(tickFormat(newValue));
 
     if (value !== newValue) {
       value = newValue;
+      fadeTickText();
       dispatch.call('onchange', slider, newValue);
     }
 
+    return slider;
+  }
+
+  slider.default = function (_) {
+    if (!arguments.length) return defaultValue;
+    defaultValue = _;
+    value = _;
     return slider;
   }
 
