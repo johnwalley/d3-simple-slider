@@ -1,4 +1,5 @@
-import * as d3 from 'd3'
+import * as d3 from 'd3';
+import _ from 'lodash';
 
 function slider() {
   var value;
@@ -10,28 +11,90 @@ function slider() {
 
   var dispatch = d3.dispatch('onchange', 'start', 'end', 'drag');
 
-  var handle = null;
+  var selection = null;
   var scale = null;
   var scaleClamped = null;
 
   function slider(context) {
+    selection = context.selection ? context.selection() : context;
+
     scale = d3.scaleLinear().domain(domain).range([0, width]).clamp(true);
     scaleClamped = d3.scaleLinear().range(scale.range()).domain(scale.range()).clamp(true);
 
-    var axis = context.call(d3.axisBottom(scale).tickFormat(tickFormat).ticks(ticks));
+    var axis = selection.selectAll('.axis')
+      .data([null]);
 
-    axis.select('.domain').remove();
+    axis.enter()
+      .append('g')
+      .attr('class', 'axis');
 
-    axis.selectAll('.tick line')
-      .attr('stroke', 'lightgray');
+    var slider = selection.selectAll('.slider')
+      .data([null]);
 
-    axis.selectAll('text')
-      .attr('dy', '12px');
+    var sliderEnter = slider.enter()
+      .append('g')
+      .attr('class', 'slider')
+      .attr('cursor', 'ew-resize')
+      .call(d3.drag()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended));
+
+    sliderEnter.append('line')
+      .attr('class', 'track')
+      .attr('x1', 0)
+      .attr('y1', 3)
+      .attr('y2', 3)
+      .attr('stroke', '#bbb')
+      .attr('stroke-width', 6)
+      .attr('stroke-linecap', 'round')
+      .merge(slider.select('.track'));
+
+    sliderEnter.append('line')
+      .attr('class', 'track-inset')
+      .attr('x1', 0)
+      .attr('y1', 3)
+      .attr('y2', 3)
+      .attr('stroke', '#eee')
+      .attr('stroke-width', 4)
+      .attr('stroke-linecap', 'round');
+
+    sliderEnter.append('line')
+      .attr('class', 'track-overlay')
+      .attr('x1', 0)
+      .attr('y1', 3)
+      .attr('y2', 3)
+      .attr('stroke', 'transparent')
+      .attr('stroke-width', 40)
+      .attr('stroke-linecap', 'round')
+      .merge(slider.select('.track-overlay'))
+      .attr('x2', scale.range()[1]);
+
+    sliderEnter.append('path')
+      .attr('class', 'handle')
+      .attr('d', 'M-5.5,-2.5v10l6,5.5l6,-5.5v-10z')
+      .attr('fill', 'white')
+      .attr('stroke', '#777');
+
+    context.select('.track')
+      .attr('x2', scale.range()[1]);
+
+    context.select('.track-inset')
+      .attr('x2', scale.range()[1]);
+
+    context.select('.track-overlay')
+      .attr('x2', scale.range()[1]);
+
+    context.select('.axis').call(d3.axisBottom(scale).tickFormat(tickFormat).ticks(ticks));
+
+    context.select('.axis')
+      .selectAll('text')
+      .attr('dy', '22px');
 
     function dragstarted() {
       d3.select(this).raise().classed('active', true);
       var pos = scaleClamped(d3.event.x);
-      handle.attr('transform', 'translate(' + pos + ',' + 0 + ')');
+      selection.select('.handle').attr('transform', 'translate(' + pos + ',' + 0 + ')');
 
       var newValue = scale.invert(pos);
       dispatch.call('start', slider, newValue);
@@ -42,10 +105,7 @@ function slider() {
       }
     }
 
-    function dragged() {
-      var pos = scaleClamped(d3.event.x);
-      handle.attr('transform', 'translate(' + pos + ',' + 0 + ')');
-
+    var throttleUpdate = _.throttle(function (pos) {
       var newValue = scale.invert(pos);
       dispatch.call('drag', slider, newValue);
 
@@ -53,12 +113,19 @@ function slider() {
         value = newValue;
         dispatch.call('onchange', slider, newValue);
       }
+    }, 150);
+
+    function dragged() {
+      var pos = scaleClamped(d3.event.x);
+      selection.select('.handle').attr('transform', 'translate(' + pos + ',' + 0 + ')');
+
+      throttleUpdate(pos);
     }
 
     function dragended() {
       d3.select(this).classed('active', false);
       var pos = scaleClamped(d3.event.x);
-      handle.attr('transform', 'translate(' + pos + ',' + 0 + ')');
+      selection.select('.handle').attr('transform', 'translate(' + pos + ',' + 0 + ')');
 
       var newValue = scale.invert(pos);
       dispatch.call('end', slider, newValue);
@@ -68,50 +135,6 @@ function slider() {
         dispatch.call('onchange', slider, newValue);
       }
     }
-
-    var slider = context.append('g')
-      .attr('class', 'handle')
-      .attr('cursor', 'ew-resize')
-      .call(d3.drag()
-        .on('start', dragstarted)
-        .on('drag', dragged)
-        .on('end', dragended));
-
-    slider.append('line')
-      .attr('class', 'baseline-halo')
-      .attr('x1', 0)
-      .attr('x2', scale.range()[1])
-      .attr('y1', 3)
-      .attr('y2', 3)
-      .attr('stroke', '#bbb')
-      .attr('stroke-width', 6)
-      .attr('stroke-linecap', 'round');
-
-    slider.append('line')
-      .attr('class', 'baseline')
-      .attr('x1', 0)
-      .attr('x2', scale.range()[1])
-      .attr('y1', 3)
-      .attr('y2', 3)
-      .attr('stroke', '#eee')
-      .attr('stroke-width', 4)
-      .attr('stroke-linecap', 'round');
-
-    slider.append('line')
-      .attr('class', 'overlay')
-      .attr('x1', 0)
-      .attr('x2', scale.range()[1])
-      .attr('y1', 3)
-      .attr('y2', 3)
-      .attr('stroke', 'transparent')
-      .attr('stroke-width', 40)
-      .attr('stroke-linecap', 'round');
-
-    handle = slider.append('path')
-      .attr('transform', 'translate(0,0)')
-      .attr('d', 'M-5.5,-2.5v10l6,5.5l6,-5.5v-10z')
-      .attr('fill', 'white')
-      .attr('stroke', '#777');
   }
 
   slider.min = function (_) {
@@ -153,7 +176,7 @@ function slider() {
   slider.value = function (_) {
     if (!arguments.length) return value;
     var pos = scaleClamped(scale(_));
-    handle.transition().ease(d3.easeQuadOut).duration(200).attr('transform', 'translate(' + pos + ',' + 0 + ')');
+    selection.select('.handle').transition().ease(d3.easeQuadOut).duration(200).attr('transform', 'translate(' + pos + ',' + 0 + ')');
 
     var newValue = scale.invert(pos);
 
