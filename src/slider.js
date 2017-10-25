@@ -4,7 +4,7 @@ import _ from 'lodash';
 function slider() {
   var value;
   var defaultValue;
-  var domain = [0, 100];
+  var domain = [0, 10];
   var width = 100;
 
   var tickFormat = null;

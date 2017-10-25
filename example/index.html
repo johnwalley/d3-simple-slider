@@ -1,19 +1,40 @@
+<!doctype html>
+<html lang="en">
+<title>d3-simple-slider</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
+<!--<script src="https://unpkg.com/d3-simple-slider@0.1.2/build/d3-simple-slider.js"></script>-->
 <script src="../build/d3-simple-slider.js"></script>
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+  crossorigin="anonymous">
+
 <body>
-  <p id="value">Move me</p>
-  <div id="value"></div>
-  <a id="setValue" href="#">Set value</a>
-  <a id="changeWidth" href="#">Change width</a>
+  <div class="container">
+    <h1>Basic example</h1>
+    <div class="row align-items-center">
+      <div class="col-sm-2">
+        <p id="value"></p>
+      </div>
+      <div class="col-sm">
+        <div id="value"></div>
+      </div>
+    </div>
+    <a id="setValue" href="#">Reset</a>
+    <br />
+    <a id="changeWidth" href="#">Change width</a>
+  </div>
 </body>
 
 <script>
   var data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
   var slider = d3Slider.sliderHorizontal()
-    .domain(d3.extent(data))
+    .min(d3.min(data))
+    .max(d3.max(data))
     .width(300)
     .tickFormat(d3.format('.2%'))
     .ticks(5)
@@ -30,6 +51,9 @@
 
   g.call(slider);
 
-  d3.select("a#setValue").on("click", () => slider.value(0.01));
+  d3.select("p#value").text(d3.format('.2%')(slider.value()))
+  d3.select("a#setValue").on("click", () => slider.value(0.015));
   d3.select("a#changeWidth").on("click", () => g.call(slider.width(Math.floor(Math.random() * 500) + 200)));
 </script>
+
+</html>
