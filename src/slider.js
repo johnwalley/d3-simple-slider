@@ -8,6 +8,7 @@ function slider() {
   var width = 100;
   var step = null;
   var tickValues = null;
+  var marks = null;
 
   var tickFormat = null;
   var ticks = null;
@@ -52,11 +53,11 @@ function slider() {
       .attr("cursor", "ew-resize")
       .attr("transform", "translate(0,10)")
       .call(
-      d3
-        .drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended)
+        d3
+          .drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended)
       );
 
     sliderEnter
@@ -94,7 +95,7 @@ function slider() {
       .append("g")
       .attr("class", "parameter-value")
       .attr("transform", "translate(" + scale(value) + ",-10)")
-      .style("font-size", 12)
+      .style("font-size", 10)
       .style("font-family", "sans-serif")
       .style("text-anchor", "middle");
 
@@ -140,8 +141,6 @@ function slider() {
 
     context.selectAll(".axis line").attr("stroke", "#aaa");
 
-    console.log(value)
-
     context
       .select(".parameter-value")
       .attr("transform", "translate(" + scale(value) + "," + -10 + ")");
@@ -167,7 +166,7 @@ function slider() {
       }
     }
 
-    var throttleUpdate = _.throttle(function (newValue) {
+    var throttleUpdate = _.throttle(function(newValue) {
       dispatch.call("drag", slider, newValue);
 
       if (value !== newValue) {
@@ -208,13 +207,13 @@ function slider() {
   function fadeTickText() {
     var distances = [];
 
-    selection.selectAll(".axis .tick").each(function (d) {
+    selection.selectAll(".axis .tick").each(function(d) {
       distances.push(Math.abs(d - value));
     });
 
     var index = d3.scan(distances);
 
-    selection.selectAll(".axis .tick text").attr("opacity", function (d, i) {
+    selection.selectAll(".axis .tick text").attr("opacity", function(d, i) {
       return i === index ? 0 : 1;
     });
   }
@@ -231,55 +230,55 @@ function slider() {
       return newValue instanceof Date ? new Date(alignValue) : alignValue;
     }
 
-    if (tickValues) {
+    if (marks) {
       var index = d3.scan(
-        tickValues.map(function (d) {
+        marks.map(function(d) {
           return Math.abs(newValue - d);
         })
       );
-      return tickValues[index];
+      return marks[index];
     }
 
     return newValue;
   }
 
-  slider.min = function (_) {
+  slider.min = function(_) {
     if (!arguments.length) return domain[0];
     domain[0] = _;
     return slider;
   };
 
-  slider.max = function (_) {
+  slider.max = function(_) {
     if (!arguments.length) return domain[1];
     domain[1] = _;
     return slider;
   };
 
-  slider.domain = function (_) {
+  slider.domain = function(_) {
     if (!arguments.length) return domain;
     domain = _;
     return slider;
   };
 
-  slider.width = function (_) {
+  slider.width = function(_) {
     if (!arguments.length) return width;
     width = _;
     return slider;
   };
 
-  slider.tickFormat = function (_) {
+  slider.tickFormat = function(_) {
     if (!arguments.length) return tickFormat;
     tickFormat = _;
     return slider;
   };
 
-  slider.ticks = function (_) {
+  slider.ticks = function(_) {
     if (!arguments.length) return ticks;
     ticks = _;
     return slider;
   };
 
-  slider.value = function (_) {
+  slider.value = function(_) {
     if (!arguments.length) return value;
     var pos = identityClamped(scale(_));
     var newValue = alignedValue(scale.invert(pos));
@@ -302,26 +301,32 @@ function slider() {
     return slider;
   };
 
-  slider.default = function (_) {
+  slider.default = function(_) {
     if (!arguments.length) return defaultValue;
     defaultValue = _;
     value = _;
     return slider;
   };
 
-  slider.step = function (_) {
+  slider.step = function(_) {
     if (!arguments.length) return step;
     step = _;
     return slider;
   };
 
-  slider.tickValues = function (_) {
+  slider.tickValues = function(_) {
     if (!arguments.length) return tickValues;
     tickValues = _;
     return slider;
   };
 
-  slider.on = function () {
+  slider.marks = function(_) {
+    if (!arguments.length) return marks;
+    marks = _;
+    return slider;
+  };
+
+  slider.on = function() {
     var value = dispatch.on.apply(dispatch, arguments);
     return value === dispatch ? slider : value;
   };

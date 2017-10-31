@@ -6,7 +6,7 @@
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
-<!--<script src="https://unpkg.com/d3-simple-slider1@0.1.2/build/d3-simple-slider.js"></script>-->
+<!--<script src="https://unpkg.com/d3-simple-slider@0.1.2/build/d3-simple-slider.js"></script>-->
 <script src="../build/d3-simple-slider.js"></script>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
@@ -44,6 +44,16 @@
       </div>
     </div>
     <a id="setValue3" href="#">Reset</a>
+    <h1>Dense values example</h1>
+    <div class="row align-items-center">
+      <div class="col-sm-2">
+        <p id="value4"></p>
+      </div>
+      <div class="col-sm">
+        <div id="slider4"></div>
+      </div>
+    </div>
+    <a id="setValue4" href="#">Reset</a>
   </div>
 </body>
 
@@ -115,6 +125,31 @@
 
   d3.select("p#value3").text(d3.timeFormat('%Y')(slider3.value()));
   d3.select("a#setValue3").on("click", () => slider3.value(new Date(1997, 11, 17)));
+
+  var data4 = [0.20, 0.22, 0.24, 0.26, 0.28, 0.30, 1];
+
+  var slider4 = d3Slider.sliderHorizontal()
+    .min(d3.min(data4))
+    .max(d3.max(data4))
+    .width(300)
+    .tickFormat(d3.format('.2%'))
+    .marks(data4)
+    .ticks(5)
+    .default(0.015)
+    .on('onchange', val => {
+      d3.select("p#value4").text(d3.format('.2%')(val));
+    });
+
+  var g = d3.select("div#slider4").append("svg")
+    .attr("width", 500)
+    .attr("height", 100)
+    .append("g")
+    .attr("transform", "translate(30,30)");
+
+  g.call(slider4);
+
+  d3.select("p#value4").text(d3.format('.2%')(slider4.value()))
+  d3.select("a#setValue4").on("click", () => slider4.value(0.015));
 </script>
 
 </html>
