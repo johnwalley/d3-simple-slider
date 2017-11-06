@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import _ from "lodash";
 
 function slider() {
   var value = 0;
@@ -163,17 +162,9 @@ function slider() {
       if (value !== newValue) {
         value = newValue;
         dispatch.call("onchange", slider, newValue);
+        fadeTickText();
       }
     }
-
-    var throttleUpdate = _.throttle(function(newValue) {
-      dispatch.call("drag", slider, newValue);
-
-      if (value !== newValue) {
-        value = newValue;
-        dispatch.call("onchange", slider, newValue);
-      }
-    }, 150);
 
     function dragged() {
       var pos = identityClamped(d3.event.x);
@@ -181,9 +172,14 @@ function slider() {
       selection
         .select(".parameter-value")
         .attr("transform", "translate(" + scale(newValue) + "," + -10 + ")");
-      fadeTickText();
       selection.select(".parameter-value text").text(tickFormat(newValue));
-      throttleUpdate(newValue);
+      dispatch.call("drag", slider, newValue);
+      fadeTickText();
+
+      if (value !== newValue) {
+        value = newValue;
+        dispatch.call("onchange", slider, newValue);
+      }
     }
 
     function dragended() {
