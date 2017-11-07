@@ -27,7 +27,7 @@ Constructs a new horizontal slider generator.
 
 <a name="sliderVertical" href="#sliderVertical">#</a> d3.<b>sliderVertical</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L256 "Source")
 
-Constructs a new vertical slider generator. Note this function is not yet implemented.
+Constructs a new vertical slider generator. *Note this function is not yet implemented*.
 
 <a name="_slider" href="#_slider">#</a> <i>slider</i>(<i>context</i>) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L19 "Source")
 
@@ -74,6 +74,6 @@ The *typenames* is a string containing one or more *typename* separated by white
 * `drag` - after an active pointer moves (on mousemove or touchmove).
 * `end` - after an active pointer becomes inactive (on mouseup, touchend or touchcancel).
 
-Note that `onchange` and `drag` events are throttled while the slider is being actively moved.
+You might consider throttling `onchange` and `drag` events. For example using [`lodash.throttle`](https://lodash.com/docs/4.17.4#throttle).
 
 See [*dispatch*.on](https://github.com/d3/d3-dispatch#dispatch_on) for more.

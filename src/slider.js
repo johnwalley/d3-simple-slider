@@ -1,5 +1,7 @@
 import * as d3 from "d3";
 
+var UPDATE_DURATION = 200;
+
 function slider() {
   var value = 0;
   var defaultValue = 0;
@@ -20,7 +22,6 @@ function slider() {
   var identityClamped = null;
 
   function slider(context) {
-    value = defaultValue;
     selection = context.selection ? context.selection() : context;
 
     scale = domain[0] instanceof Date ? d3.scaleTime() : d3.scaleLinear();
@@ -116,9 +117,7 @@ function slider() {
     }
 
     context.select(".track").attr("x2", scale.range()[1]);
-
     context.select(".track-inset").attr("x2", scale.range()[1]);
-
     context.select(".track-overlay").attr("x2", scale.range()[1]);
 
     context.select(".axis").call(
@@ -129,12 +128,13 @@ function slider() {
         .tickValues(tickValues)
     );
 
-    context.select(".axis").attr("transform", "translate(0,7)");
-
-    context
+    // https://bl.ocks.org/mbostock/4323929
+    selection
       .select(".axis")
       .select(".domain")
       .remove();
+
+    context.select(".axis").attr("transform", "translate(0,7)");
 
     context
       .selectAll(".axis text")
@@ -152,62 +152,32 @@ function slider() {
     fadeTickText();
 
     function dragstarted() {
-      d3
-        .select(this)
-        .raise()
-        .classed("active", true);
+      d3.select(this).classed("active", true);
       var pos = identityClamped(d3.event.x);
       var newValue = alignedValue(scale.invert(pos));
-      selection
-        .select(".parameter-value")
-        .attr("transform", "translate(" + scale(newValue) + ",0)");
 
-      updateText(newValue);
-
+      updateHandle(newValue);
       dispatch.call("start", slider, newValue);
-
-      if (value !== newValue) {
-        value = newValue;
-        dispatch.call("onchange", slider, newValue);
-        fadeTickText();
-      }
+      updateValue(newValue);
     }
 
     function dragged() {
       var pos = identityClamped(d3.event.x);
       var newValue = alignedValue(scale.invert(pos));
-      selection
-        .select(".parameter-value")
-        .attr("transform", "translate(" + scale(newValue) + ",0)");
 
-      updateText(newValue);
-
+      updateHandle(newValue);
       dispatch.call("drag", slider, newValue);
-      fadeTickText();
-
-      if (value !== newValue) {
-        value = newValue;
-        dispatch.call("onchange", slider, newValue);
-      }
+      updateValue(newValue);
     }
 
     function dragended() {
       d3.select(this).classed("active", false);
       var pos = identityClamped(d3.event.x);
       var newValue = alignedValue(scale.invert(pos));
-      selection
-        .select(".parameter-value")
-        .attr("transform", "translate(" + scale(newValue) + ",0)");
 
-      updateText(newValue);
-
+      updateHandle(newValue);
       dispatch.call("end", slider, newValue);
-      value = newValue;
-      fadeTickText();
-
-      if (value !== newValue) {
-        dispatch.call("onchange", slider, newValue);
-      }
+      updateValue(newValue);
     }
   }
 
@@ -245,13 +215,33 @@ function slider() {
           return Math.abs(newValue - d);
         })
       );
+
       return marks[index];
     }
 
     return newValue;
   }
 
-  function updateText(newValue) {
+  function updateValue(newValue) {
+    if (value !== newValue) {
+      value = newValue;
+      dispatch.call("onchange", slider, newValue);
+      fadeTickText();
+    }
+  }
+
+  function updateHandle(newValue, animate = false) {
+    var handleSelection = selection.select(".parameter-value");
+
+    if (animate) {
+      handleSelection = handleSelection
+        .transition()
+        .ease(d3.easeQuadOut)
+        .duration(UPDATE_DURATION);
+    }
+
+    handleSelection.attr("transform", "translate(" + scale(newValue) + ",0)");
+
     if (displayValue) {
       selection.select(".parameter-value text").text(tickFormat(newValue));
     }
@@ -298,20 +288,8 @@ function slider() {
     var pos = identityClamped(scale(_));
     var newValue = alignedValue(scale.invert(pos));
 
-    selection
-      .select(".parameter-value")
-      .transition()
-      .ease(d3.easeQuadOut)
-      .duration(200)
-      .attr("transform", "translate(" + scale(newValue) + ",0)");
-
-    updateText(newValue);
-
-    if (value !== newValue) {
-      value = newValue;
-      fadeTickText();
-      dispatch.call("onchange", slider, newValue);
-    }
+    updateHandle(newValue, true);
+    updateValue(newValue);
 
     return slider;
   };

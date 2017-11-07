@@ -54,6 +54,16 @@
       </div>
     </div>
     <a id="setValue4" href="#">Reset</a>
+    <h1>Transition example</h1>
+    <div class="row align-items-center">
+      <div class="col-sm-2">
+        <p id="value5"></p>
+      </div>
+      <div class="col-sm">
+        <div id="slider5"></div>
+      </div>
+    </div>
+    <a id="setValue5" href="#">Reset</a>
   </div>
 </body>
 
@@ -151,6 +161,31 @@
 
   d3.select("p#value4").text(d3.format('.2%')(slider4.value()))
   d3.select("a#setValue4").on("click", () => slider4.value(0.015));
+
+  var slider5 = d3Slider.sliderHorizontal()
+    .min(0)
+    .max(10)
+    .step(1)
+    .width(300)
+    .on('onchange', val => {
+      d3.select("p#value5").text(val);
+    });
+
+  var g = d3.select("div#slider5").append("svg")
+    .attr("width", 500)
+    .attr("height", 100)
+    .append("g")
+    .attr("transform", "translate(30,30)");
+
+  g.call(slider5);
+
+  setInterval(() => {
+    slider5.width(Math.random() * 200 + 100);
+    g.transition().duration(1000).call(slider5);
+  }, 4000);
+
+  d3.select("p#value5").text((slider5.value()));
+  d3.select("a#setValue5").on("click", () => slider5.value(5));
 </script>
 
 </html>
