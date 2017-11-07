@@ -18,6 +18,8 @@ function slider() {
   var scale = null;
   var identityClamped = null;
 
+  var handle = "M-5.5,-5.5v10l6,5.5l6,-5.5v-10z";
+
   function slider(context) {
     selection = context.selection ? context.selection() : context;
 
@@ -41,6 +43,7 @@ function slider() {
     axis
       .enter()
       .append("g")
+      .attr("transform", "translate(0,7)")
       .attr("class", "axis");
 
     var slider = selection.selectAll(".slider").data([null]);
@@ -50,7 +53,7 @@ function slider() {
       .append("g")
       .attr("class", "slider")
       .attr("cursor", "ew-resize")
-      .attr("transform", "translate(0,10)")
+      .attr("transform", "translate(0,0)")
       .call(
         d3
           .drag()
@@ -63,8 +66,8 @@ function slider() {
       .append("line")
       .attr("class", "track")
       .attr("x1", 0)
-      .attr("y1", -7)
-      .attr("y2", -7)
+      .attr("y1", 0)
+      .attr("y2", 0)
       .attr("stroke", "#bbb")
       .attr("stroke-width", 6)
       .attr("stroke-linecap", "round");
@@ -73,8 +76,8 @@ function slider() {
       .append("line")
       .attr("class", "track-inset")
       .attr("x1", 0)
-      .attr("y1", -7)
-      .attr("y2", -7)
+      .attr("y1", 0)
+      .attr("y2", 0)
       .attr("stroke", "#eee")
       .attr("stroke-width", 4)
       .attr("stroke-linecap", "round");
@@ -83,8 +86,8 @@ function slider() {
       .append("line")
       .attr("class", "track-overlay")
       .attr("x1", 0)
-      .attr("y1", -7)
-      .attr("y2", -7)
+      .attr("y1", 0)
+      .attr("y2", 0)
       .attr("stroke", "transparent")
       .attr("stroke-width", 40)
       .attr("stroke-linecap", "round")
@@ -93,20 +96,19 @@ function slider() {
     var handleEnter = sliderEnter
       .append("g")
       .attr("class", "parameter-value")
-      .attr("transform", "translate(" + scale(value) + ",-10)")
-      .style("font-size", 10)
+      .attr("transform", "translate(" + scale(value) + ",0)")
       .style("font-family", "sans-serif")
       .style("text-anchor", "middle");
 
     handleEnter
       .append("path")
-      .attr("d", "M-5.5,-2.5v10l6,5.5l6,-5.5v-10z")
+      .attr("d", handle)
       .attr("fill", "white")
       .attr("stroke", "#777");
 
     handleEnter
       .append("text")
-      .attr("y", 30)
+      .attr("y", 27)
       .attr("dy", ".71em")
       .text(tickFormat(value));
 
@@ -124,7 +126,7 @@ function slider() {
         .tickValues(tickValues)
     );
 
-    context.select(".axis").attr("transform", "translate(0,10)");
+    context.select(".axis").attr("transform", "translate(0,7)");
 
     context
       .select(".axis")
@@ -142,7 +144,7 @@ function slider() {
 
     context
       .select(".parameter-value")
-      .attr("transform", "translate(" + scale(value) + "," + -10 + ")");
+      .attr("transform", "translate(" + scale(value) + ",0)");
 
     fadeTickText();
 
@@ -155,7 +157,7 @@ function slider() {
       var newValue = alignedValue(scale.invert(pos));
       selection
         .select(".parameter-value")
-        .attr("transform", "translate(" + scale(newValue) + "," + -10 + ")");
+        .attr("transform", "translate(" + scale(newValue) + ",0)");
       selection.select(".parameter-value text").text(tickFormat(newValue));
       dispatch.call("start", slider, newValue);
 
@@ -171,7 +173,7 @@ function slider() {
       var newValue = alignedValue(scale.invert(pos));
       selection
         .select(".parameter-value")
-        .attr("transform", "translate(" + scale(newValue) + "," + -10 + ")");
+        .attr("transform", "translate(" + scale(newValue) + ",0)");
       selection.select(".parameter-value text").text(tickFormat(newValue));
       dispatch.call("drag", slider, newValue);
       fadeTickText();
@@ -188,7 +190,7 @@ function slider() {
       var newValue = alignedValue(scale.invert(pos));
       selection
         .select(".parameter-value")
-        .attr("transform", "translate(" + scale(newValue) + "," + -10 + ")");
+        .attr("transform", "translate(" + scale(newValue) + ",0)");
       selection.select(".parameter-value text").text(tickFormat(newValue));
       dispatch.call("end", slider, newValue);
       value = newValue;
@@ -284,7 +286,7 @@ function slider() {
       .transition()
       .ease(d3.easeQuadOut)
       .duration(200)
-      .attr("transform", "translate(" + scale(newValue) + "," + -10 + ")");
+      .attr("transform", "translate(" + scale(newValue) + ",0)");
 
     selection.select(".parameter-value text").text(tickFormat(newValue));
 
@@ -319,6 +321,12 @@ function slider() {
   slider.marks = function(_) {
     if (!arguments.length) return marks;
     marks = _;
+    return slider;
+  };
+
+  slider.handle = function(_) {
+    if (!arguments.length) return handle;
+    handle = _;
     return slider;
   };
 
