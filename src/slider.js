@@ -2,13 +2,14 @@ import * as d3 from "d3";
 
 function slider() {
   var value = 0;
-  var defaultValue;
+  var defaultValue = 0;
   var domain = [0, 10];
   var width = 100;
+  var displayValue = true;
+  var handle = "M-5.5,-5.5v10l6,5.5l6,-5.5v-10z";
   var step = null;
   var tickValues = null;
   var marks = null;
-
   var tickFormat = null;
   var ticks = null;
 
@@ -18,9 +19,8 @@ function slider() {
   var scale = null;
   var identityClamped = null;
 
-  var handle = "M-5.5,-5.5v10l6,5.5l6,-5.5v-10z";
-
   function slider(context) {
+    value = defaultValue;
     selection = context.selection ? context.selection() : context;
 
     scale = domain[0] instanceof Date ? d3.scaleTime() : d3.scaleLinear();
@@ -97,8 +97,8 @@ function slider() {
       .append("g")
       .attr("class", "parameter-value")
       .attr("transform", "translate(" + scale(value) + ",0)")
-      .style("font-family", "sans-serif")
-      .style("text-anchor", "middle");
+      .attr("font-family", "sans-serif")
+      .attr("text-anchor", "middle");
 
     handleEnter
       .append("path")
@@ -106,12 +106,14 @@ function slider() {
       .attr("fill", "white")
       .attr("stroke", "#777");
 
-    handleEnter
-      .append("text")
-      .attr("font-size", 10)
-      .attr("y", 27)
-      .attr("dy", ".71em")
-      .text(tickFormat(value));
+    if (displayValue) {
+      handleEnter
+        .append("text")
+        .attr("font-size", 10)
+        .attr("y", 27)
+        .attr("dy", ".71em")
+        .text(tickFormat(value));
+    }
 
     context.select(".track").attr("x2", scale.range()[1]);
 
@@ -139,7 +141,7 @@ function slider() {
       .attr("fill", "#aaa")
       .attr("y", 20)
       .attr("dy", ".71em")
-      .style("text-anchor", "middle");
+      .attr("text-anchor", "middle");
 
     context.selectAll(".axis line").attr("stroke", "#aaa");
 
@@ -159,7 +161,9 @@ function slider() {
       selection
         .select(".parameter-value")
         .attr("transform", "translate(" + scale(newValue) + ",0)");
-      selection.select(".parameter-value text").text(tickFormat(newValue));
+
+      updateText(newValue);
+
       dispatch.call("start", slider, newValue);
 
       if (value !== newValue) {
@@ -175,7 +179,9 @@ function slider() {
       selection
         .select(".parameter-value")
         .attr("transform", "translate(" + scale(newValue) + ",0)");
-      selection.select(".parameter-value text").text(tickFormat(newValue));
+
+      updateText(newValue);
+
       dispatch.call("drag", slider, newValue);
       fadeTickText();
 
@@ -192,7 +198,9 @@ function slider() {
       selection
         .select(".parameter-value")
         .attr("transform", "translate(" + scale(newValue) + ",0)");
-      selection.select(".parameter-value text").text(tickFormat(newValue));
+
+      updateText(newValue);
+
       dispatch.call("end", slider, newValue);
       value = newValue;
       fadeTickText();
@@ -204,17 +212,19 @@ function slider() {
   }
 
   function fadeTickText() {
-    var distances = [];
+    if (displayValue) {
+      var distances = [];
 
-    selection.selectAll(".axis .tick").each(function(d) {
-      distances.push(Math.abs(d - value));
-    });
+      selection.selectAll(".axis .tick").each(function(d) {
+        distances.push(Math.abs(d - value));
+      });
 
-    var index = d3.scan(distances);
+      var index = d3.scan(distances);
 
-    selection.selectAll(".axis .tick text").attr("opacity", function(d, i) {
-      return i === index ? 0 : 1;
-    });
+      selection.selectAll(".axis .tick text").attr("opacity", function(d, i) {
+        return i === index ? 0 : 1;
+      });
+    }
   }
 
   function alignedValue(newValue) {
@@ -239,6 +249,12 @@ function slider() {
     }
 
     return newValue;
+  }
+
+  function updateText(newValue) {
+    if (displayValue) {
+      selection.select(".parameter-value text").text(tickFormat(newValue));
+    }
   }
 
   slider.min = function(_) {
@@ -289,7 +305,7 @@ function slider() {
       .duration(200)
       .attr("transform", "translate(" + scale(newValue) + ",0)");
 
-    selection.select(".parameter-value text").text(tickFormat(newValue));
+    updateText(newValue);
 
     if (value !== newValue) {
       value = newValue;
@@ -328,6 +344,12 @@ function slider() {
   slider.handle = function(_) {
     if (!arguments.length) return handle;
     handle = _;
+    return slider;
+  };
+
+  slider.displayValue = function(_) {
+    if (!arguments.length) return displayValue;
+    displayValue = _;
     return slider;
   };
 

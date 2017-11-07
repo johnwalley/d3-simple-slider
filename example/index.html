@@ -87,6 +87,7 @@
     .max(10)
     .step(1)
     .width(300)
+    .displayValue(false)
     .on('onchange', val => {
       d3.select("p#value2").text(val);
     });
