@@ -108,6 +108,7 @@ function slider() {
 
     handleEnter
       .append("text")
+      .attr("font-size", 10)
       .attr("y", 27)
       .attr("dy", ".71em")
       .text(tickFormat(value));
