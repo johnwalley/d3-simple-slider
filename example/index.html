@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<!--<script src="https://unpkg.com/d3-simple-slider@0.1.2/build/d3-simple-slider.js"></script>-->
 <script src="../build/d3-simple-slider.js"></script>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
-  crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
 
 <body>
   <div class="container">
@@ -69,7 +67,7 @@
 <script>
   var data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
-  var slider1 = d3Slider.sliderHorizontal()
+  var slider1 = d3.sliderHorizontal()
     .min(d3.min(data1))
     .max(d3.max(data1))
     .width(300)
@@ -91,7 +89,7 @@
   d3.select("p#value1").text(d3.format('.2%')(slider1.value()))
   d3.select("a#setValue1").on("click", () => slider1.value(0.015));
 
-  var slider2 = d3Slider.sliderHorizontal()
+  var slider2 = d3.sliderHorizontal()
     .min(0)
     .max(10)
     .step(1)
@@ -114,7 +112,7 @@
 
   var data3 = d3.range(0, 10).map(function (d) { return new Date(1995 + d, 10, 3); });
 
-  var slider3 = d3Slider.sliderHorizontal()
+  var slider3 = d3.sliderHorizontal()
     .min(d3.min(data3))
     .max(d3.max(data3))
     .step(1000 * 60 * 60 * 24 * 365)
@@ -138,7 +136,7 @@
 
   var data4 = [0.20, 0.22, 0.24, 0.26, 0.28, 0.30, 1];
 
-  var slider4 = d3Slider.sliderHorizontal()
+  var slider4 = d3.sliderHorizontal()
     .min(d3.min(data4))
     .max(d3.max(data4))
     .width(300)
@@ -161,7 +159,7 @@
   d3.select("p#value4").text(d3.format('.2%')(slider4.value()))
   d3.select("a#setValue4").on("click", () => slider4.value(0.015));
 
-  var slider5 = d3Slider.sliderHorizontal()
+  var slider5 = d3.sliderHorizontal()
     .min(0)
     .max(10)
     .step(1)

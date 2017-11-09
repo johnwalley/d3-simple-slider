@@ -1,4 +1,10 @@
-import * as d3 from "d3";
+import { scan } from "d3-array";
+import { axisBottom } from "d3-axis";
+import { dispatch } from "d3-dispatch";
+import { drag } from "d3-drag";
+import { easeQuadOut } from "d3-ease";
+import { scaleLinear, scaleTime } from "d3-scale";
+import { event, select } from "d3-selection";
 
 var UPDATE_DURATION = 200;
 
@@ -15,7 +21,7 @@ function slider() {
   var tickFormat = null;
   var ticks = null;
 
-  var dispatch = d3.dispatch("onchange", "start", "end", "drag");
+  var listeners = dispatch("onchange", "start", "end", "drag");
 
   var selection = null;
   var scale = null;
@@ -24,15 +30,14 @@ function slider() {
   function slider(context) {
     selection = context.selection ? context.selection() : context;
 
-    scale = domain[0] instanceof Date ? d3.scaleTime() : d3.scaleLinear();
+    scale = domain[0] instanceof Date ? scaleTime() : scaleLinear();
 
     scale = scale
       .domain(domain)
       .range([0, width])
       .clamp(true);
 
-    identityClamped = d3
-      .scaleLinear()
+    identityClamped = scaleLinear()
       .range(scale.range())
       .domain(scale.range())
       .clamp(true);
@@ -56,8 +61,7 @@ function slider() {
       .attr("cursor", "ew-resize")
       .attr("transform", "translate(0,0)")
       .call(
-        d3
-          .drag()
+        drag()
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended)
@@ -121,8 +125,7 @@ function slider() {
     context.select(".track-overlay").attr("x2", scale.range()[1]);
 
     context.select(".axis").call(
-      d3
-        .axisBottom(scale)
+      axisBottom(scale)
         .tickFormat(tickFormat)
         .ticks(ticks)
         .tickValues(tickValues)
@@ -152,31 +155,31 @@ function slider() {
     fadeTickText();
 
     function dragstarted() {
-      d3.select(this).classed("active", true);
-      var pos = identityClamped(d3.event.x);
+      select(this).classed("active", true);
+      var pos = identityClamped(event.x);
       var newValue = alignedValue(scale.invert(pos));
 
       updateHandle(newValue);
-      dispatch.call("start", slider, newValue);
+      listeners.call("start", slider, newValue);
       updateValue(newValue);
     }
 
     function dragged() {
-      var pos = identityClamped(d3.event.x);
+      var pos = identityClamped(event.x);
       var newValue = alignedValue(scale.invert(pos));
 
       updateHandle(newValue);
-      dispatch.call("drag", slider, newValue);
+      listeners.call("drag", slider, newValue);
       updateValue(newValue);
     }
 
     function dragended() {
-      d3.select(this).classed("active", false);
-      var pos = identityClamped(d3.event.x);
+      select(this).classed("active", false);
+      var pos = identityClamped(event.x);
       var newValue = alignedValue(scale.invert(pos));
 
       updateHandle(newValue);
-      dispatch.call("end", slider, newValue);
+      listeners.call("end", slider, newValue);
       updateValue(newValue);
     }
   }
@@ -189,7 +192,7 @@ function slider() {
         distances.push(Math.abs(d - value));
       });
 
-      var index = d3.scan(distances);
+      var index = scan(distances);
 
       selection.selectAll(".axis .tick text").attr("opacity", function(d, i) {
         return i === index ? 0 : 1;
@@ -210,7 +213,7 @@ function slider() {
     }
 
     if (marks) {
-      var index = d3.scan(
+      var index = scan(
         marks.map(function(d) {
           return Math.abs(newValue - d);
         })
@@ -225,7 +228,7 @@ function slider() {
   function updateValue(newValue) {
     if (value !== newValue) {
       value = newValue;
-      dispatch.call("onchange", slider, newValue);
+      listeners.call("onchange", slider, newValue);
       fadeTickText();
     }
   }
@@ -236,7 +239,7 @@ function slider() {
     if (animate) {
       handleSelection = handleSelection
         .transition()
-        .ease(d3.easeQuadOut)
+        .ease(easeQuadOut)
         .duration(UPDATE_DURATION);
     }
 
@@ -332,8 +335,8 @@ function slider() {
   };
 
   slider.on = function() {
-    var value = dispatch.on.apply(dispatch, arguments);
-    return value === dispatch ? slider : value;
+    var value = listeners.on.apply(listeners, arguments);
+    return value === listeners ? slider : value;
   };
 
   return slider;

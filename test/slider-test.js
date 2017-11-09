@@ -2,7 +2,7 @@ var tape = require("tape");
 var jsdom = require("jsdom");
 var fs = require("fs");
 var path = require("path");
-d3 = Object.assign({}, require("d3"), require("../"));
+d3 = Object.assign({}, require("d3-selection"), require("../"));
 
 tape("sliderHorizontal() has the expected defaults", function(test) {
   var s = d3.sliderHorizontal();
