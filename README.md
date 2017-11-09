@@ -1,6 +1,6 @@
 # d3-simple-slider
 
-This component renders a simple interactive slider.
+Render a simple interactive slider using SVG.
 
 [Live demo](https://bl.ocks.org/johnwalley/e1d256b81e51da68f7feb632a53c3518/32f0f75e8b8fdfa212604f3a77cb022187f12cbf)
 
