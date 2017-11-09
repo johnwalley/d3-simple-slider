@@ -18,7 +18,7 @@
   },
   "scripts": {
     "pretest":
-      "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -g d3:d3,lodash:_ -n d3Slider -o build/d3-simple-slider.js -- index.js",
+      "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -g d3:d3 -n d3Slider -o build/d3-simple-slider.js -- index.js",
     "test": "tape 'test/**/*-test.js' && eslint index.js src",
     "prepublish":
       "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-simple-slider.js -c -m -o build/d3-simple-slider.min.js",
