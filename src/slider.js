@@ -233,7 +233,9 @@ function slider() {
     }
   }
 
-  function updateHandle(newValue, animate = false) {
+  function updateHandle(newValue, animate) {
+    animate = typeof animate !== "undefined" ? animate : false;
+
     var handleSelection = selection.select(".parameter-value");
 
     if (animate) {
