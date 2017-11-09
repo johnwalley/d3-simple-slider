@@ -2,7 +2,9 @@
 
 Render a simple interactive slider using SVG.
 
-[Live demo](https://bl.ocks.org/johnwalley/e1d256b81e51da68f7feb632a53c3518/32f0f75e8b8fdfa212604f3a77cb022187f12cbf)
+![d3-simple-slider](https://user-images.githubusercontent.com/981531/32612807-1b4bc7d0-c561-11e7-95cf-1af7c10788d2.gif)
+
+[Live demo](https://bl.ocks.org/johnwalley/e1d256b81e51da68f7feb632a53c3518)
 
 Inspired by The New York Times [Is It Better to Rent or Buy?](https://www.nytimes.com/interactive/2014/upshot/buy-rent-calculator.html)
 
