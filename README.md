@@ -1,5 +1,7 @@
 # d3-simple-slider
 
+[![Build Status](https://travis-ci.org/johnwalley/d3-simple-slider.svg?branch=master)](https://travis-ci.org/johnwalley/d3-simple-slider)
+
 Render a simple interactive slider using SVG.
 
 ![d3-simple-slider](https://user-images.githubusercontent.com/981531/32612807-1b4bc7d0-c561-11e7-95cf-1af7c10788d2.gif)
