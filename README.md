@@ -10,6 +10,37 @@ Render a simple interactive slider using SVG.
 
 Inspired by The New York Times [Is It Better to Rent or Buy?](https://www.nytimes.com/interactive/2014/upshot/buy-rent-calculator.html)
 
+## Installing
+
+If you use NPM, `npm install d3-simple-slider`. Otherwise, download the [latest release](https://github.com/johnwalley/d3-simple-slider/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3` global is exported:
+
+```html
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://unpkg.com/d3-simple-slider"></script>
+
+<p id="value"></p>
+<div id="slider"></div>
+
+<script>
+  var slider = d3.sliderHorizontal()
+    .min(0)
+    .max(10)
+    .step(1)
+    .width(300)
+    .displayValue(false)
+    .on('onchange', val => {
+      d3.select("#value").text(val);
+    });
+
+  d3.select("#slider").append("svg")
+    .attr("width", 500)
+    .attr("height", 100)
+    .append("g")
+    .attr("transform", "translate(30,30)")
+    .call(slider);
+</script>
+```
+
 ## API Reference
 
 Regardless of orientation, sliders are always rendered at the origin. To change the position of the slider specify a [transform attribute](http://www.w3.org/TR/SVG/coords.html#TransformAttribute) on the containing element. For example:
