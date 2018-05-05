@@ -42,6 +42,12 @@ function slider() {
       .domain(scale.range())
       .clamp(true);
 
+    // Ensure value is valid
+    value = scaleLinear()
+      .range(domain)
+      .domain(domain)
+      .clamp(true)(value);
+
     tickFormat = tickFormat || scale.tickFormat();
 
     var axis = selection.selectAll(".axis").data([null]);
