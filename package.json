@@ -1,8 +1,13 @@
 {
   "name": "d3-simple-slider",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Renders an SVG slider",
-  "keywords": ["d3", "d3-module", "slider", "visualization"],
+  "keywords": [
+    "d3",
+    "d3-module",
+    "slider",
+    "visualization"
+  ],
   "homepage": "https://github.com/johnwalley/d3-simple-slider",
   "license": "BSD-3-Clause",
   "author": {
@@ -17,21 +22,18 @@
     "url": "https://github.com/johnwalley/d3-simple-slider.git"
   },
   "scripts": {
-    "pretest":
-      "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -g d3-array:d3,d3-axis:d3,d3-dispatch:d3,d3-drag:d3,d3-ease:d3,d3-scale:d3,d3-selection:d3 -n d3 -o build/d3-simple-slider.js --extend -- index.js",
+    "pretest": "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -g d3-array:d3,d3-axis:d3,d3-dispatch:d3,d3-drag:d3,d3-ease:d3,d3-scale:d3,d3-selection:d3 -n d3 -o build/d3-simple-slider.js --extend -- index.js",
     "test": "tape 'test/**/*-test.js' && eslint index.js src",
-    "prepublish":
-      "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-simple-slider.js -c -m -o build/d3-simple-slider.min.js",
-    "postpublish":
-      "git push && git push --tags && zip -j build/d3-simple-slider.zip -- LICENSE README.md build/d3-simple-slider.js build/d3-simple-slider.min.js"
+    "prepublish": "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-simple-slider.js -c -m -o build/d3-simple-slider.min.js",
+    "postpublish": "git push && git push --tags && zip -j build/d3-simple-slider.zip -- LICENSE README.md build/d3-simple-slider.js build/d3-simple-slider.min.js"
   },
   "devDependencies": {
-    "eslint": "^4.9.0",
-    "jsdom": "^11.3.0",
+    "eslint": "^4.19.1",
+    "jsdom": "11.3.0",
     "package-preamble": "^0.1.0",
-    "rollup": "^0.50.0",
-    "tape": "^4.8.0",
-    "uglify-js": "^3.1.4"
+    "rollup": "^0.58.2",
+    "tape": "^4.9.0",
+    "uglify-js": "^3.3.23"
   },
   "dependencies": {
     "d3-array": "^1.2.1",
@@ -40,7 +42,7 @@
     "d3-dispatch": "^1.0.3",
     "d3-drag": "^1.2.1",
     "d3-ease": "^1.0.3",
-    "d3-scale": "^1.0.6",
-    "d3-selection": "^1.1.0"
+    "d3-scale": "^2.0.0",
+    "d3-selection": "^1.3.0"
   }
 }
