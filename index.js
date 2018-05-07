@@ -1,1 +1,1 @@
-export { sliderHorizontal } from "./src/slider.js";
+export { sliderHorizontal } from './src/slider.js';
