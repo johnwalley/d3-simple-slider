@@ -20,12 +20,16 @@ function slider() {
   var marks = null;
   var tickFormat = null;
   var ticks = null;
+  var displayFormat = null;
 
   var listeners = dispatch('onchange', 'start', 'end', 'drag');
 
   var selection = null;
   var scale = null;
   var identityClamped = null;
+
+  var handleSelection = null;
+  var textSelection = null;
 
   function slider(context) {
     selection = context.selection ? context.selection() : context;
@@ -49,6 +53,7 @@ function slider() {
       .clamp(true)(value);
 
     tickFormat = tickFormat || scale.tickFormat();
+    displayFormat = displayFormat || scale.tickFormat();
 
     var axis = selection.selectAll('.axis').data([null]);
 
@@ -186,8 +191,12 @@ function slider() {
 
       updateHandle(newValue);
       listeners.call('end', slider, newValue);
-      updateValue(newValue);
+      updateValue(newValue, true);
     }
+
+    textSelection = selection.select(".parameter-value text");
+    handleSelection = selection.select('.parameter-value');    
+  
   }
 
   function fadeTickText() {
@@ -231,18 +240,19 @@ function slider() {
     return newValue;
   }
 
-  function updateValue(newValue) {
+  function updateValue(newValue, notifyListener) {
     if (value !== newValue) {
       value = newValue;
-      listeners.call('onchange', slider, newValue);
+      if (notifyListener) {
+        listeners.call('onchange', slider, newValue);
+      }
       fadeTickText();
     }
   }
 
+
   function updateHandle(newValue, animate) {
     animate = typeof animate !== 'undefined' ? animate : false;
-
-    var handleSelection = selection.select('.parameter-value');
 
     if (animate) {
       handleSelection = handleSelection
@@ -254,7 +264,7 @@ function slider() {
     handleSelection.attr('transform', 'translate(' + scale(newValue) + ',0)');
 
     if (displayValue) {
-      selection.select('.parameter-value text').text(tickFormat(newValue));
+      textSelection.text(displayFormat(newValue));
     }
   }
 
@@ -288,6 +298,12 @@ function slider() {
     return slider;
   };
 
+  slider.displayFormat = function(_) {
+    if (!arguments.length) return displayFormat;
+    displayFormat = _;
+    return slider;
+  };  
+
   slider.ticks = function(_) {
     if (!arguments.length) return ticks;
     ticks = _;
@@ -300,10 +316,21 @@ function slider() {
     var newValue = alignedValue(scale.invert(pos));
 
     updateHandle(newValue, true);
-    updateValue(newValue);
+    updateValue(newValue, true);
 
     return slider;
   };
+
+  slider.silentValue = function(_) {
+    if (!arguments.length) return value;
+    var pos = identityClamped(scale(_));
+    var newValue = alignedValue(scale.invert(pos));
+
+    updateHandle(newValue, false);
+    updateValue(newValue, false);
+
+    return slider;
+  };  
 
   slider.default = function(_) {
     if (!arguments.length) return defaultValue;
