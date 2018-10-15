@@ -172,7 +172,7 @@ function slider() {
 
       updateHandle(newValue);
       listeners.call('start', slider, newValue);
-      updateValue(newValue);
+      updateValue(newValue, true);
     }
 
     function dragged() {
@@ -181,7 +181,7 @@ function slider() {
 
       updateHandle(newValue);
       listeners.call('drag', slider, newValue);
-      updateValue(newValue);
+      updateValue(newValue, true);
     }
 
     function dragended() {
