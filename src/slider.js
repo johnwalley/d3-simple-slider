@@ -53,7 +53,7 @@ function slider() {
       .clamp(true)(value);
 
     tickFormat = tickFormat || scale.tickFormat();
-    displayFormat = displayFormat || scale.tickFormat();
+    displayFormat = displayFormat || tickFormat || scale.tickFormat();
 
     var axis = selection.selectAll('.axis').data([null]);
 
