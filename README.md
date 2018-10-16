@@ -58,19 +58,19 @@ d3
 
 The orientation of a slider is fixed; to change the orientation, remove the old slider and create a new slider.
 
-<a name="sliderHorizontal" href="#sliderHorizontal">#</a> d3.<b>sliderHorizontal</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L353 'Source')
+<a name="sliderHorizontal" href="#sliderHorizontal">#</a> d3.<b>sliderHorizontal</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L380 'Source')
 
 Constructs a new horizontal slider generator.
 
-<a name="sliderVertical" href="#sliderVertical">#</a> d3.<b>sliderVertical</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L353 'Source')
+<a name="sliderVertical" href="#sliderVertical">#</a> d3.<b>sliderVertical</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L380 'Source')
 
 Constructs a new vertical slider generator. _Note this function is not yet implemented_.
 
-<a name="_slider" href="#_slider">#</a> <i>slider</i>(<i>context</i>) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L30 'Source')
+<a name="_slider" href="#_slider">#</a> <i>slider</i>(<i>context</i>) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L34 'Source')
 
 Render the slider to the given _context_, which may be either a [selection](https://github.com/d3/d3-selection) of SVG containers (either SVG or G elements) or a corresponding [transition](https://github.com/d3/d3-transition).
 
-<a name="slider_ticks" href="#slider_ticks">#</a> <i>slider</i>.<b>ticks</b>(<i>count</i>) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L291 'Source')
+<a name="slider_ticks" href="#slider_ticks">#</a> <i>slider</i>.<b>ticks</b>(<i>count</i>) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L307 'Source')
 
 To generate twenty ticks:
 
@@ -78,7 +78,7 @@ To generate twenty ticks:
 slider.ticks(20);
 ```
 
-<a name="slider_tickFormat" href="#slider_tickFormat">#</a> <i>slider</i>.<b>tickFormat</b>([<i>format</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L285 'Source')
+<a name="slider_tickFormat" href="#slider_tickFormat">#</a> <i>slider</i>.<b>tickFormat</b>([<i>format</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L295 'Source')
 
 If _format_ is specified, sets the tick format function and returns the slider. If _format_ is not specified, returns the current format function, which defaults to null. A null format indicates that the slider's default formatter should be used.
 
@@ -88,19 +88,46 @@ See [d3-format](https://github.com/d3/d3-format) and [d3-time-format](https://gi
 slider.tickFormat(d3.format(',.0f'));
 ```
 
-<a name="slider_width" href="#slider_width">#</a> <i>slider</i>.<b>width</b>([<i>size</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L279 'Source')
+<a name="slider_displayFormat" href="#slider_displayFormat">#</a> <i>slider</i>.<b>displayFormat</b>([<i>format</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L301 'Source')
+
+If _format_ is specified, sets the function used to format the highlighted value and returns the slider. If _format_ is not specified, returns the current format function, which defaults to null. A null format indicates that the tickFormat should be used. If tickFormat is null then the slider's default formatter should be used.
+
+See [d3-format](https://github.com/d3/d3-format) and [d3-time-format](https://github.com/d3/d3-time-format) for help creating formatters. For example, to display integers with comma-grouping for thousands:
+
+```js
+slider.displayFormat(d3.format(',.0f'));
+```
+
+<a name="slider_value" href="#slider_value">#</a> <i>slider</i>.<b>value</b>([<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L313 'Source')
+
+If _value_ is specified, sets the value of the slider to the specified value and returns the slider. If _value_ is not specified, returns the current value.
+
+<a name="slider_silentValue" href="#slider_silentValue">#</a> <i>slider</i>.<b>silentValue</b>([<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L324 'Source')
+
+If _value_ is specified, sets the value of the slider to the specified value and returns the slider *without* invoking any listeners. If _value_ is not specified, returns the current value.
+
+<a name="slider_displayValue" href="#slider_displayValue">#</a> <i>slider</i>.<b>displayValue</b>([<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L366 'Source')
+
+If _value_ is specified, sets the whether the highlighted value of the slider should be shown and returns the slider. If _value_ is not specified, returns the current value, which defaults to true.
+
+<a name="slider_handle" href="#slider_handle">#</a> <i>slider</i>.<b>handle</b>([<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L360 'Source')
+
+If _value_ is specified, sets the [SVG path definition](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d) used to render the slider handle and returns the slider. If _value_ is not specified, returns the current value, which defaults to 'M-5.5,-5.5v10l6,5.5l6,-5.5v-10z'.
+
+
+<a name="slider_width" href="#slider_width">#</a> <i>slider</i>.<b>width</b>([<i>size</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L289 'Source')
 
 If _size_ is specified, sets the width of the slider to the specified value and returns the slider. If _size_ is not specified, returns the current width, which defaults to 100.
 
-<a name="slider_min" href="#slider_min">#</a> <i>slider</i>.<b>min</b>([<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L261 'Source')
+<a name="slider_min" href="#slider_min">#</a> <i>slider</i>.<b>min</b>([<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L271 'Source')
 
 If _value_ is specified, sets the minimum value of the slider to the specified value and returns the slider. If _value_ is not specified, returns the current minimum value, which defaults to 0.
 
-<a name="slider_max" href="#slider_max">#</a> <i>slider</i>.<b>max</b>([<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L267 'Source')
+<a name="slider_max" href="#slider_max">#</a> <i>slider</i>.<b>max</b>([<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L277 'Source')
 
 If _value_ is specified, sets the maximum value of the slider to the specified value and returns the slider. If _value_ is not specified, returns the current maximum value, which defaults to 10.
 
-<a href="#slider_on" name="slider_on">#</a> <i>slider</i>.<b>on</b>(<i>typenames</i>, [<i>listener</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L345 'Source')
+<a href="#slider_on" name="slider_on">#</a> <i>slider</i>.<b>on</b>(<i>typenames</i>, [<i>listener</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L372 'Source')
 
 If _listener_ is specified, sets the event _listener_ for the specified _typenames_ and returns the slider. If an event listener was already registered for the same type and name, the existing listener is removed before the new listener is added. If _listener_ is null, removes the current event listeners for the specified _typenames_, if any. If _listener_ is not specified, returns the first currently-assigned listener matching the specified _typenames_, if any. When a specified event is dispatched, each _listener_ will be invoked with the same context and arguments as [_selection_.on](https://github.com/d3/d3-selection#selection_on) listeners: the current datum `d` and index `i`, with the `this` context as the current DOM element.
 
