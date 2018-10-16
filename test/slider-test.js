@@ -38,8 +38,17 @@ tape('slider.default(value) sets the default value', function(test) {
   test.end();
 });
 
-tape('sliderVertical() should throw not implemented error', function(test) {
-  test.throws(() => d3.sliderVertical(), /implemented/, "Should throw not implemented error");
+tape('sliderVertical(selection) produces the expected result', function(test) {
+  var bodyActual = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window
+    .document.body;
+  var bodyExpected = new jsdom.JSDOM(file('slider-horizontal.html')).window
+    .document.body;
+
+  d3.select(bodyActual)
+    .select('g')
+    .call(d3.sliderHorizontal());
+
+  test.equal(bodyActual.outerHTML, bodyExpected.outerHTML);
   test.end();
 });
 
@@ -48,12 +57,12 @@ tape('sliderHorizontal(selection) produces the expected result', function(
 ) {
   var bodyActual = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window
     .document.body;
-  var bodyExpected = new jsdom.JSDOM(file('slider.html')).window.document.body;
+  var bodyExpected = new jsdom.JSDOM(file('slider-vertical.html')).window
+    .document.body;
 
-  d3
-    .select(bodyActual)
+  d3.select(bodyActual)
     .select('g')
-    .call(d3.sliderHorizontal());
+    .call(d3.sliderVertical());
 
   test.equal(bodyActual.outerHTML, bodyExpected.outerHTML);
   test.end();

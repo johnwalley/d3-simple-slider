@@ -61,6 +61,16 @@
       </div>
     </div>
     <a id="setValue5" href="#">Reset</a>
+    <h1>Vertical example</h1>
+    <div class="row align-items-center">
+      <div class="col-sm-2">
+        <p id="value6"></p>
+      </div>
+      <div class="col-sm">
+        <div id="slider6"></div>
+      </div>
+    </div>
+    <a id="setValue6" href="#">Reset</a>
   </div>
 </body>
 
@@ -78,13 +88,13 @@
       d3.select("p#value1").text(d3.format('.2%')(val));
     });
 
-  var g = d3.select("div#slider1").append("svg")
+  var group1 = d3.select("div#slider1").append("svg")
     .attr("width", 500)
     .attr("height", 100)
     .append("g")
     .attr("transform", "translate(30,30)");
 
-  g.call(slider1);
+  group1.call(slider1);
 
   d3.select("p#value1").text(d3.format('.2%')(slider1.value()))
   d3.select("a#setValue1").on("click", () => { slider1.value(0.015); d3.event.preventDefault(); });
@@ -99,13 +109,13 @@
       d3.select("p#value2").text(val);
     });
 
-  var g = d3.select("div#slider2").append("svg")
+  var group2 = d3.select("div#slider2").append("svg")
     .attr("width", 500)
     .attr("height", 100)
     .append("g")
     .attr("transform", "translate(30,30)");
 
-  g.call(slider2);
+  group2.call(slider2);
 
   d3.select("p#value2").text((slider2.value()));
   d3.select("a#setValue2").on("click", () => { slider2.value(5); d3.event.preventDefault(); });
@@ -123,13 +133,13 @@
       d3.select("p#value3").text(d3.timeFormat('%Y')(val));
     });
 
-  var g = d3.select("div#slider3").append("svg")
+  var group3 = d3.select("div#slider3").append("svg")
     .attr("width", 500)
     .attr("height", 100)
     .append("g")
     .attr("transform", "translate(30,30)");
 
-  g.call(slider3);
+  group3.call(slider3);
 
   d3.select("p#value3").text(d3.timeFormat('%Y')(slider3.value()));
   d3.select("a#setValue3").on("click", () => { slider3.value(new Date(1997, 11, 17)); d3.event.preventDefault(); });
@@ -148,13 +158,13 @@
       d3.select("p#value4").text(d3.format('.2%')(val));
     });
 
-  var g = d3.select("div#slider4").append("svg")
+  var group4 = d3.select("div#slider4").append("svg")
     .attr("width", 500)
     .attr("height", 100)
     .append("g")
     .attr("transform", "translate(30,30)");
 
-  g.call(slider4);
+  group4.call(slider4);
 
   d3.select("p#value4").text(d3.format('.2%')(slider4.value()))
   d3.select("a#setValue4").on("click", () => { slider4.value(0.015); d3.event.preventDefault(); });
@@ -168,21 +178,41 @@
       d3.select("p#value5").text(val);
     });
 
-  var g = d3.select("div#slider5").append("svg")
+  var group5 = d3.select("div#slider5").append("svg")
     .attr("width", 500)
     .attr("height", 100)
     .append("g")
     .attr("transform", "translate(30,30)");
 
-  g.call(slider5);
+  group5.call(slider5);
 
   setInterval(() => {
     slider5.width(Math.random() * 200 + 100);
-    g.transition().duration(1000).call(slider5);
+    group5.transition().duration(1000).call(slider5);
   }, 4000);
 
   d3.select("p#value5").text((slider5.value()));
   d3.select("a#setValue5").on("click", () => { slider5.value(5); d3.event.preventDefault(); });
+
+  var slider6 = d3.sliderVertical()
+    .min(0)
+    .max(10)
+    .step(1)
+    .height(300)
+    .on('onchange', val => {
+      d3.select("p#value6").text(val);
+    });
+
+  var group6 = d3.select("div#slider6").append("svg")
+    .attr("width", 100)
+    .attr("height", 360)
+    .append("g")
+    .attr("transform", "translate(60,30)");
+
+  group6.call(slider6);
+
+  d3.select("p#value6").text((slider6.value()));
+  d3.select("a#setValue6").on("click", () => { slider6.value(5); d3.event.preventDefault(); });
 </script>
 
 </html>
