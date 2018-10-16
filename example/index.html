@@ -87,7 +87,7 @@
   g.call(slider1);
 
   d3.select("p#value1").text(d3.format('.2%')(slider1.value()))
-  d3.select("a#setValue1").on("click", () => slider1.value(0.015));
+  d3.select("a#setValue1").on("click", () => { slider1.value(0.015); d3.event.preventDefault(); });
 
   var slider2 = d3.sliderHorizontal()
     .min(0)
@@ -108,7 +108,7 @@
   g.call(slider2);
 
   d3.select("p#value2").text((slider2.value()));
-  d3.select("a#setValue2").on("click", () => slider2.value(5));
+  d3.select("a#setValue2").on("click", () => { slider2.value(5); d3.event.preventDefault(); });
 
   var data3 = d3.range(0, 10).map(function (d) { return new Date(1995 + d, 10, 3); });
 
@@ -132,7 +132,7 @@
   g.call(slider3);
 
   d3.select("p#value3").text(d3.timeFormat('%Y')(slider3.value()));
-  d3.select("a#setValue3").on("click", () => slider3.value(new Date(1997, 11, 17)));
+  d3.select("a#setValue3").on("click", () => { slider3.value(new Date(1997, 11, 17)); d3.event.preventDefault(); });
 
   var data4 = [0.20, 0.22, 0.24, 0.26, 0.28, 0.30, 1];
 
@@ -157,7 +157,7 @@
   g.call(slider4);
 
   d3.select("p#value4").text(d3.format('.2%')(slider4.value()))
-  d3.select("a#setValue4").on("click", () => slider4.value(0.015));
+  d3.select("a#setValue4").on("click", () => { slider4.value(0.015); d3.event.preventDefault(); });
 
   var slider5 = d3.sliderHorizontal()
     .min(0)
@@ -182,7 +182,7 @@
   }, 4000);
 
   d3.select("p#value5").text((slider5.value()));
-  d3.select("a#setValue5").on("click", () => slider5.value(5));
+  d3.select("a#setValue5").on("click", () => { slider5.value(5); d3.event.preventDefault(); });
 </script>
 
 </html>
