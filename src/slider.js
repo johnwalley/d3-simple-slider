@@ -380,3 +380,7 @@ function slider() {
 export function sliderHorizontal() {
   return slider();
 }
+
+export function sliderVertical() {
+  throw new Error('Not implemented');
+}

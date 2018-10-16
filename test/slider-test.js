@@ -38,6 +38,11 @@ tape('slider.default(value) sets the default value', function(test) {
   test.end();
 });
 
+tape('sliderVertical() should throw not implemented error', function(test) {
+  test.throws(() => d3.sliderVertical(), /implemented/, "Should throw not implemented error");
+  test.end();
+});
+
 tape('sliderHorizontal(selection) produces the expected result', function(
   test
 ) {
