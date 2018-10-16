@@ -194,9 +194,8 @@ function slider() {
       updateValue(newValue, true);
     }
 
-    textSelection = selection.select(".parameter-value text");
-    handleSelection = selection.select('.parameter-value');    
-  
+    textSelection = selection.select('.parameter-value text');
+    handleSelection = selection.select('.parameter-value');
   }
 
   function fadeTickText() {
@@ -250,18 +249,18 @@ function slider() {
     }
   }
 
-
   function updateHandle(newValue, animate) {
     animate = typeof animate !== 'undefined' ? animate : false;
 
     if (animate) {
-      handleSelection = handleSelection
+      handleSelection
         .transition()
         .ease(easeQuadOut)
-        .duration(UPDATE_DURATION);
+        .duration(UPDATE_DURATION)
+        .attr('transform', 'translate(' + scale(newValue) + ',0)');
+    } else {
+      handleSelection.attr('transform', 'translate(' + scale(newValue) + ',0)');
     }
-
-    handleSelection.attr('transform', 'translate(' + scale(newValue) + ',0)');
 
     if (displayValue) {
       textSelection.text(displayFormat(newValue));
@@ -302,7 +301,7 @@ function slider() {
     if (!arguments.length) return displayFormat;
     displayFormat = _;
     return slider;
-  };  
+  };
 
   slider.ticks = function(_) {
     if (!arguments.length) return ticks;
@@ -330,7 +329,7 @@ function slider() {
     updateValue(newValue, false);
 
     return slider;
-  };  
+  };
 
   slider.default = function(_) {
     if (!arguments.length) return defaultValue;
