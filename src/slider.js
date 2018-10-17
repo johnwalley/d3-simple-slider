@@ -1,5 +1,5 @@
 import { scan } from 'd3-array';
-import { axisBottom, axisLeft } from 'd3-axis';
+import { axisTop, axisRight, axisBottom, axisLeft } from 'd3-axis';
 import { dispatch } from 'd3-dispatch';
 import { drag } from 'd3-drag';
 import { easeQuadOut } from 'd3-ease';
@@ -8,6 +8,19 @@ import { event, select } from 'd3-selection';
 
 var UPDATE_DURATION = 200;
 
+var top = 1;
+var right = 2;
+var bottom = 3;
+var left = 4;
+
+function translateX(x) {
+  return 'translate(' + x + ',0)';
+}
+
+function translateY(y) {
+  return 'translate(0,' + y + ')';
+}
+
 function slider(orientation) {
   var value = 0;
   var defaultValue = 0;
@@ -15,10 +28,7 @@ function slider(orientation) {
   var width = 100;
   var height = 100;
   var displayValue = true;
-  var handle =
-    orientation === 'horizontal'
-      ? 'M-5.5,-5.5v10l6,5.5l6,-5.5v-10z'
-      : 'M5.5,-5.5h-10l-5.5,6l5.5,6h10z';
+  var handle = 'M-5.5,-5.5v10l6,5.5l6,-5.5v-10z';
   var step = null;
   var tickValues = null;
   var marks = null;
@@ -32,6 +42,33 @@ function slider(orientation) {
   var scale = null;
   var identityClamped = null;
 
+  var k = orientation === top || orientation === left ? -1 : 1;
+  var x = orientation === left || orientation === right ? 'y' : 'x';
+  var y = orientation === left || orientation === right ? 'x' : 'y';
+
+  var transformAlong =
+    orientation === top || orientation === bottom ? translateX : translateY;
+
+  var transformAcross =
+    orientation === top || orientation === bottom ? translateY : translateX;
+
+  var axisFunction = null;
+
+  switch (orientation) {
+    case top:
+      axisFunction = axisTop;
+      break;
+    case right:
+      axisFunction = axisRight;
+      break;
+    case bottom:
+      axisFunction = axisBottom;
+      break;
+    case left:
+      axisFunction = axisLeft;
+      break;
+  }
+
   var handleSelection = null;
   var textSelection = null;
 
@@ -42,7 +79,10 @@ function slider(orientation) {
 
     scale = scale
       .domain(domain)
-      .range([0, orientation === 'horizontal' ? width : height])
+      .range([
+        0,
+        orientation === top || orientation === bottom ? width : height,
+      ])
       .clamp(true);
 
     identityClamped = scaleLinear()
@@ -64,10 +104,7 @@ function slider(orientation) {
     axis
       .enter()
       .append('g')
-      .attr(
-        'transform',
-        orientation === 'horizontal' ? 'translate(0,7)' : 'translate(-7,0)'
-      )
+      .attr('transform', transformAcross(k * 7))
       .attr('class', 'axis');
 
     var slider = selection.selectAll('.slider').data([null]);
@@ -76,8 +113,12 @@ function slider(orientation) {
       .enter()
       .append('g')
       .attr('class', 'slider')
-      .attr('cursor', orientation === 'horizontal' ? 'ew-resize' : 'ns-resize')
-      .attr('transform', 'translate(0,0)')
+      .attr(
+        'cursor',
+        orientation === top || orientation === bottom
+          ? 'ew-resize'
+          : 'ns-resize'
+      )
       .call(
         drag()
           .on('start', dragstarted)
@@ -88,10 +129,6 @@ function slider(orientation) {
     sliderEnter
       .append('line')
       .attr('class', 'track')
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr('x2', 0)
-      .attr('y2', 0)
       .attr('stroke', '#bbb')
       .attr('stroke-width', 6)
       .attr('stroke-linecap', 'round');
@@ -99,10 +136,6 @@ function slider(orientation) {
     sliderEnter
       .append('line')
       .attr('class', 'track-inset')
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr('x2', 0)
-      .attr('y2', 0)
       .attr('stroke', '#eee')
       .attr('stroke-width', 4)
       .attr('stroke-linecap', 'round');
@@ -110,10 +143,6 @@ function slider(orientation) {
     sliderEnter
       .append('line')
       .attr('class', 'track-overlay')
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr('x2', 0)
-      .attr('y2', 0)
       .attr('stroke', 'transparent')
       .attr('stroke-width', 40)
       .attr('stroke-linecap', 'round')
@@ -122,17 +151,20 @@ function slider(orientation) {
     var handleEnter = sliderEnter
       .append('g')
       .attr('class', 'parameter-value')
-      .attr(
-        'transform',
-        orientation === 'horizontal'
-          ? 'translate(' + scale(value) + ',0)'
-          : 'translate(0,' + scale(value) + ')'
-      )
+      .attr('transform', transformAlong(scale(value)))
       .attr('font-family', 'sans-serif')
-      .attr('text-anchor', orientation === 'horizontal' ? 'middle' : 'end');
+      .attr(
+        'text-anchor',
+        orientation === right
+          ? 'start'
+          : orientation === left
+            ? 'end'
+            : 'middle'
+      );
 
     handleEnter
       .append('path')
+      .attr('transform', 'rotate(' + (orientation + 1) * 90 + ')')
       .attr('d', handle)
       .attr('fill', 'white')
       .attr('stroke', '#777');
@@ -140,33 +172,28 @@ function slider(orientation) {
     if (displayValue) {
       handleEnter
         .append('text')
-        .attr('font-size', 10)
-        .attr('x', orientation === 'horizontal' ? 0 : -27)
-        .attr('y', orientation === 'horizontal' ? 27 : 0)
-        .attr('dy', orientation === 'horizontal' ? '.71em' : '.4em')
+        .attr('font-size', 10) // TODO: Remove coupling to font-size in d3-axis
+        .attr(y, k * 27)
+        .attr(
+          'dy',
+          orientation === top
+            ? '0em'
+            : orientation === bottom
+              ? '.71em'
+              : '.32em'
+        )
         .text(tickFormat(value));
     }
 
-    if (orientation === 'horizontal') {
-      context.select('.track').attr('x2', scale.range()[1]);
-      context.select('.track-inset').attr('x2', scale.range()[1]);
-      context.select('.track-overlay').attr('x2', scale.range()[1]);
-    } else {
-      context.select('.track').attr('y2', scale.range()[1]);
-      context.select('.track-inset').attr('y2', scale.range()[1]);
-      context.select('.track-overlay').attr('y2', scale.range()[1]);
-    }
+    context.select('.track').attr(x + '2', scale.range()[1]);
+    context.select('.track-inset').attr(x + '2', scale.range()[1]);
+    context.select('.track-overlay').attr(x + '2', scale.range()[1]);
 
     context.select('.axis').call(
-      orientation === 'horizontal'
-        ? axisBottom(scale)
-            .tickFormat(tickFormat)
-            .ticks(ticks)
-            .tickValues(tickValues)
-        : axisLeft(scale)
-            .tickFormat(tickFormat)
-            .ticks(ticks)
-            .tickValues(tickValues)
+      axisFunction(scale)
+        .tickFormat(tickFormat)
+        .ticks(ticks)
+        .tickValues(tickValues)
     );
 
     // https://bl.ocks.org/mbostock/4323929
@@ -175,31 +202,30 @@ function slider(orientation) {
       .select('.domain')
       .remove();
 
-    context
-      .select('.axis')
-      .attr(
-        'transform',
-        orientation === 'horizontal' ? 'translate(0,7)' : 'translate(-7,0)'
-      );
+    context.select('.axis').attr('transform', transformAcross(k * 7));
 
     context
       .selectAll('.axis text')
       .attr('fill', '#aaa')
-      .attr('x', orientation === 'horizontal' ? 0 : -20)
-      .attr('y', orientation === 'horizontal' ? 20 : 0)
-      .attr('dy', orientation === 'horizontal' ? '.71em' : '.4em')
-      .attr('text-anchor', orientation === 'horizontal' ? 'middle' : 'end');
+      .attr(y, k * 20)
+      .attr(
+        'dy',
+        orientation === top ? '0em' : orientation === bottom ? '.71em' : '.32em'
+      )
+      .attr(
+        'text-anchor',
+        orientation === right
+          ? 'start'
+          : orientation === left
+            ? 'end'
+            : 'middle'
+      );
 
     context.selectAll('.axis line').attr('stroke', '#aaa');
 
     context
       .select('.parameter-value')
-      .attr(
-        'transform',
-        orientation === 'horizontal'
-          ? 'translate(' + scale(value) + ',0)'
-          : 'translate(0,' + scale(value) + ')'
-      );
+      .attr('transform', transformAlong(scale(value)));
 
     fadeTickText();
 
@@ -207,7 +233,7 @@ function slider(orientation) {
       select(this).classed('active', true);
 
       var pos = identityClamped(
-        orientation === 'horizontal' ? event.x : event.y
+        orientation === bottom || orientation === top ? event.x : event.y
       );
 
       var newValue = alignedValue(scale.invert(pos));
@@ -219,7 +245,7 @@ function slider(orientation) {
 
     function dragged() {
       var pos = identityClamped(
-        orientation === 'horizontal' ? event.x : event.y
+        orientation === bottom || orientation === top ? event.x : event.y
       );
       var newValue = alignedValue(scale.invert(pos));
 
@@ -231,7 +257,7 @@ function slider(orientation) {
     function dragended() {
       select(this).classed('active', false);
       var pos = identityClamped(
-        orientation === 'horizontal' ? event.x : event.y
+        orientation === bottom || orientation === top ? event.x : event.y
       );
       var newValue = alignedValue(scale.invert(pos));
 
@@ -305,19 +331,9 @@ function slider(orientation) {
         .transition()
         .ease(easeQuadOut)
         .duration(UPDATE_DURATION)
-        .attr(
-          'transform',
-          orientation === 'horizontal'
-            ? 'translate(' + scale(newValue) + ',0)'
-            : 'translate(0,' + scale(newValue) + ')'
-        );
+        .attr('transform', transformAlong(scale(newValue)));
     } else {
-      handleSelection.attr(
-        'transform',
-        orientation === 'horizontal'
-          ? 'translate(' + scale(newValue) + ',0)'
-          : 'translate(0,' + scale(newValue) + ')'
-      );
+      handleSelection.attr('transform', transformAlong(scale(newValue)));
     }
 
     if (displayValue) {
@@ -441,9 +457,25 @@ function slider(orientation) {
 }
 
 export function sliderHorizontal() {
-  return slider('horizontal');
+  return slider(bottom);
 }
 
 export function sliderVertical() {
-  return slider('vertical');
+  return slider(left);
+}
+
+export function sliderTop() {
+  return slider(top);
+}
+
+export function sliderRight() {
+  return slider(right);
+}
+
+export function sliderBottom() {
+  return slider(bottom);
+}
+
+export function sliderLeft() {
+  return slider(left);
 }

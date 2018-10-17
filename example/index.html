@@ -71,6 +71,26 @@
       </div>
     </div>
     <a id="setValue6" href="#">Reset</a>
+    <h1>Top example</h1>
+    <div class="row align-items-center">
+      <div class="col-sm-2">
+        <p id="value7"></p>
+      </div>
+      <div class="col-sm">
+        <div id="slider7"></div>
+      </div>
+    </div>
+    <a id="setValue7" href="#">Reset</a>
+    <h1>Right example</h1>
+    <div class="row align-items-center">
+      <div class="col-sm-2">
+        <p id="value8"></p>
+      </div>
+      <div class="col-sm">
+        <div id="slider8"></div>
+      </div>
+    </div>
+    <a id="setValue8" href="#">Reset</a>
   </div>
 </body>
 
@@ -213,6 +233,46 @@
 
   d3.select("p#value6").text((slider6.value()));
   d3.select("a#setValue6").on("click", () => { slider6.value(5); d3.event.preventDefault(); });
+
+  var slider7 = d3.sliderTop()
+    .min(0)
+    .max(10)
+    .step(1)
+    .height(300)
+    .on('onchange', val => {
+      d3.select("p#value7").text(val);
+    });
+
+  var group7 = d3.select("div#slider7").append("svg")
+    .attr("width", 300)
+    .attr("height", 100)
+    .append("g")
+    .attr("transform", "translate(30,60)");
+
+  group7.call(slider7);
+
+  d3.select("p#value7").text((slider7.value()));
+  d3.select("a#setValue7").on("click", () => { slider7.value(5); d3.event.preventDefault(); });
+
+  var slider8 = d3.sliderRight()
+    .min(0)
+    .max(10)
+    .step(1)
+    .height(300)
+    .on('onchange', val => {
+      d3.select("p#value8").text(val);
+    });
+
+  var group8 = d3.select("div#slider8").append("svg")
+    .attr("width", 100)
+    .attr("height", 360)
+    .append("g")
+    .attr("transform", "translate(60,30)");
+
+  group8.call(slider8);
+
+  d3.select("p#value8").text((slider8.value()));
+  d3.select("a#setValue8").on("click", () => { slider8.value(5); d3.event.preventDefault(); });
 </script>
 
 </html>

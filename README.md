@@ -59,11 +59,27 @@ The orientation of a slider is fixed; to change the orientation, remove the old 
 
 <a name="sliderHorizontal" href="#sliderHorizontal">#</a> d3.<b>sliderHorizontal</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L442 'Source')
 
-Constructs a new horizontal slider generator.
+Constructs a new horizontal slider generator. _Note that this is equivalent to [`sliderBottom`](#sliderBottom)._
 
 <a name="sliderVertical" href="#sliderVertical">#</a> d3.<b>sliderVertical</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L447 'Source')
 
-Constructs a new vertical slider generator.
+Constructs a new vertical slider generator. _Note that this is equivalent to [`sliderLeft`](#sliderLeft)._
+
+<a name="sliderTop" href="#sliderTop">#</a> d3.<b>sliderTop</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L442 'Source')
+
+Constructs a new horizontal slider generator. Ticks on top.
+
+<a name="sliderRight" href="#sliderRight">#</a> d3.<b>sliderRight</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L447 'Source')
+
+Constructs a new vertical slider generator. Ticks to the right;
+
+<a name="sliderBottom" href="#sliderBottom">#</a> d3.<b>sliderBottom</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L442 'Source')
+
+Constructs a new horizontal slider generator. Ticks on the bottom.
+
+<a name="sliderLeft" href="#sliderLeft">#</a> d3.<b>sliderLeft</b>() [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L447 'Source')
+
+Constructs a new vertical slider generator. Ticks to the left;
 
 <a name="_slider" href="#_slider">#</a> <i>slider</i>(<i>context</i>) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L38 'Source')
 

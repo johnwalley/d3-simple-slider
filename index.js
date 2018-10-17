@@ -1,1 +1,8 @@
-export { sliderHorizontal, sliderVertical } from './src/slider.js';
+export {
+  sliderHorizontal,
+  sliderVertical,
+  sliderTop,
+  sliderRight,
+  sliderBottom,
+  sliderLeft,
+} from './src/slider.js';
