@@ -1,6 +1,6 @@
 {
   "name": "d3-simple-slider",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Renders an SVG slider",
   "keywords": [
     "d3",
@@ -25,9 +25,18 @@
     "pretest": "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -g d3-array:d3,d3-axis:d3,d3-dispatch:d3,d3-drag:d3,d3-ease:d3,d3-scale:d3,d3-selection:d3 -n d3 -o build/d3-simple-slider.js --extend -- index.js",
     "test": "tape 'test/**/*-test.js' && eslint index.js src",
     "prepublish": "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-simple-slider.js -c -m -o build/d3-simple-slider.min.js",
-    "postpublish": "git push && git push --tags && zip -j build/d3-simple-slider.zip -- LICENSE README.md build/d3-simple-slider.js build/d3-simple-slider.min.js"
+    "postpublish": "git push && git push --tags && zip -j build/d3-simple-slider.zip -- LICENSE README.md build/d3-simple-slider.js build/d3-simple-slider.min.js",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@storybook/html": "^4.0.0-rc.1",
+    "babel-loader": "^8.0.4",
+    "d3-axis": "^1.0.12",
+    "d3-format": "^1.3.2",
+    "d3-scale": "^2.1.2",
+    "d3-time-format": "^2.1.3",
     "eslint": "^5.7.0",
     "jsdom": "^12.2.0",
     "package-preamble": "^0.1.0",
@@ -37,12 +46,10 @@
   },
   "dependencies": {
     "d3-array": "^1.2.4",
-    "d3-axis": "^1.0.12",
     "d3-brush": "^1.0.6",
     "d3-dispatch": "^1.0.5",
     "d3-drag": "^1.2.3",
     "d3-ease": "^1.0.5",
-    "d3-scale": "^2.1.2",
     "d3-selection": "^1.3.2"
   }
 }
