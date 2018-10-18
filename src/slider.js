@@ -1,4 +1,4 @@
-import { scan } from 'd3-array';
+import { min, max, scan } from 'd3-array';
 import { axisTop, axisRight, axisBottom, axisLeft } from 'd3-axis';
 import { dispatch } from 'd3-dispatch';
 import { drag } from 'd3-drag';
@@ -7,6 +7,7 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import { event, select } from 'd3-selection';
 
 var UPDATE_DURATION = 200;
+var SLIDER_END_PADDING = 8;
 
 var top = 1;
 var right = 2;
@@ -21,7 +22,9 @@ function translateY(y) {
   return 'translate(0,' + y + ')';
 }
 
-function slider(orientation) {
+function slider(orientation, scale) {
+  scale = typeof scale !== 'undefined' ? scale : null;
+
   var value = 0;
   var defaultValue = 0;
   var domain = [0, 10];
@@ -39,7 +42,6 @@ function slider(orientation) {
   var listeners = dispatch('onchange', 'start', 'end', 'drag');
 
   var selection = null;
-  var scale = null;
   var identityClamped = null;
 
   var k = orientation === top || orientation === left ? -1 : 1;
@@ -75,15 +77,20 @@ function slider(orientation) {
   function slider(context) {
     selection = context.selection ? context.selection() : context;
 
-    scale = domain[0] instanceof Date ? scaleTime() : scaleLinear();
+    if (scale) {
+      domain = [min(scale.domain()), max(scale.domain())];
+      scale = scale.clamp(true);
+    } else {
+      scale = domain[0] instanceof Date ? scaleTime() : scaleLinear();
 
-    scale = scale
-      .domain(domain)
-      .range([
-        0,
-        orientation === top || orientation === bottom ? width : height,
-      ])
-      .clamp(true);
+      scale = scale
+        .domain(domain)
+        .range([
+          0,
+          orientation === top || orientation === bottom ? width : height,
+        ])
+        .clamp(true);
+    }
 
     identityClamped = scaleLinear()
       .range(scale.range())
@@ -129,6 +136,7 @@ function slider(orientation) {
     sliderEnter
       .append('line')
       .attr('class', 'track')
+      .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
       .attr('stroke', '#bbb')
       .attr('stroke-width', 6)
       .attr('stroke-linecap', 'round');
@@ -136,6 +144,7 @@ function slider(orientation) {
     sliderEnter
       .append('line')
       .attr('class', 'track-inset')
+      .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
       .attr('stroke', '#eee')
       .attr('stroke-width', 4)
       .attr('stroke-linecap', 'round');
@@ -143,6 +152,7 @@ function slider(orientation) {
     sliderEnter
       .append('line')
       .attr('class', 'track-overlay')
+      .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
       .attr('stroke', 'transparent')
       .attr('stroke-width', 40)
       .attr('stroke-linecap', 'round')
@@ -185,9 +195,15 @@ function slider(orientation) {
         .text(tickFormat(value));
     }
 
-    context.select('.track').attr(x + '2', scale.range()[1]);
-    context.select('.track-inset').attr(x + '2', scale.range()[1]);
-    context.select('.track-overlay').attr(x + '2', scale.range()[1]);
+    context
+      .select('.track')
+      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+    context
+      .select('.track-inset')
+      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+    context
+      .select('.track-overlay')
+      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
 
     context.select('.axis').call(
       axisFunction(scale)
@@ -456,26 +472,26 @@ function slider(orientation) {
   return slider;
 }
 
-export function sliderHorizontal() {
-  return slider(bottom);
+export function sliderHorizontal(scale) {
+  return slider(bottom, scale);
 }
 
-export function sliderVertical() {
-  return slider(left);
+export function sliderVertical(scale) {
+  return slider(left, scale);
 }
 
-export function sliderTop() {
-  return slider(top);
+export function sliderTop(scale) {
+  return slider(top, scale);
 }
 
-export function sliderRight() {
-  return slider(right);
+export function sliderRight(scale) {
+  return slider(right, scale);
 }
 
-export function sliderBottom() {
-  return slider(bottom);
+export function sliderBottom(scale) {
+  return slider(bottom, scale);
 }
 
-export function sliderLeft() {
-  return slider(left);
+export function sliderLeft(scale) {
+  return slider(left, scale);
 }
