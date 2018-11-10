@@ -1,10 +1,10 @@
-import { min, max, scan } from "d3-array";
-import { axisTop, axisRight, axisBottom, axisLeft } from "d3-axis";
-import { dispatch } from "d3-dispatch";
-import { drag } from "d3-drag";
-import { easeQuadOut } from "d3-ease";
-import { scaleLinear, scaleTime } from "d3-scale";
-import { event, select } from "d3-selection";
+import { min, max, scan } from 'd3-array';
+import { axisTop, axisRight, axisBottom, axisLeft } from 'd3-axis';
+import { dispatch } from 'd3-dispatch';
+import { drag } from 'd3-drag';
+import { easeQuadOut } from 'd3-ease';
+import { scaleLinear, scaleTime } from 'd3-scale';
+import { event, select } from 'd3-selection';
 
 var UPDATE_DURATION = 200;
 var SLIDER_END_PADDING = 8;
@@ -15,15 +15,15 @@ var bottom = 3;
 var left = 4;
 
 function translateX(x) {
-  return "translate(" + x + ",0)";
+  return 'translate(' + x + ',0)';
 }
 
 function translateY(y) {
-  return "translate(0," + y + ")";
+  return 'translate(0,' + y + ')';
 }
 
 function slider(orientation, scale) {
-  scale = typeof scale !== "undefined" ? scale : null;
+  scale = typeof scale !== 'undefined' ? scale : null;
 
   var value = 0;
   var defaultValue = 0;
@@ -31,7 +31,7 @@ function slider(orientation, scale) {
   var width = 100;
   var height = 100;
   var displayValue = true;
-  var handle = "M-5.5,-5.5v10l6,5.5l6,-5.5v-10z";
+  var handle = 'M-5.5,-5.5v10l6,5.5l6,-5.5v-10z';
   var step = null;
   var tickValues = null;
   var marks = null;
@@ -39,14 +39,14 @@ function slider(orientation, scale) {
   var ticks = null;
   var displayFormat = null;
 
-  var listeners = dispatch("onchange", "start", "end", "drag");
+  var listeners = dispatch('onchange', 'start', 'end', 'drag');
 
   var selection = null;
   var identityClamped = null;
 
   var k = orientation === top || orientation === left ? -1 : 1;
-  var x = orientation === left || orientation === right ? "y" : "x";
-  var y = orientation === left || orientation === right ? "x" : "y";
+  var x = orientation === left || orientation === right ? 'y' : 'x';
+  var y = orientation === left || orientation === right ? 'x' : 'y';
 
   var transformAlong =
     orientation === top || orientation === bottom ? translateX : translateY;
@@ -87,7 +87,7 @@ function slider(orientation, scale) {
         .domain(domain)
         .range([
           0,
-          orientation === top || orientation === bottom ? width : height
+          orientation === top || orientation === bottom ? width : height,
         ])
         .clamp(true);
     }
@@ -106,106 +106,106 @@ function slider(orientation, scale) {
     tickFormat = tickFormat || scale.tickFormat();
     displayFormat = displayFormat || tickFormat || scale.tickFormat();
 
-    var axis = selection.selectAll(".axis").data([null]);
+    var axis = selection.selectAll('.axis').data([null]);
 
     axis
       .enter()
-      .append("g")
-      .attr("transform", transformAcross(k * 7))
-      .attr("class", "axis");
+      .append('g')
+      .attr('transform', transformAcross(k * 7))
+      .attr('class', 'axis');
 
-    var slider = selection.selectAll(".slider").data([null]);
+    var slider = selection.selectAll('.slider').data([null]);
 
     var sliderEnter = slider
       .enter()
-      .append("g")
-      .attr("class", "slider")
+      .append('g')
+      .attr('class', 'slider')
       .attr(
-        "cursor",
+        'cursor',
         orientation === top || orientation === bottom
-          ? "ew-resize"
-          : "ns-resize"
+          ? 'ew-resize'
+          : 'ns-resize'
       )
       .call(
         drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended)
+          .on('start', dragstarted)
+          .on('drag', dragged)
+          .on('end', dragended)
       );
 
     sliderEnter
-      .append("line")
-      .attr("class", "track")
-      .attr(x + "1", scale.range()[0] - SLIDER_END_PADDING)
-      .attr("stroke", "#bbb")
-      .attr("stroke-width", 6)
-      .attr("stroke-linecap", "round");
+      .append('line')
+      .attr('class', 'track')
+      .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+      .attr('stroke', '#bbb')
+      .attr('stroke-width', 6)
+      .attr('stroke-linecap', 'round');
 
     sliderEnter
-      .append("line")
-      .attr("class", "track-inset")
-      .attr(x + "1", scale.range()[0] - SLIDER_END_PADDING)
-      .attr("stroke", "#eee")
-      .attr("stroke-width", 4)
-      .attr("stroke-linecap", "round");
+      .append('line')
+      .attr('class', 'track-inset')
+      .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+      .attr('stroke', '#eee')
+      .attr('stroke-width', 4)
+      .attr('stroke-linecap', 'round');
 
     sliderEnter
-      .append("line")
-      .attr("class", "track-overlay")
-      .attr(x + "1", scale.range()[0] - SLIDER_END_PADDING)
-      .attr("stroke", "transparent")
-      .attr("stroke-width", 40)
-      .attr("stroke-linecap", "round")
-      .merge(slider.select(".track-overlay"));
+      .append('line')
+      .attr('class', 'track-overlay')
+      .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+      .attr('stroke', 'transparent')
+      .attr('stroke-width', 40)
+      .attr('stroke-linecap', 'round')
+      .merge(slider.select('.track-overlay'));
 
     var handleEnter = sliderEnter
-      .append("g")
-      .attr("class", "parameter-value")
-      .attr("transform", transformAlong(scale(value)))
-      .attr("font-family", "sans-serif")
+      .append('g')
+      .attr('class', 'parameter-value')
+      .attr('transform', transformAlong(scale(value)))
+      .attr('font-family', 'sans-serif')
       .attr(
-        "text-anchor",
+        'text-anchor',
         orientation === right
-          ? "start"
+          ? 'start'
           : orientation === left
-          ? "end"
-          : "middle"
+          ? 'end'
+          : 'middle'
       );
 
     handleEnter
-      .append("path")
-      .attr("transform", "rotate(" + (orientation + 1) * 90 + ")")
-      .attr("d", handle)
-      .attr("fill", "white")
-      .attr("stroke", "#777");
+      .append('path')
+      .attr('transform', 'rotate(' + (orientation + 1) * 90 + ')')
+      .attr('d', handle)
+      .attr('fill', 'white')
+      .attr('stroke', '#777');
 
     if (displayValue) {
       handleEnter
-        .append("text")
-        .attr("font-size", 10) // TODO: Remove coupling to font-size in d3-axis
+        .append('text')
+        .attr('font-size', 10) // TODO: Remove coupling to font-size in d3-axis
         .attr(y, k * 27)
         .attr(
-          "dy",
+          'dy',
           orientation === top
-            ? "0em"
+            ? '0em'
             : orientation === bottom
-            ? ".71em"
-            : ".32em"
+            ? '.71em'
+            : '.32em'
         )
         .text(tickFormat(value));
     }
 
     context
-      .select(".track")
-      .attr(x + "2", scale.range()[1] + SLIDER_END_PADDING);
+      .select('.track')
+      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
     context
-      .select(".track-inset")
-      .attr(x + "2", scale.range()[1] + SLIDER_END_PADDING);
+      .select('.track-inset')
+      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
     context
-      .select(".track-overlay")
-      .attr(x + "2", scale.range()[1] + SLIDER_END_PADDING);
+      .select('.track-overlay')
+      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
 
-    context.select(".axis").call(
+    context.select('.axis').call(
       axisFunction(scale)
         .tickFormat(tickFormat)
         .ticks(ticks)
@@ -214,39 +214,39 @@ function slider(orientation, scale) {
 
     // https://bl.ocks.org/mbostock/4323929
     selection
-      .select(".axis")
-      .select(".domain")
+      .select('.axis')
+      .select('.domain')
       .remove();
 
-    context.select(".axis").attr("transform", transformAcross(k * 7));
+    context.select('.axis').attr('transform', transformAcross(k * 7));
 
     context
-      .selectAll(".axis text")
-      .attr("fill", "#aaa")
+      .selectAll('.axis text')
+      .attr('fill', '#aaa')
       .attr(y, k * 20)
       .attr(
-        "dy",
-        orientation === top ? "0em" : orientation === bottom ? ".71em" : ".32em"
+        'dy',
+        orientation === top ? '0em' : orientation === bottom ? '.71em' : '.32em'
       )
       .attr(
-        "text-anchor",
+        'text-anchor',
         orientation === right
-          ? "start"
+          ? 'start'
           : orientation === left
-          ? "end"
-          : "middle"
+          ? 'end'
+          : 'middle'
       );
 
-    context.selectAll(".axis line").attr("stroke", "#aaa");
+    context.selectAll('.axis line').attr('stroke', '#aaa');
 
     context
-      .select(".parameter-value")
-      .attr("transform", transformAlong(scale(value)));
+      .select('.parameter-value')
+      .attr('transform', transformAlong(scale(value)));
 
     fadeTickText();
 
     function dragstarted() {
-      select(this).classed("active", true);
+      select(this).classed('active', true);
 
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
@@ -255,7 +255,7 @@ function slider(orientation, scale) {
       var newValue = alignedValue(scale.invert(pos));
 
       updateHandle(newValue);
-      listeners.call("start", slider, newValue);
+      listeners.call('start', slider, newValue);
       updateValue(newValue, true);
     }
 
@@ -266,37 +266,37 @@ function slider(orientation, scale) {
       var newValue = alignedValue(scale.invert(pos));
 
       updateHandle(newValue);
-      listeners.call("drag", slider, newValue);
+      listeners.call('drag', slider, newValue);
       updateValue(newValue, true);
     }
 
     function dragended() {
-      select(this).classed("active", false);
+      select(this).classed('active', false);
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
       );
       var newValue = alignedValue(scale.invert(pos));
 
       updateHandle(newValue);
-      listeners.call("end", slider, newValue);
+      listeners.call('end', slider, newValue);
       updateValue(newValue, true);
     }
 
-    textSelection = selection.select(".parameter-value text");
-    handleSelection = selection.select(".parameter-value");
+    textSelection = selection.select('.parameter-value text');
+    handleSelection = selection.select('.parameter-value');
   }
 
   function fadeTickText() {
     if (displayValue) {
       var distances = [];
 
-      selection.selectAll(".axis .tick").each(function(d) {
+      selection.selectAll('.axis .tick').each(function(d) {
         distances.push(Math.abs(d - value));
       });
 
       var index = scan(distances);
 
-      selection.selectAll(".axis .tick text").attr("opacity", function(d, i) {
+      selection.selectAll('.axis .tick text').attr('opacity', function(d, i) {
         return i === index ? 0 : 1;
       });
     }
@@ -332,7 +332,7 @@ function slider(orientation, scale) {
       value = newValue;
 
       if (notifyListener) {
-        listeners.call("onchange", slider, newValue);
+        listeners.call('onchange', slider, newValue);
       }
 
       fadeTickText();
@@ -340,16 +340,16 @@ function slider(orientation, scale) {
   }
 
   function updateHandle(newValue, animate) {
-    animate = typeof animate !== "undefined" ? animate : false;
+    animate = typeof animate !== 'undefined' ? animate : false;
 
     if (animate) {
       handleSelection
         .transition()
         .ease(easeQuadOut)
         .duration(UPDATE_DURATION)
-        .attr("transform", transformAlong(scale(newValue)));
+        .attr('transform', transformAlong(scale(newValue)));
     } else {
-      handleSelection.attr("transform", transformAlong(scale(newValue)));
+      handleSelection.attr('transform', transformAlong(scale(newValue)));
     }
 
     if (displayValue) {
