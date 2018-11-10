@@ -38,6 +38,7 @@ function slider(orientation, scale) {
   var tickFormat = null;
   var ticks = null;
   var displayFormat = null;
+  var fill = null;
 
   var listeners = dispatch('onchange', 'start', 'end', 'drag');
 
@@ -72,6 +73,7 @@ function slider(orientation, scale) {
   }
 
   var handleSelection = null;
+  var fillSelection = null;
   var textSelection = null;
 
   function slider(context) {
@@ -149,6 +151,16 @@ function slider(orientation, scale) {
       .attr('stroke-width', 4)
       .attr('stroke-linecap', 'round');
 
+    if (fill) {
+      sliderEnter
+        .append('line')
+        .attr('class', 'track-fill')
+        .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+        .attr('stroke', fill)
+        .attr('stroke-width', 4)
+        .attr('stroke-linecap', 'round');
+    }
+
     sliderEnter
       .append('line')
       .attr('class', 'track-overlay')
@@ -198,9 +210,15 @@ function slider(orientation, scale) {
     context
       .select('.track')
       .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+
     context
       .select('.track-inset')
       .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+
+    if (fill) {
+      context.select('.track-fill').attr(x + '2', scale(value));
+    }
+
     context
       .select('.track-overlay')
       .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
@@ -284,6 +302,7 @@ function slider(orientation, scale) {
 
     textSelection = selection.select('.parameter-value text');
     handleSelection = selection.select('.parameter-value');
+    fillSelection = selection.select('.track-fill');
   }
 
   function fadeTickText() {
@@ -348,8 +367,20 @@ function slider(orientation, scale) {
         .ease(easeQuadOut)
         .duration(UPDATE_DURATION)
         .attr('transform', transformAlong(scale(newValue)));
+
+      if (fill) {
+        fillSelection
+          .transition()
+          .ease(easeQuadOut)
+          .duration(UPDATE_DURATION)
+          .attr(x + '1', scale(newValue));
+      }
     } else {
       handleSelection.attr('transform', transformAlong(scale(newValue)));
+
+      if (fill) {
+        fillSelection.attr(x + '2', scale(newValue));
+      }
     }
 
     if (displayValue) {
@@ -461,6 +492,12 @@ function slider(orientation, scale) {
   slider.displayValue = function(_) {
     if (!arguments.length) return displayValue;
     displayValue = _;
+    return slider;
+  };
+
+  slider.fill = function(_) {
+    if (!arguments.length) return fill;
+    fill = _;
     return slider;
   };
 
