@@ -86,6 +86,7 @@ storiesOf('Examples', module)
     svg.append('g').call(slider);
 
     const draw = selected => {
+      console.log(selected);
       barsEnter
         .merge(bars)
         .attr('fill', d => (d.year === selected ? '#bad80a' : '#e0e0e0'));
@@ -150,6 +151,32 @@ storiesOf('Examples', module)
 
     return div;
   });
+
+storiesOf('Range slider', module).add('simple', () => {
+  const div = document.createElement('div');
+
+  const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+  const slider = sliderBottom()
+    .min(min(data1))
+    .max(max(data1))
+    .width(300)
+    .tickFormat(format('.2%'))
+    .ticks(5)
+    .default([0.015, 0.02])
+    .fill('skyblue');
+
+  const g = select(div)
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  g.call(slider);
+
+  return div;
+});
 
 storiesOf('Alternative handles', module)
   .add('circle', () => {
