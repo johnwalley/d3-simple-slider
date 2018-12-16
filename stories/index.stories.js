@@ -164,7 +164,8 @@ storiesOf('Range slider', module).add('simple', () => {
     .tickFormat(format('.2%'))
     .ticks(5)
     .default([0.015, 0.02])
-    .fill('skyblue');
+    .fill('skyblue')
+    .displayValue(false);
 
   const g = select(div)
     .append('svg')
