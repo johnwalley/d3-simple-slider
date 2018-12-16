@@ -25,8 +25,8 @@ function translateY(y) {
 function slider(orientation, scale) {
   scale = typeof scale !== 'undefined' ? scale : null;
 
-  var value = 0;
-  var defaultValue = 0;
+  var value = [0];
+  var defaultValue = [0];
   var domain = [0, 10];
   var width = 100;
   var height = 100;
@@ -520,7 +520,13 @@ function slider(orientation, scale) {
   };
 
   slider.value = function(_) {
-    if (!arguments.length) return value;
+    if (!arguments.length) {
+      if (value.length === 1) {
+        return value[0];
+      }
+
+      return value;
+    }
 
     var pos = identityClamped(scale(_));
     var newValue = alignedValue(scale.invert(pos));
