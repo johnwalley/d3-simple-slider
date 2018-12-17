@@ -1,5 +1,6 @@
 # d3-simple-slider
 
+[![npm](https://img.shields.io/npm/v/d3-simple-slider.svg)](https://npmjs.com/package/d3-simple-slider)
 [![Build Status](https://travis-ci.org/johnwalley/d3-simple-slider.svg?branch=master)](https://travis-ci.org/johnwalley/d3-simple-slider)
 
 Render a simple interactive slider using SVG.
@@ -24,21 +25,23 @@ If you use NPM, `npm install d3-simple-slider`. Otherwise, download the [latest 
 <div id="slider"></div>
 
 <script>
-  var slider = d3.sliderHorizontal()
+  var slider = d3
+    .sliderHorizontal()
     .min(0)
     .max(10)
     .step(1)
     .width(300)
     .displayValue(false)
     .on('onchange', val => {
-      d3.select("#value").text(val);
+      d3.select('#value').text(val);
     });
 
-  d3.select("#slider").append("svg")
-    .attr("width", 500)
-    .attr("height", 100)
-    .append("g")
-    .attr("transform", "translate(30,30)")
+  d3.select('#slider')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)')
     .call(slider);
 </script>
 ```
