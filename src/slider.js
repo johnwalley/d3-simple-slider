@@ -230,7 +230,7 @@ function slider(orientation, scale) {
     if (fill) {
       context
         .select('.track-fill')
-        .attr(x + '2', value.length === 1 ? scale(value) : scale(value[1]));
+        .attr(x + '2', value.length === 1 ? scale(value[0]) : scale(value[1]));
     }
 
     context
@@ -439,7 +439,7 @@ function slider(orientation, scale) {
           )
           .attr(
             x + '2',
-            value.length === 1 ? scale(newValue) : scale(newValue[1])
+            value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
           );
       }
     } else {
@@ -460,7 +460,7 @@ function slider(orientation, scale) {
           )
           .attr(
             x + '2',
-            value.length === 1 ? scale(newValue) : scale(newValue[1])
+            value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
           );
       }
     }
