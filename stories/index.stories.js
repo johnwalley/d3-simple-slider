@@ -1,6 +1,6 @@
 import { document, console } from 'global';
 import { storiesOf } from '@storybook/html';
-import { select } from 'd3-selection';
+import { event, select } from 'd3-selection';
 import { format } from 'd3-format';
 import { timeFormat } from 'd3-time-format';
 import { min, max, range } from 'd3-array';
@@ -86,7 +86,6 @@ storiesOf('Examples', module)
     svg.append('g').call(slider);
 
     const draw = selected => {
-      console.log(selected);
       barsEnter
         .merge(bars)
         .attr('fill', d => (d.year === selected ? '#bad80a' : '#e0e0e0'));
@@ -155,17 +154,26 @@ storiesOf('Examples', module)
 storiesOf('Range slider', module).add('simple', () => {
   const div = document.createElement('div');
 
-  const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+  const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+  const defaultValue = [0.015, 0.02];
+
+  const p = select(div)
+    .append('p')
+    .attr('id', 'value')
+    .text(defaultValue.map(format('.2%')).join('-'));
 
   const slider = sliderBottom()
-    .min(min(data1))
-    .max(max(data1))
+    .min(min(data))
+    .max(max(data))
     .width(300)
     .tickFormat(format('.2%'))
     .ticks(5)
-    .default([0.015, 0.02])
+    .default(defaultValue)
     .fill('skyblue')
-    .displayValue(false);
+    .displayValue(true)
+    .on('onchange', val => {
+      p.text(val.map(format('.2%')).join('-'));
+    });
 
   const g = select(div)
     .append('svg')
@@ -175,6 +183,14 @@ storiesOf('Range slider', module).add('simple', () => {
     .attr('transform', 'translate(30,30)');
 
   g.call(slider);
+
+  const button = select(div)
+    .append('button')
+    .text('Reset')
+    .on('click', () => {
+      slider.value(defaultValue);
+      event.preventDefault();
+    });
 
   return div;
 });
