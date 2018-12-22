@@ -18,7 +18,7 @@ Inspired by The New York Times [Is It Better to Rent or Buy?](https://www.nytime
 If you use NPM, `npm install d3-simple-slider`. Otherwise, download the [latest release](https://github.com/johnwalley/d3-simple-slider/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3` global is exported:
 
 ```html
-<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://d3js.org/d3.v5.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
 
 <p id="value"></p>
