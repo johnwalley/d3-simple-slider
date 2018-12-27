@@ -452,4 +452,6 @@
       .attr('transform', `translate(30,${60 * i})`)
       .call(slider);
   });
+
+  d3.select('p#value-color-picker').text(`#${num2hex(rgb)}`);
 </script>
