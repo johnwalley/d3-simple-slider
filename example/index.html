@@ -73,12 +73,12 @@
 
 <script>
   // Simple
-  var dataNewYorkTimes1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+  var data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
   var sliderSimple = d3
     .sliderBottom()
-    .min(d3.min(dataNewYorkTimes1))
-    .max(d3.max(dataNewYorkTimes1))
+    .min(d3.min(data))
+    .max(d3.max(data))
     .width(300)
     .tickFormat(d3.format('.2%'))
     .ticks(5)
@@ -102,8 +102,8 @@
   // Step
   var sliderStep = d3
     .sliderBottom()
-    .min(d3.min(dataNewYorkTimes1))
-    .max(d3.max(dataNewYorkTimes1))
+    .min(d3.min(data))
+    .max(d3.max(data))
     .width(300)
     .tickFormat(d3.format('.2%'))
     .ticks(5)
@@ -126,18 +126,18 @@
   d3.select('p#value-step').text(d3.format('.2%')(sliderStep.value()));
 
   // Time
-  var dataNewYorkTimesTime = d3.range(0, 10).map(function(d) {
+  var dataTime = d3.range(0, 10).map(function(d) {
     return new Date(1995 + d, 10, 3);
   });
 
   var sliderTime = d3
     .sliderBottom()
-    .min(d3.min(dataNewYorkTimesTime))
-    .max(d3.max(dataNewYorkTimesTime))
+    .min(d3.min(dataTime))
+    .max(d3.max(dataTime))
     .step(1000 * 60 * 60 * 24 * 365)
     .width(300)
     .tickFormat(d3.timeFormat('%Y'))
-    .tickValues(dataNewYorkTimesTime)
+    .tickValues(dataTime)
     .default(new Date(1998, 10, 3))
     .on('onchange', val => {
       d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
@@ -158,8 +158,8 @@
   // Fill
   var sliderFill = d3
     .sliderBottom()
-    .min(d3.min(dataNewYorkTimes1))
-    .max(d3.max(dataNewYorkTimes1))
+    .min(d3.min(data))
+    .max(d3.max(data))
     .width(300)
     .tickFormat(d3.format('.2%'))
     .ticks(5)
@@ -184,8 +184,8 @@
   // Range
   var sliderRange = d3
     .sliderBottom()
-    .min(d3.min(dataNewYorkTimes1))
-    .max(d3.max(dataNewYorkTimes1))
+    .min(d3.min(data))
+    .max(d3.max(data))
     .width(300)
     .tickFormat(d3.format('.2%'))
     .ticks(5)
@@ -215,8 +215,8 @@
   // Vertical
   var sliderVertical = d3
     .sliderLeft()
-    .min(d3.min(dataNewYorkTimes1))
-    .max(d3.max(dataNewYorkTimes1))
+    .min(d3.min(data))
+    .max(d3.max(data))
     .height(300)
     .tickFormat(d3.format('.2%'))
     .ticks(5)
@@ -240,8 +240,8 @@
   // Alternative handle
   var sliderAlternativeHandle = d3
     .sliderBottom()
-    .min(d3.min(dataNewYorkTimes1))
-    .max(d3.max(dataNewYorkTimes1))
+    .min(d3.min(data))
+    .max(d3.max(data))
     .width(300)
     .tickFormat(d3.format('.2%'))
     .ticks(5)
@@ -271,8 +271,8 @@
   // Transition
   var sliderTransition = d3
     .sliderBottom()
-    .min(d3.min(dataNewYorkTimes1))
-    .max(d3.max(dataNewYorkTimes1))
+    .min(d3.min(data))
+    .max(d3.max(data))
     .width(300)
     .tickFormat(d3.format('.2%'))
     .ticks(5)
