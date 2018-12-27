@@ -38,6 +38,13 @@ tape('slider.default(value) sets the default value', function(test) {
   test.end();
 });
 
+tape('slider.default(value) sets the default range', function(test) {
+  var s = d3.sliderHorizontal().default([4, 8]);
+  test.deepEqual(s.value(), [4, 8]);
+  test.deepEqual(s.default(), [4, 8]);
+  test.end();
+});
+
 tape('sliderVertical(selection) produces the expected result', function(test) {
   var bodyActual = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window
     .document.body;
