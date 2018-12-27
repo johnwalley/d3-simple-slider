@@ -78,12 +78,27 @@ function slider(orientation, scale) {
   var fillSelection = null;
   var textSelection = null;
 
+  if (scale) {
+    domain = [min(scale.domain()), max(scale.domain())];
+
+    if (orientation === top || orientation === bottom) {
+      width = max(scale.range()) - min(scale.range());
+    } else {
+      height = max(scale.range()) - min(scale.range());
+    }
+
+    scale = scale.clamp(true);
+  }
+
   function slider(context) {
     selection = context.selection ? context.selection() : context;
 
     if (scale) {
-      domain = [min(scale.domain()), max(scale.domain())];
-      scale = scale.clamp(true);
+      scale = scale.range([
+        min(scale.range()),
+        min(scale.range()) +
+          (orientation === top || orientation === bottom ? width : height),
+      ]);
     } else {
       scale = domain[0] instanceof Date ? scaleTime() : scaleLinear();
 
@@ -273,7 +288,7 @@ function slider(orientation, scale) {
 
     context.selectAll('.axis line').attr('stroke', '#aaa');
 
-    handleSelection.attr('transform', function(d) {
+    context.selectAll('.parameter-value').attr('transform', function(d) {
       return transformAlong(scale(d));
     });
 

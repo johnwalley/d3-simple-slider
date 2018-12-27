@@ -1,4 +1,4 @@
-import { document, console } from 'global';
+import { document } from 'global';
 import { storiesOf } from '@storybook/html';
 import { event, select } from 'd3-selection';
 import { format } from 'd3-format';
@@ -9,8 +9,242 @@ import { axisRight } from 'd3-axis';
 import { symbol, symbolCircle, symbolSquare } from 'd3-shape';
 import { sliderBottom, sliderLeft } from '../src/slider';
 
+storiesOf('Basic functionality', module)
+  .add('Simple', () => {
+    const div = document.createElement('div');
+
+    const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderBottom()
+      .min(min(data))
+      .max(max(data))
+      .width(300)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default(0.015);
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+
+    g.call(slider);
+
+    return div;
+  })
+  .add('Step', () => {
+    const div = document.createElement('div');
+
+    const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderBottom()
+      .min(min(data))
+      .max(max(data))
+      .width(300)
+      .step(0.005)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default(0.015);
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+
+    g.call(slider);
+
+    return div;
+  })
+  .add('Time', () => {
+    const div = document.createElement('div');
+
+    const data = range(0, 10).map(function(d) {
+      return new Date(1995 + d, 10, 3);
+    });
+
+    const slider = sliderBottom()
+      .min(min(data))
+      .max(max(data))
+      .step(1000 * 60 * 60 * 24 * 365)
+      .width(300)
+      .tickFormat(timeFormat('%Y'))
+      .tickValues(data)
+      .default(new Date(1998, 10, 3));
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+
+    g.call(slider);
+
+    return div;
+  })
+  .add('Fill', () => {
+    const div = document.createElement('div');
+
+    const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderBottom()
+      .min(min(data))
+      .max(max(data))
+      .width(300)
+      .displayValue(false)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default(0.015)
+      .fill('#2196f3');
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+
+    g.call(slider);
+
+    return div;
+  })
+  .add('Range', () => {
+    const div = document.createElement('div');
+
+    const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+    const defaultValue = [0.015, 0.02];
+
+    const p = select(div)
+      .append('p')
+      .attr('id', 'value')
+      .text(defaultValue.map(format('.2%')).join('-'));
+
+    const slider = sliderBottom()
+      .min(min(data))
+      .max(max(data))
+      .width(300)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default(defaultValue)
+      .fill('skyblue')
+      .displayValue(true)
+      .on('onchange', val => {
+        p.text(val.map(format('.2%')).join('-'));
+      });
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+
+    g.call(slider);
+
+    const button = select(div)
+      .append('button')
+      .text('Reset')
+      .on('click', () => {
+        slider.value(defaultValue);
+        event.preventDefault();
+      });
+
+    return div;
+  })
+  .add('Vertical', () => {
+    const div = document.createElement('div');
+
+    const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderLeft()
+      .min(min(data1))
+      .max(max(data1))
+      .height(300)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default(0.015);
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 100)
+      .attr('height', 400)
+      .append('g')
+      .attr('transform', 'translate(60,30)');
+
+    g.call(slider);
+
+    return div;
+  });
+
+storiesOf('Extended functionality', module)
+  .add('Alternative handle', () => {
+    const div = document.createElement('div');
+
+    const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderBottom()
+      .min(min(data1))
+      .max(max(data1))
+      .width(300)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default(0.015)
+      .handle(
+        symbol()
+          .type(symbolCircle)
+          .size(200)()
+      );
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+
+    g.call(slider);
+
+    return div;
+  })
+  .add('Transition', () => {
+    const div = document.createElement('div');
+
+    const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderBottom()
+      .min(min(data))
+      .max(max(data))
+      .width(300)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default(0.015)
+      .fill('#2196f3');
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+
+    g.call(slider);
+
+    setInterval(() => {
+      slider.width(Math.random() * 100 + 200);
+      g.transition()
+        .duration(200)
+        .call(slider);
+    }, 1000);
+
+    return div;
+  });
+
 storiesOf('Examples', module)
-  .add('showcase', () => {
+  .add('New York Times', () => {
     const div = document.createElement('div');
 
     const width = 565;
@@ -95,212 +329,58 @@ storiesOf('Examples', module)
 
     return div;
   })
-  .add('time', () => {
+  .add('Color picker', () => {
+    const num2hex = rgb => {
+      return rgb
+        .map(color => {
+          let str = color.toString(16);
+
+          if (str.length === 1) {
+            str = '0' + str;
+          }
+
+          return str;
+        })
+        .join('');
+    };
+
+    let rgb = [100, 0, 0];
+    const colors = ['red', 'green', 'blue'];
+
     const div = document.createElement('div');
-
-    const data = range(0, 10).map(function(d) {
-      return new Date(1995 + d, 10, 3);
-    });
-
-    const slider = sliderBottom()
-      .min(min(data))
-      .max(max(data))
-      .step(1000 * 60 * 60 * 24 * 365)
-      .width(300)
-      .tickFormat(timeFormat('%Y'))
-      .tickValues(data)
-      .default(0.015);
 
     const g = select(div)
       .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
+      .attr('width', 600)
+      .attr('height', 400)
       .append('g')
       .attr('transform', 'translate(30,30)');
 
-    g.call(slider);
+    const box = g
+      .append('rect')
+      .attr('width', 100)
+      .attr('height', 100)
+      .attr('transform', 'translate(400,0)')
+      .attr('fill', `#${num2hex(rgb)}`);
 
-    return div;
-  })
-  .add('fill', () => {
-    const div = document.createElement('div');
+    rgb.forEach((color, i) => {
+      const slider = sliderBottom()
+        .min(0)
+        .max(255)
+        .step(1)
+        .width(300)
+        .default(rgb[i])
+        .displayValue(false)
+        .fill(colors[i])
+        .on('onchange', num => {
+          rgb[i] = num;
+          box.attr('fill', `#${num2hex(rgb)}`);
+        });
 
-    const data = range(0, 10).map(function(d) {
-      return new Date(1995 + d, 10, 3);
+      g.append('g')
+        .attr('transform', `translate(30,${60 * i})`)
+        .call(slider);
     });
-
-    const slider = sliderBottom()
-      .min(min(data))
-      .max(max(data))
-      .step(1000 * 60 * 60 * 24 * 365)
-      .width(300)
-      .tickFormat(timeFormat('%Y'))
-      .tickValues(data)
-      .default(0.015)
-      .fill('#2196f3');
-
-    const g = select(div)
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
-      .append('g')
-      .attr('transform', 'translate(30,30)');
-
-    g.call(slider);
-
-    return div;
-  });
-
-storiesOf('Range slider', module).add('simple', () => {
-  const div = document.createElement('div');
-
-  const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
-  const defaultValue = [0.015, 0.02];
-
-  const p = select(div)
-    .append('p')
-    .attr('id', 'value')
-    .text(defaultValue.map(format('.2%')).join('-'));
-
-  const slider = sliderBottom()
-    .min(min(data))
-    .max(max(data))
-    .width(300)
-    .tickFormat(format('.2%'))
-    .ticks(5)
-    .default(defaultValue)
-    .fill('skyblue')
-    .displayValue(true)
-    .on('onchange', val => {
-      p.text(val.map(format('.2%')).join('-'));
-    });
-
-  const g = select(div)
-    .append('svg')
-    .attr('width', 500)
-    .attr('height', 100)
-    .append('g')
-    .attr('transform', 'translate(30,30)');
-
-  g.call(slider);
-
-  const button = select(div)
-    .append('button')
-    .text('Reset')
-    .on('click', () => {
-      slider.value(defaultValue);
-      event.preventDefault();
-    });
-
-  return div;
-});
-
-storiesOf('Alternative handles', module)
-  .add('circle', () => {
-    const div = document.createElement('div');
-
-    const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
-
-    const slider = sliderBottom()
-      .min(min(data1))
-      .max(max(data1))
-      .width(300)
-      .tickFormat(format('.2%'))
-      .ticks(5)
-      .default(0.015)
-      .handle(
-        symbol()
-          .type(symbolCircle)
-          .size(200)()
-      );
-
-    const g = select(div)
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
-      .append('g')
-      .attr('transform', 'translate(30,30)');
-
-    g.call(slider);
-
-    return div;
-  })
-  .add('square', () => {
-    const div = document.createElement('div');
-
-    const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
-
-    const slider = sliderBottom()
-      .min(min(data1))
-      .max(max(data1))
-      .width(300)
-      .tickFormat(format('.2%'))
-      .ticks(5)
-      .default(0.015)
-      .handle(
-        symbol()
-          .type(symbolSquare)
-          .size(200)()
-      );
-
-    const g = select(div)
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
-      .append('g')
-      .attr('transform', 'translate(30,30)');
-
-    g.call(slider);
 
     return div;
   });
-
-storiesOf('Orientation/sliderBottom', module).add('simple', () => {
-  const div = document.createElement('div');
-
-  const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
-
-  const slider = sliderBottom()
-    .min(min(data1))
-    .max(max(data1))
-    .width(300)
-    .tickFormat(format('.2%'))
-    .ticks(5)
-    .default(0.015);
-
-  const g = select(div)
-    .append('svg')
-    .attr('width', 500)
-    .attr('height', 100)
-    .append('g')
-    .attr('transform', 'translate(30,30)');
-
-  g.call(slider);
-
-  return div;
-});
-
-storiesOf('Orientation/sliderLeft', module).add('simple', () => {
-  const div = document.createElement('div');
-
-  const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
-
-  const slider = sliderLeft()
-    .min(min(data1))
-    .max(max(data1))
-    .height(300)
-    .tickFormat(format('.2%'))
-    .ticks(5)
-    .default(0.015);
-
-  const g = select(div)
-    .append('svg')
-    .attr('width', 100)
-    .attr('height', 500)
-    .append('g')
-    .attr('transform', 'translate(60,30)');
-
-  g.call(slider);
-
-  return div;
-});
