@@ -14,18 +14,19 @@
     "name": "John Walley",
     "url": "http://www.walley.org.uk"
   },
-  "main": "build/d3-simple-slider.js",
-  "module": "index",
-  "jsnext:main": "index",
+  "main": "dist/d3-simple-slider.js",
+  "unpkg": "dist/d3-simple-slider.min.js",
+  "jsdelivr": "dist/d3-simple-slider.min.js",
+  "module": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/johnwalley/d3-simple-slider.git"
   },
   "scripts": {
-    "pretest": "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -g d3-array:d3,d3-axis:d3,d3-dispatch:d3,d3-drag:d3,d3-ease:d3,d3-scale:d3,d3-selection:d3,d3-transition:d3 -n d3 -o build/d3-simple-slider.js --extend -- index.js",
+    "pretest": "rollup -c",
     "test": "tape 'test/**/*-test.js' && eslint index.js src",
-    "prepublishOnly": "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-simple-slider.js -c -m -o build/d3-simple-slider.min.js",
-    "postpublish": "git push && git push --tags && zip -j build/d3-simple-slider.zip -- LICENSE README.md build/d3-simple-slider.js build/d3-simple-slider.min.js",
+    "prepublishOnly": "rm -rf dist && npm test",
+    "postpublish": "zip -j dist/${npm_package_name}.zip -- LICENSE README.md dist/${npm_package_name}.js dist/${npm_package_name}.min.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "format:fix": "pretty-quick --staged",
@@ -46,12 +47,11 @@
     "eslint": "^5.10.0",
     "husky": "^1.2.1",
     "jsdom": "^13.1.0",
-    "package-preamble": "^0.1.0",
     "prettier": "^1.15.3",
     "pretty-quick": "^1.8.0",
-    "rollup": "^0.68.0",
-    "tape": "^4.9.1",
-    "uglify-js": "^3.4.9"
+    "rollup": "^0.68.2",
+    "rollup-plugin-terser": "^3.0.0",
+    "tape": "^4.9.1"
   },
   "dependencies": {
     "d3-array": "^2.0.0",

@@ -1,4 +1,4 @@
-build/*.zip
+dist/*.zip
 test/
 .storybook/
 stories/
@@ -7,3 +7,4 @@ example/
 .travis.yml
 .prettierrc
 .eslintrc
+rollup.config.js
