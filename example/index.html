@@ -1,306 +1,455 @@
-<!DOCTYPE html>
-<html lang="en">
-  <title>d3-simple-slider</title>
-  <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, shrink-to-fit=no"
-  />
+<!DOCTYPE html> <meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, shrink-to-fit=no"
+/>
+<title>d3-simple-slider</title>
 
-  <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script src="../build/d3-simple-slider.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="../build/d3-simple-slider.js"></script>
 
-  <link
-    rel="stylesheet"
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-    crossorigin="anonymous"
-  />
+<link
+  rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+  crossorigin="anonymous"
+/>
 
-  <body>
-    <div class="container">
-      <h1>Basic example</h1>
-      <div class="row align-items-center">
-        <div class="col-sm-2"><p id="value1"></p></div>
-        <div class="col-sm"><div id="slider1"></div></div>
-      </div>
-      <a id="setValue1" href="#">Reset</a>
-      <h1>Step example</h1>
-      <div class="row align-items-center">
-        <div class="col-sm-2"><p id="value2"></p></div>
-        <div class="col-sm"><div id="slider2"></div></div>
-      </div>
-      <a id="setValue2" href="#">Reset</a>
-      <h1>Time example</h1>
-      <div class="row align-items-center">
-        <div class="col-sm-2"><p id="value3"></p></div>
-        <div class="col-sm"><div id="slider3"></div></div>
-      </div>
-      <a id="setValue3" href="#">Reset</a>
-      <h1>Dense values example</h1>
-      <div class="row align-items-center">
-        <div class="col-sm-2"><p id="value4"></p></div>
-        <div class="col-sm"><div id="slider4"></div></div>
-      </div>
-      <a id="setValue4" href="#">Reset</a>
-      <h1>Transition example</h1>
-      <div class="row align-items-center">
-        <div class="col-sm-2"><p id="value5"></p></div>
-        <div class="col-sm"><div id="slider5"></div></div>
-      </div>
-      <a id="setValue5" href="#">Reset</a>
-      <h1>Vertical example</h1>
-      <div class="row align-items-center">
-        <div class="col-sm-2"><p id="value6"></p></div>
-        <div class="col-sm"><div id="slider6"></div></div>
-      </div>
-      <a id="setValue6" href="#">Reset</a>
-      <h1>Top example</h1>
-      <div class="row align-items-center">
-        <div class="col-sm-2"><p id="value7"></p></div>
-        <div class="col-sm"><div id="slider7"></div></div>
-      </div>
-      <a id="setValue7" href="#">Reset</a>
-      <h1>Right example</h1>
-      <div class="row align-items-center">
-        <div class="col-sm-2"><p id="value8"></p></div>
-        <div class="col-sm"><div id="slider8"></div></div>
-      </div>
-      <a id="setValue8" href="#">Reset</a>
-    </div>
-  </body>
+<div class="container">
+  <h1>Basic functionality</h1>
+  <h2>Simple</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-simple"></p></div>
+    <div class="col-sm"><div id="slider-simple"></div></div>
+  </div>
+  <h2>Step</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-step"></p></div>
+    <div class="col-sm"><div id="slider-step"></div></div>
+  </div>
+  <h2>Time</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-time"></p></div>
+    <div class="col-sm"><div id="slider-time"></div></div>
+  </div>
+  <h2>Fill</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-fill"></p></div>
+    <div class="col-sm"><div id="slider-fill"></div></div>
+  </div>
+  <h2>Range</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-range"></p></div>
+    <div class="col-sm"><div id="slider-range"></div></div>
+  </div>
+  <h2>Vertical</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-vertical"></p></div>
+    <div class="col-sm"><div id="slider-vertical"></div></div>
+  </div>
+  <h1>Extended functionality</h1>
+  <h2>Alternative handle</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-alternative-handle"></p></div>
+    <div class="col-sm"><div id="slider-alternative-handle"></div></div>
+  </div>
+  <h2>Transition</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-transition"></p></div>
+    <div class="col-sm"><div id="slider-transition"></div></div>
+  </div>
+  <h1>Examples</h1>
+  <h2>New York Times</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-new-york-times"></p></div>
+    <div class="col-sm"><div id="slider-new-york-times"></div></div>
+  </div>
+  <h2>Color picker</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-color-picker"></p></div>
+    <div class="col-sm"><div id="slider-color-picker"></div></div>
+  </div>
+</div>
 
-  <script>
-    var data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+<script>
+  // Simple
+  var data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
-    var slider1 = d3
-      .sliderHorizontal()
-      .min(d3.min(data1))
-      .max(d3.max(data1))
-      .width(300)
-      .tickFormat(d3.format('.2%'))
-      .ticks(5)
-      .default(0.015)
-      .on('onchange', val => {
-        d3.select('p#value1').text(d3.format('.2%')(val));
-      });
-
-    var group1 = d3
-      .select('div#slider1')
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
-      .append('g')
-      .attr('transform', 'translate(30,30)');
-
-    group1.call(slider1);
-
-    d3.select('p#value1').text(d3.format('.2%')(slider1.value()));
-    d3.select('a#setValue1').on('click', () => {
-      slider1.value(0.015);
-      d3.event.preventDefault();
+  var sliderSimple = d3
+    .sliderBottom()
+    .min(d3.min(data))
+    .max(d3.max(data))
+    .width(300)
+    .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .default(0.015)
+    .on('onchange', val => {
+      d3.select('p#value-simple').text(d3.format('.2%')(val));
     });
 
-    var slider2 = d3
-      .sliderHorizontal()
+  var gSimple = d3
+    .select('div#slider-simple')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  gSimple.call(sliderSimple);
+
+  d3.select('p#value-simple').text(d3.format('.2%')(sliderSimple.value()));
+
+  // Step
+  var sliderStep = d3
+    .sliderBottom()
+    .min(d3.min(data))
+    .max(d3.max(data))
+    .width(300)
+    .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .step(0.005)
+    .default(0.015)
+    .on('onchange', val => {
+      d3.select('p#value-step').text(d3.format('.2%')(val));
+    });
+
+  var gStep = d3
+    .select('div#slider-step')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  gStep.call(sliderStep);
+
+  d3.select('p#value-step').text(d3.format('.2%')(sliderStep.value()));
+
+  // Time
+  var dataTime = d3.range(0, 10).map(function(d) {
+    return new Date(1995 + d, 10, 3);
+  });
+
+  var sliderTime = d3
+    .sliderBottom()
+    .min(d3.min(dataTime))
+    .max(d3.max(dataTime))
+    .step(1000 * 60 * 60 * 24 * 365)
+    .width(300)
+    .tickFormat(d3.timeFormat('%Y'))
+    .tickValues(dataTime)
+    .default(new Date(1998, 10, 3))
+    .on('onchange', val => {
+      d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
+    });
+
+  var gTime = d3
+    .select('div#slider-time')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  gTime.call(sliderTime);
+
+  d3.select('p#value-time').text(d3.timeFormat('%Y')(sliderTime.value()));
+
+  // Fill
+  var sliderFill = d3
+    .sliderBottom()
+    .min(d3.min(data))
+    .max(d3.max(data))
+    .width(300)
+    .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .default(0.015)
+    .fill('#2196f3')
+    .on('onchange', val => {
+      d3.select('p#value-fill').text(d3.format('.2%')(val));
+    });
+
+  var gFill = d3
+    .select('div#slider-fill')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  gFill.call(sliderFill);
+
+  d3.select('p#value-fill').text(d3.format('.2%')(sliderFill.value()));
+
+  // Range
+  var sliderRange = d3
+    .sliderBottom()
+    .min(d3.min(data))
+    .max(d3.max(data))
+    .width(300)
+    .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .default([0.015, 0.02])
+    .fill('#2196f3')
+    .on('onchange', val => {
+      d3.select('p#value-range').text(val.map(d3.format('.2%')).join('-'));
+    });
+
+  var gRange = d3
+    .select('div#slider-range')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  gRange.call(sliderRange);
+
+  d3.select('p#value-range').text(
+    sliderRange
+      .value()
+      .map(d3.format('.2%'))
+      .join('-')
+  );
+
+  // Vertical
+  var sliderVertical = d3
+    .sliderLeft()
+    .min(d3.min(data))
+    .max(d3.max(data))
+    .height(300)
+    .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .default(0.015)
+    .on('onchange', val => {
+      d3.select('p#value-vertical').text(d3.format('.2%')(val));
+    });
+
+  var gVertical = d3
+    .select('div#slider-vertical')
+    .append('svg')
+    .attr('width', 100)
+    .attr('height', 400)
+    .append('g')
+    .attr('transform', 'translate(60,30)');
+
+  gVertical.call(sliderVertical);
+
+  d3.select('p#value-vertical').text(d3.format('.2%')(sliderVertical.value()));
+
+  // Alternative handle
+  var sliderAlternativeHandle = d3
+    .sliderBottom()
+    .min(d3.min(data))
+    .max(d3.max(data))
+    .width(300)
+    .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .default(0.015)
+    .handle(
+      d3
+        .symbol()
+        .type(d3.symbolCircle)
+        .size(200)()
+    )
+    .on('onchange', val => {
+      d3.select('p#value-alternative-handle').text(d3.format('.2%')(val));
+    });
+
+  var g2 = d3
+    .select('div#slider-alternative-handle')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  g2.call(sliderAlternativeHandle);
+
+  d3.select('p#value-alternative-handle').text(sliderAlternativeHandle.value());
+
+  // Transition
+  var sliderTransition = d3
+    .sliderBottom()
+    .min(d3.min(data))
+    .max(d3.max(data))
+    .width(300)
+    .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .default(0.015)
+    .on('onchange', val => {
+      d3.select('p#value-transition').text(d3.format('.2%')(val));
+    });
+
+  var gTransition = d3
+    .select('div#slider-transition')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  gTransition.call(sliderTransition);
+
+  setInterval(() => {
+    sliderTransition.width(Math.random() * 100 + 200);
+
+    gTransition
+      .transition()
+      .duration(200)
+      .call(sliderTransition);
+  }, 1000);
+
+  d3.select('p#value-transition').text(
+    d3.format('.2%')(sliderTransition.value())
+  );
+
+  // New York Times
+  var width = 565;
+  var height = 120;
+  var margin = { top: 20, right: 50, bottom: 50, left: 40 };
+
+  var dataNewYorkTimes = d3.range(1, 41).map(d => ({
+    year: d,
+    value: 10000 * Math.exp(-(d - 1) / 40),
+  }));
+
+  var svg = d3
+    .select('div#slider-new-york-times')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+  var padding = 0.1;
+
+  var xBand = d3
+    .scaleBand()
+    .domain(dataNewYorkTimes.map(d => d.year))
+    .range([margin.left, width - margin.right])
+    .padding(padding);
+
+  var xLinear = d3
+    .scaleLinear()
+    .domain([
+      d3.min(dataNewYorkTimes, d => d.year),
+      d3.max(dataNewYorkTimes, d => d.year),
+    ])
+    .range([
+      margin.left + xBand.bandwidth() / 2 + xBand.step() * padding - 0.5,
+      width -
+        margin.right -
+        xBand.bandwidth() / 2 -
+        xBand.step() * padding -
+        0.5,
+    ]);
+
+  var y = d3
+    .scaleLinear()
+    .domain([0, d3.max(dataNewYorkTimes, d => d.value)])
+    .nice()
+    .range([height - margin.bottom, margin.top]);
+
+  var yAxis = g =>
+    g
+      .attr('transform', `translate(${width - margin.right},0)`)
+      .call(
+        d3
+          .axisRight(y)
+          .tickValues([1e4])
+          .tickFormat(d3.format('($.2s'))
+      )
+      .call(g => g.select('.domain').remove());
+
+  var slider = g =>
+    g.attr('transform', `translate(0,${height - margin.bottom})`).call(
+      d3
+        .sliderBottom(xLinear)
+        .step(1)
+        .ticks(4)
+        .default(9)
+        .on('onchange', value => draw(value))
+    );
+
+  var bars = svg
+    .append('g')
+    .selectAll('rect')
+    .data(dataNewYorkTimes);
+
+  var barsEnter = bars
+    .enter()
+    .append('rect')
+    .attr('x', d => xBand(d.year))
+    .attr('y', d => y(d.value))
+    .attr('height', d => y(0) - y(d.value))
+    .attr('width', xBand.bandwidth());
+
+  svg.append('g').call(yAxis);
+  svg.append('g').call(slider);
+
+  var draw = selected => {
+    barsEnter
+      .merge(bars)
+      .attr('fill', d => (d.year === selected ? '#bad80a' : '#e0e0e0'));
+
+    d3.select('p#value-new-york-times').text(
+      d3.format('$,.2r')(dataNewYorkTimes[selected - 1].value)
+    );
+  };
+
+  draw(9);
+
+  // Color picker
+  var num2hex = rgb => {
+    return rgb
+      .map(color => {
+        let str = color.toString(16);
+
+        if (str.length === 1) {
+          str = '0' + str;
+        }
+
+        return str;
+      })
+      .join('');
+  };
+
+  var rgb = [100, 0, 0];
+  var colors = ['red', 'green', 'blue'];
+
+  var gColorPicker = d3
+    .select('div#slider-color-picker')
+    .append('svg')
+    .attr('width', 600)
+    .attr('height', 400)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  var box = gColorPicker
+    .append('rect')
+    .attr('width', 100)
+    .attr('height', 100)
+    .attr('transform', 'translate(400,0)')
+    .attr('fill', `#${num2hex(rgb)}`);
+
+  rgb.forEach((color, i) => {
+    var slider = d3
+      .sliderBottom()
       .min(0)
-      .max(10)
+      .max(255)
       .step(1)
       .width(300)
+      .default(rgb[i])
       .displayValue(false)
-      .on('onchange', val => {
-        d3.select('p#value2').text(val);
+      .fill(colors[i])
+      .on('onchange', num => {
+        rgb[i] = num;
+        box.attr('fill', `#${num2hex(rgb)}`);
+        d3.select('p#value-color-picker').text(`#${num2hex(rgb)}`);
       });
 
-    var group2 = d3
-      .select('div#slider2')
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
+    gColorPicker
       .append('g')
-      .attr('transform', 'translate(30,30)');
-
-    group2.call(slider2);
-
-    d3.select('p#value2').text(slider2.value());
-    d3.select('a#setValue2').on('click', () => {
-      slider2.value(5);
-      d3.event.preventDefault();
-    });
-
-    var data3 = d3.range(0, 10).map(function(d) {
-      return new Date(1995 + d, 10, 3);
-    });
-
-    var slider3 = d3
-      .sliderHorizontal()
-      .min(d3.min(data3))
-      .max(d3.max(data3))
-      .step(1000 * 60 * 60 * 24 * 365)
-      .width(400)
-      .tickFormat(d3.timeFormat('%Y'))
-      .tickValues(data3)
-      .on('onchange', val => {
-        d3.select('p#value3').text(d3.timeFormat('%Y')(val));
-      });
-
-    var group3 = d3
-      .select('div#slider3')
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
-      .append('g')
-      .attr('transform', 'translate(30,30)');
-
-    group3.call(slider3);
-
-    d3.select('p#value3').text(d3.timeFormat('%Y')(slider3.value()));
-    d3.select('a#setValue3').on('click', () => {
-      slider3.value(new Date(1997, 11, 17));
-      d3.event.preventDefault();
-    });
-
-    var data4 = [0.2, 0.22, 0.24, 0.26, 0.28, 0.3, 1];
-
-    var slider4 = d3
-      .sliderHorizontal()
-      .min(d3.min(data4))
-      .max(d3.max(data4))
-      .width(300)
-      .tickFormat(d3.format('.2%'))
-      .marks(data4)
-      .ticks(5)
-      .default(0.015)
-      .on('onchange', val => {
-        d3.select('p#value4').text(d3.format('.2%')(val));
-      });
-
-    var group4 = d3
-      .select('div#slider4')
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
-      .append('g')
-      .attr('transform', 'translate(30,30)');
-
-    group4.call(slider4);
-
-    d3.select('p#value4').text(d3.format('.2%')(slider4.value()));
-    d3.select('a#setValue4').on('click', () => {
-      slider4.value(0.015);
-      d3.event.preventDefault();
-    });
-
-    var slider5 = d3
-      .sliderHorizontal()
-      .min(0)
-      .max(10)
-      .step(1)
-      .width(300)
-      .on('onchange', val => {
-        d3.select('p#value5').text(val);
-      });
-
-    var group5 = d3
-      .select('div#slider5')
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
-      .append('g')
-      .attr('transform', 'translate(30,30)');
-
-    group5.call(slider5);
-
-    setInterval(() => {
-      slider5.width(Math.random() * 200 + 100);
-      group5
-        .transition()
-        .duration(1000)
-        .call(slider5);
-    }, 4000);
-
-    d3.select('p#value5').text(slider5.value());
-    d3.select('a#setValue5').on('click', () => {
-      slider5.value(5);
-      d3.event.preventDefault();
-    });
-
-    var slider6 = d3
-      .sliderVertical()
-      .min(0)
-      .max(10)
-      .step(1)
-      .height(300)
-      .on('onchange', val => {
-        d3.select('p#value6').text(val);
-      });
-
-    var group6 = d3
-      .select('div#slider6')
-      .append('svg')
-      .attr('width', 100)
-      .attr('height', 360)
-      .append('g')
-      .attr('transform', 'translate(60,30)');
-
-    group6.call(slider6);
-
-    d3.select('p#value6').text(slider6.value());
-    d3.select('a#setValue6').on('click', () => {
-      slider6.value(5);
-      d3.event.preventDefault();
-    });
-
-    var slider7 = d3
-      .sliderTop()
-      .min(0)
-      .max(10)
-      .step(1)
-      .width(300)
-      .on('onchange', val => {
-        d3.select('p#value7').text(val);
-      });
-
-    var group7 = d3
-      .select('div#slider7')
-      .append('svg')
-      .attr('width', 300)
-      .attr('height', 100)
-      .append('g')
-      .attr('transform', 'translate(30,60)');
-
-    group7.call(slider7);
-
-    d3.select('p#value7').text(slider7.value());
-    d3.select('a#setValue7').on('click', () => {
-      slider7.value(5);
-      d3.event.preventDefault();
-    });
-
-    var slider8 = d3
-      .sliderRight()
-      .min(0)
-      .max(10)
-      .step(1)
-      .height(300)
-      .on('onchange', val => {
-        d3.select('p#value8').text(val);
-      });
-
-    var group8 = d3
-      .select('div#slider8')
-      .append('svg')
-      .attr('width', 100)
-      .attr('height', 360)
-      .append('g')
-      .attr('transform', 'translate(60,30)');
-
-    group8.call(slider8);
-
-    d3.select('p#value8').text(slider8.value());
-    d3.select('a#setValue8').on('click', () => {
-      slider8.value(5);
-      d3.event.preventDefault();
-    });
-  </script>
-</html>
+      .attr('transform', `translate(30,${60 * i})`)
+      .call(slider);
+  });
+</script>

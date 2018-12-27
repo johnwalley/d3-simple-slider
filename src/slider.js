@@ -5,6 +5,7 @@ import { drag } from 'd3-drag';
 import { easeQuadOut } from 'd3-ease';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { event, select } from 'd3-selection';
+import 'd3-transition';
 
 var UPDATE_DURATION = 200;
 var SLIDER_END_PADDING = 8;
@@ -25,8 +26,8 @@ function translateY(y) {
 function slider(orientation, scale) {
   scale = typeof scale !== 'undefined' ? scale : null;
 
-  var value = 0;
-  var defaultValue = 0;
+  var value = [0];
+  var defaultValue = [0];
   var domain = [0, 10];
   var width = 100;
   var height = 100;
@@ -44,6 +45,7 @@ function slider(orientation, scale) {
 
   var selection = null;
   var identityClamped = null;
+  var handleIndex = null;
 
   var k = orientation === top || orientation === left ? -1 : 1;
   var x = orientation === left || orientation === right ? 'y' : 'x';
@@ -76,12 +78,27 @@ function slider(orientation, scale) {
   var fillSelection = null;
   var textSelection = null;
 
+  if (scale) {
+    domain = [min(scale.domain()), max(scale.domain())];
+
+    if (orientation === top || orientation === bottom) {
+      width = max(scale.range()) - min(scale.range());
+    } else {
+      height = max(scale.range()) - min(scale.range());
+    }
+
+    scale = scale.clamp(true);
+  }
+
   function slider(context) {
     selection = context.selection ? context.selection() : context;
 
     if (scale) {
-      domain = [min(scale.domain()), max(scale.domain())];
-      scale = scale.clamp(true);
+      scale = scale.range([
+        min(scale.range()),
+        min(scale.range()) +
+          (orientation === top || orientation === bottom ? width : height),
+      ]);
     } else {
       scale = domain[0] instanceof Date ? scaleTime() : scaleLinear();
 
@@ -100,10 +117,12 @@ function slider(orientation, scale) {
       .clamp(true);
 
     // Ensure value is valid
-    value = scaleLinear()
-      .range(domain)
-      .domain(domain)
-      .clamp(true)(value);
+    value = value.map(function(d) {
+      return scaleLinear()
+        .range(domain)
+        .domain(domain)
+        .clamp(true)(d);
+    });
 
     tickFormat = tickFormat || scale.tickFormat();
     displayFormat = displayFormat || tickFormat || scale.tickFormat();
@@ -155,7 +174,12 @@ function slider(orientation, scale) {
       sliderEnter
         .append('line')
         .attr('class', 'track-fill')
-        .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+        .attr(
+          x + '1',
+          value.length === 1
+            ? scale.range()[0] - SLIDER_END_PADDING
+            : scale(value[0])
+        )
         .attr('stroke', fill)
         .attr('stroke-width', 4)
         .attr('stroke-linecap', 'round');
@@ -170,10 +194,15 @@ function slider(orientation, scale) {
       .attr('stroke-linecap', 'round')
       .merge(slider.select('.track-overlay'));
 
-    var handleEnter = sliderEnter
+    handleSelection = sliderEnter.selectAll('.parameter-value').data(value);
+
+    var handleEnter = handleSelection
+      .enter()
       .append('g')
       .attr('class', 'parameter-value')
-      .attr('transform', transformAlong(scale(value)))
+      .attr('transform', function(d) {
+        return transformAlong(scale(d));
+      })
       .attr('font-family', 'sans-serif')
       .attr(
         'text-anchor',
@@ -191,7 +220,7 @@ function slider(orientation, scale) {
       .attr('fill', 'white')
       .attr('stroke', '#777');
 
-    if (displayValue) {
+    if (displayValue && value.length === 1) {
       handleEnter
         .append('text')
         .attr('font-size', 10) // TODO: Remove coupling to font-size in d3-axis
@@ -204,7 +233,7 @@ function slider(orientation, scale) {
             ? '.71em'
             : '.32em'
         )
-        .text(tickFormat(value));
+        .text(tickFormat(value[0]));
     }
 
     context
@@ -216,7 +245,9 @@ function slider(orientation, scale) {
       .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
 
     if (fill) {
-      context.select('.track-fill').attr(x + '2', scale(value));
+      context
+        .select('.track-fill')
+        .attr(x + '2', value.length === 1 ? scale(value[0]) : scale(value[1]));
     }
 
     context
@@ -257,9 +288,9 @@ function slider(orientation, scale) {
 
     context.selectAll('.axis line').attr('stroke', '#aaa');
 
-    context
-      .select('.parameter-value')
-      .attr('transform', transformAlong(scale(value)));
+    context.selectAll('.parameter-value').attr('transform', function(d) {
+      return transformAlong(scale(d));
+    });
 
     fadeTickText();
 
@@ -270,10 +301,22 @@ function slider(orientation, scale) {
         orientation === bottom || orientation === top ? event.x : event.y
       );
 
-      var newValue = alignedValue(scale.invert(pos));
+      handleIndex = scan(
+        value.map(function(d) {
+          return Math.abs(d - alignedValue(scale.invert(pos)));
+        })
+      );
+
+      var newValue = value.map(function(d, i) {
+        return i === handleIndex ? alignedValue(scale.invert(pos)) : d;
+      });
 
       updateHandle(newValue);
-      listeners.call('start', slider, newValue);
+      listeners.call(
+        'start',
+        slider,
+        newValue.length === 1 ? newValue[0] : newValue
+      );
       updateValue(newValue, true);
     }
 
@@ -281,36 +324,62 @@ function slider(orientation, scale) {
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
       );
-      var newValue = alignedValue(scale.invert(pos));
+
+      var adjustedValue = alignedValue(scale.invert(pos));
+
+      var newValue = value.map(function(d, i) {
+        if (value.length === 2) {
+          return i === handleIndex
+            ? handleIndex === 0
+              ? Math.min(adjustedValue, alignedValue(value[1]))
+              : Math.max(adjustedValue, alignedValue(value[0]))
+            : d;
+        } else {
+          return i === handleIndex ? adjustedValue : d;
+        }
+      });
 
       updateHandle(newValue);
-      listeners.call('drag', slider, newValue);
+      listeners.call(
+        'drag',
+        slider,
+        newValue.length === 1 ? newValue[0] : newValue
+      );
       updateValue(newValue, true);
     }
 
     function dragended() {
       select(this).classed('active', false);
+
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
       );
-      var newValue = alignedValue(scale.invert(pos));
+
+      var newValue = value.map(function(d, i) {
+        return i === handleIndex ? alignedValue(scale.invert(pos)) : d;
+      });
 
       updateHandle(newValue);
-      listeners.call('end', slider, newValue);
+      listeners.call(
+        'end',
+        slider,
+        newValue.length === 1 ? newValue[0] : newValue
+      );
       updateValue(newValue, true);
+
+      handleIndex = null;
     }
 
     textSelection = selection.select('.parameter-value text');
-    handleSelection = selection.select('.parameter-value');
     fillSelection = selection.select('.track-fill');
   }
 
   function fadeTickText() {
-    if (displayValue) {
+    if (displayValue && value.length === 1) {
       var distances = [];
 
       selection.selectAll('.axis .tick').each(function(d) {
-        distances.push(Math.abs(d - value));
+        distances.push(Math.abs(d - value[0]));
       });
 
       var index = scan(distances);
@@ -351,7 +420,11 @@ function slider(orientation, scale) {
       value = newValue;
 
       if (notifyListener) {
-        listeners.call('onchange', slider, newValue);
+        listeners.call(
+          'onchange',
+          slider,
+          newValue.length === 1 ? newValue[0] : newValue
+        );
       }
 
       fadeTickText();
@@ -362,29 +435,57 @@ function slider(orientation, scale) {
     animate = typeof animate !== 'undefined' ? animate : false;
 
     if (animate) {
-      handleSelection
+      selection
+        .selectAll('.parameter-value')
+        .data(newValue)
         .transition()
         .ease(easeQuadOut)
         .duration(UPDATE_DURATION)
-        .attr('transform', transformAlong(scale(newValue)));
+        .attr('transform', function(d) {
+          return transformAlong(scale(d));
+        });
 
       if (fill) {
         fillSelection
           .transition()
           .ease(easeQuadOut)
           .duration(UPDATE_DURATION)
-          .attr(x + '1', scale(newValue));
+          .attr(
+            x + '1',
+            value.length === 1
+              ? scale.range()[0] - SLIDER_END_PADDING
+              : scale(newValue[0])
+          )
+          .attr(
+            x + '2',
+            value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
+          );
       }
     } else {
-      handleSelection.attr('transform', transformAlong(scale(newValue)));
+      selection
+        .selectAll('.parameter-value')
+        .data(newValue)
+        .attr('transform', function(d) {
+          return transformAlong(scale(d));
+        });
 
       if (fill) {
-        fillSelection.attr(x + '2', scale(newValue));
+        fillSelection
+          .attr(
+            x + '1',
+            value.length === 1
+              ? scale.range()[0] - SLIDER_END_PADDING
+              : scale(newValue[0])
+          )
+          .attr(
+            x + '2',
+            value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
+          );
       }
     }
 
     if (displayValue) {
-      textSelection.text(displayFormat(newValue));
+      textSelection.text(displayFormat(newValue[0]));
     }
   }
 
@@ -432,14 +533,23 @@ function slider(orientation, scale) {
 
   slider.ticks = function(_) {
     if (!arguments.length) return ticks;
+
     ticks = _;
     return slider;
   };
 
   slider.value = function(_) {
-    if (!arguments.length) return value;
-    var pos = identityClamped(scale(_));
-    var newValue = alignedValue(scale.invert(pos));
+    if (!arguments.length) {
+      if (value.length === 1) {
+        return value[0];
+      }
+
+      return value;
+    }
+
+    var toArray = Array.isArray(_) ? _ : [_];
+    var pos = toArray.map(scale).map(identityClamped);
+    var newValue = pos.map(scale.invert).map(alignedValue);
 
     updateHandle(newValue, true);
     updateValue(newValue, true);
@@ -448,9 +558,17 @@ function slider(orientation, scale) {
   };
 
   slider.silentValue = function(_) {
-    if (!arguments.length) return value;
-    var pos = identityClamped(scale(_));
-    var newValue = alignedValue(scale.invert(pos));
+    if (!arguments.length) {
+      if (value.length === 1) {
+        return value[0];
+      }
+
+      return value;
+    }
+
+    var toArray = Array.isArray(_) ? _ : [_];
+    var pos = toArray.map(scale).map(identityClamped);
+    var newValue = pos.map(scale.invert).map(alignedValue);
 
     updateHandle(newValue, false);
     updateValue(newValue, false);
@@ -459,9 +577,18 @@ function slider(orientation, scale) {
   };
 
   slider.default = function(_) {
-    if (!arguments.length) return defaultValue;
-    defaultValue = _;
-    value = _;
+    if (!arguments.length) {
+      if (defaultValue.length === 1) {
+        return defaultValue[0];
+      }
+
+      return defaultValue;
+    }
+
+    var toArray = Array.isArray(_) ? _ : [_];
+
+    defaultValue = toArray;
+    value = toArray;
     return slider;
   };
 
