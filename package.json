@@ -1,6 +1,6 @@
 {
   "name": "d3-simple-slider",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Renders an SVG slider",
   "keywords": [
     "d3",
@@ -24,7 +24,7 @@
   "scripts": {
     "pretest": "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -g d3-array:d3,d3-axis:d3,d3-dispatch:d3,d3-drag:d3,d3-ease:d3,d3-scale:d3,d3-selection:d3,d3-transition:d3 -n d3 -o build/d3-simple-slider.js --extend -- index.js",
     "test": "tape 'test/**/*-test.js' && eslint index.js src",
-    "prepublish": "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-simple-slider.js -c -m -o build/d3-simple-slider.min.js",
+    "prepublishOnly": "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-simple-slider.js -c -m -o build/d3-simple-slider.min.js",
     "postpublish": "git push && git push --tags && zip -j build/d3-simple-slider.zip -- LICENSE README.md build/d3-simple-slider.js build/d3-simple-slider.min.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
