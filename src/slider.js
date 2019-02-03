@@ -375,6 +375,7 @@ function slider(orientation, scale) {
   }
 
   function fadeTickText() {
+    if (selection) {
     if (displayValue && value.length === 1) {
       var distances = [];
 
@@ -388,6 +389,7 @@ function slider(orientation, scale) {
         return i === index ? 0 : 1;
       });
     }
+  }
   }
 
   function alignedValue(newValue) {
@@ -435,6 +437,7 @@ function slider(orientation, scale) {
   }
 
   function updateHandle(newValue, animate) {
+    if (selection) {
     animate = typeof animate !== 'undefined' ? animate : false;
 
     if (animate) {
@@ -490,6 +493,7 @@ function slider(orientation, scale) {
     if (displayValue) {
       textSelection.text(displayFormat(newValue[0]));
     }
+  }
   }
 
   slider.min = function(_) {
