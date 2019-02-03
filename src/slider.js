@@ -88,22 +88,7 @@ function slider(orientation, scale) {
     }
 
     scale = scale.clamp(true);
-  } else {
-    scale = domain[0] instanceof Date ? scaleTime() : scaleLinear();
-
-    scale = scale
-      .domain(domain)
-      .range([
-        0,
-        orientation === top || orientation === bottom ? width : height,
-      ])
-      .clamp(true);
   }
-
-  identityClamped = scaleLinear()
-    .range(scale.range())
-    .domain(scale.range())
-    .clamp(true);
 
   function slider(context) {
     selection = context.selection ? context.selection() : context;

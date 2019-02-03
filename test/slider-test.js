@@ -45,19 +45,6 @@ tape('slider.default(value) sets the default range', function(test) {
   test.end();
 });
 
-tape(
-  'slider.value(value) does not trigger onchange event if value has not changed',
-  function(test) {
-    var count = 0;
-    var s = d3.sliderHorizontal().default(1);
-    s.on('onchange', () => count++);
-    s.value(1);
-    s.value(2);
-    test.equal(count, 1);
-    test.end();
-  }
-);
-
 tape('sliderVertical(selection) produces the expected result', function(test) {
   var bodyActual = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window
     .document.body;
