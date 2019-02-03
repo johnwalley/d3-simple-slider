@@ -88,7 +88,22 @@ function slider(orientation, scale) {
     }
 
     scale = scale.clamp(true);
+  } else {
+    scale = domain[0] instanceof Date ? scaleTime() : scaleLinear();
+
+    scale = scale
+      .domain(domain)
+      .range([
+        0,
+        orientation === top || orientation === bottom ? width : height,
+      ])
+      .clamp(true);
   }
+
+  identityClamped = scaleLinear()
+    .range(scale.range())
+    .domain(scale.range())
+    .clamp(true);
 
   function slider(context) {
     selection = context.selection ? context.selection() : context;
@@ -376,20 +391,20 @@ function slider(orientation, scale) {
 
   function fadeTickText() {
     if (selection) {
-    if (displayValue && value.length === 1) {
-      var distances = [];
+      if (displayValue && value.length === 1) {
+        var distances = [];
 
-      selection.selectAll('.axis .tick').each(function(d) {
-        distances.push(Math.abs(d - value[0]));
-      });
+        selection.selectAll('.axis .tick').each(function(d) {
+          distances.push(Math.abs(d - value[0]));
+        });
 
-      var index = scan(distances);
+        var index = scan(distances);
 
-      selection.selectAll('.axis .tick text').attr('opacity', function(d, i) {
-        return i === index ? 0 : 1;
-      });
+        selection.selectAll('.axis .tick text').attr('opacity', function(d, i) {
+          return i === index ? 0 : 1;
+        });
+      }
     }
-  }
   }
 
   function alignedValue(newValue) {
@@ -438,62 +453,62 @@ function slider(orientation, scale) {
 
   function updateHandle(newValue, animate) {
     if (selection) {
-    animate = typeof animate !== 'undefined' ? animate : false;
+      animate = typeof animate !== 'undefined' ? animate : false;
 
-    if (animate) {
-      selection
-        .selectAll('.parameter-value')
-        .data(newValue)
-        .transition()
-        .ease(easeQuadOut)
-        .duration(UPDATE_DURATION)
-        .attr('transform', function(d) {
-          return transformAlong(scale(d));
-        });
-
-      if (fill) {
-        fillSelection
+      if (animate) {
+        selection
+          .selectAll('.parameter-value')
+          .data(newValue)
           .transition()
           .ease(easeQuadOut)
           .duration(UPDATE_DURATION)
-          .attr(
-            x + '1',
-            value.length === 1
-              ? scale.range()[0] - SLIDER_END_PADDING
-              : scale(newValue[0])
-          )
-          .attr(
-            x + '2',
-            value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
-          );
-      }
-    } else {
-      selection
-        .selectAll('.parameter-value')
-        .data(newValue)
-        .attr('transform', function(d) {
-          return transformAlong(scale(d));
-        });
+          .attr('transform', function(d) {
+            return transformAlong(scale(d));
+          });
 
-      if (fill) {
-        fillSelection
-          .attr(
-            x + '1',
-            value.length === 1
-              ? scale.range()[0] - SLIDER_END_PADDING
-              : scale(newValue[0])
-          )
-          .attr(
-            x + '2',
-            value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
-          );
+        if (fill) {
+          fillSelection
+            .transition()
+            .ease(easeQuadOut)
+            .duration(UPDATE_DURATION)
+            .attr(
+              x + '1',
+              value.length === 1
+                ? scale.range()[0] - SLIDER_END_PADDING
+                : scale(newValue[0])
+            )
+            .attr(
+              x + '2',
+              value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
+            );
+        }
+      } else {
+        selection
+          .selectAll('.parameter-value')
+          .data(newValue)
+          .attr('transform', function(d) {
+            return transformAlong(scale(d));
+          });
+
+        if (fill) {
+          fillSelection
+            .attr(
+              x + '1',
+              value.length === 1
+                ? scale.range()[0] - SLIDER_END_PADDING
+                : scale(newValue[0])
+            )
+            .attr(
+              x + '2',
+              value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
+            );
+        }
+      }
+
+      if (displayValue) {
+        textSelection.text(displayFormat(newValue[0]));
       }
     }
-
-    if (displayValue) {
-      textSelection.text(displayFormat(newValue[0]));
-    }
-  }
   }
 
   slider.min = function(_) {
