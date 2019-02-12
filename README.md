@@ -9,7 +9,7 @@ Render a simple interactive slider using SVG.
 
 Examples:
 
-- [Storybook](https://d3-simple-slider.netlify.com)
+- [Storybook](https://d3-simple-slider.mulberryhousesoftware.com)
 - [Bl.ocks.org](https://bl.ocks.org/johnwalley/e1d256b81e51da68f7feb632a53c3518)
 
 Inspired by The New York Times [Is It Better to Rent or Buy?](https://www.nytimes.com/interactive/2014/upshot/buy-rent-calculator.html)
