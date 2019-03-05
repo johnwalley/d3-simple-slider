@@ -135,9 +135,9 @@ function slider(orientation, scale) {
       .attr('transform', transformAcross(k * 7))
       .attr('class', 'axis');
 
-    var slider = selection.selectAll('.slider').data([null]);
+    var sliderSelection = selection.selectAll('.slider').data([null]);
 
-    var sliderEnter = slider
+    var sliderEnter = sliderSelection
       .enter()
       .append('g')
       .attr('class', 'slider')
@@ -192,7 +192,7 @@ function slider(orientation, scale) {
       .attr('stroke', 'transparent')
       .attr('stroke-width', 40)
       .attr('stroke-linecap', 'round')
-      .merge(slider.select('.track-overlay'));
+      .merge(sliderSelection.select('.track-overlay'));
 
     handleSelection = sliderEnter.selectAll('.parameter-value').data(value);
 
@@ -217,8 +217,28 @@ function slider(orientation, scale) {
       .append('path')
       .attr('transform', 'rotate(' + (orientation + 1) * 90 + ')')
       .attr('d', handle)
+      .attr('class', 'handle')
+      .attr('aria-label', 'handle')
+      .attr('focusable', 'true')
+      .attr('tabindex', 0)
       .attr('fill', 'white')
-      .attr('stroke', '#777');
+      .attr('stroke', '#777')
+      .on('keydown', function() {
+        var change = step || (domain[1] - domain[0]) / 100;
+
+        switch (event.key) {
+          case 'ArrowLeft':
+          case 'ArrowDown':
+            slider.value(+value - change);
+            event.preventDefault();
+            break;
+          case 'ArrowRight':
+          case 'ArrowUp':
+            slider.value(+value + change);
+            event.preventDefault();
+            break;
+        }
+      });
 
     if (displayValue && value.length === 1) {
       handleEnter
@@ -314,7 +334,7 @@ function slider(orientation, scale) {
       updateHandle(newValue);
       listeners.call(
         'start',
-        slider,
+        sliderSelection,
         newValue.length === 1 ? newValue[0] : newValue
       );
       updateValue(newValue, true);
@@ -342,7 +362,7 @@ function slider(orientation, scale) {
       updateHandle(newValue);
       listeners.call(
         'drag',
-        slider,
+        sliderSelection,
         newValue.length === 1 ? newValue[0] : newValue
       );
       updateValue(newValue, true);
@@ -362,7 +382,7 @@ function slider(orientation, scale) {
       updateHandle(newValue);
       listeners.call(
         'end',
-        slider,
+        sliderSelection,
         newValue.length === 1 ? newValue[0] : newValue
       );
       updateValue(newValue, true);
