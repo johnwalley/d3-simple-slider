@@ -9,6 +9,7 @@ import 'd3-transition';
 
 var UPDATE_DURATION = 200;
 var SLIDER_END_PADDING = 8;
+var KEYBOARD_NUMBER_STEPS = 100;
 
 var top = 1;
 var right = 2;
@@ -136,9 +137,9 @@ function slider(orientation, scale) {
       .attr('transform', transformAcross(k * 7))
       .attr('class', 'axis');
 
-    var slider = selection.selectAll('.slider').data([null]);
+    var sliderSelection = selection.selectAll('.slider').data([null]);
 
-    var sliderEnter = slider
+    var sliderEnter = sliderSelection
       .enter()
       .append('g')
       .attr('class', 'slider')
@@ -193,7 +194,7 @@ function slider(orientation, scale) {
       .attr('stroke', 'transparent')
       .attr('stroke-width', 40)
       .attr('stroke-linecap', 'round')
-      .merge(slider.select('.track-overlay'));
+      .merge(sliderSelection.select('.track-overlay'));
 
     handleSelection = sliderEnter.selectAll('.parameter-value').data(value);
 
@@ -218,8 +219,68 @@ function slider(orientation, scale) {
       .append('path')
       .attr('transform', 'rotate(' + (orientation + 1) * 90 + ')')
       .attr('d', handle)
+      .attr('class', 'handle')
+      .attr('aria-label', 'handle')
+      .attr('aria-valuemax', domain[1])
+      .attr('aria-valuemin', domain[0])
+      .attr('aria-valuenow', value)
+      .attr(
+        'aria-orientation',
+        orientation === left || orientation === right
+          ? 'vertical'
+          : 'horizontal'
+      )
+      .attr('focusable', 'true')
+      .attr('tabindex', 0)
       .attr('fill', 'white')
-      .attr('stroke', '#777');
+      .attr('stroke', '#777')
+      .on('keydown', function(d, i) {
+        var change = step || (domain[1] - domain[0]) / KEYBOARD_NUMBER_STEPS;
+
+        // TODO: Don't need to loop over value because we know which element needs to change
+        function newValue(adjustedValue) {
+          return value.map(function(d, j) {
+            if (value.length === 2) {
+              return j === i
+                ? i === 0
+                  ? Math.min(adjustedValue, alignedValue(value[1]))
+                  : Math.max(adjustedValue, alignedValue(value[0]))
+                : d;
+            } else {
+              return j === i ? adjustedValue : d;
+            }
+          });
+        }
+
+        switch (event.key) {
+          case 'ArrowLeft':
+          case 'ArrowDown':
+            slider.value(newValue(+value[i] - change));
+            event.preventDefault();
+            break;
+          case 'PageDown':
+            slider.value(newValue(+value[i] - 2 * change));
+            event.preventDefault();
+            break;
+          case 'ArrowRight':
+          case 'ArrowUp':
+            slider.value(newValue(+value[i] + change));
+            event.preventDefault();
+            break;
+          case 'PageUp':
+            slider.value(newValue(+value[i] + 2 * change));
+            event.preventDefault();
+            break;
+          case 'Home':
+            slider.value(newValue(domain[0]));
+            event.preventDefault();
+            break;
+          case 'End':
+            slider.value(newValue(domain[1]));
+            event.preventDefault();
+            break;
+        }
+      });
 
     if (displayValue && value.length === 1) {
       handleEnter
@@ -239,11 +300,11 @@ function slider(orientation, scale) {
 
     context
       .select('.track')
-      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+      .attr(x + '2', scale.range()[1] + k * SLIDER_END_PADDING);
 
     context
       .select('.track-inset')
-      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+      .attr(x + '2', scale.range()[1] + k * SLIDER_END_PADDING);
 
     if (fill) {
       context
@@ -253,7 +314,7 @@ function slider(orientation, scale) {
 
     context
       .select('.track-overlay')
-      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+      .attr(x + '2', scale.range()[1] + k * SLIDER_END_PADDING);
 
     context.select('.axis').call(
       axisFunction(scale)
@@ -315,7 +376,7 @@ function slider(orientation, scale) {
       updateHandle(newValue);
       listeners.call(
         'start',
-        slider,
+        sliderSelection,
         newValue.length === 1 ? newValue[0] : newValue
       );
       updateValue(newValue, true);
@@ -343,7 +404,7 @@ function slider(orientation, scale) {
       updateHandle(newValue);
       listeners.call(
         'drag',
-        slider,
+        sliderSelection,
         newValue.length === 1 ? newValue[0] : newValue
       );
       updateValue(newValue, true);
@@ -363,7 +424,7 @@ function slider(orientation, scale) {
       updateHandle(newValue);
       listeners.call(
         'end',
-        slider,
+        sliderSelection,
         newValue.length === 1 ? newValue[0] : newValue
       );
       updateValue(newValue, true);
@@ -450,6 +511,10 @@ function slider(orientation, scale) {
           .duration(UPDATE_DURATION)
           .attr('transform', function(d) {
             return transformAlong(scale(d));
+          })
+          .select('.handle')
+          .attr('aria-valuenow', function(d) {
+            return d;
           });
 
         if (fill) {
@@ -474,6 +539,10 @@ function slider(orientation, scale) {
           .data(newValue)
           .attr('transform', function(d) {
             return transformAlong(scale(d));
+          })
+          .select('.handle')
+          .attr('aria-valuenow', function(d) {
+            return d;
           });
 
         if (fill) {
