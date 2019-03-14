@@ -221,32 +221,62 @@ function slider(orientation, scale) {
       .attr('d', handle)
       .attr('class', 'handle')
       .attr('aria-label', 'handle')
+      .attr('aria-valuemax', domain[1])
+      .attr('aria-valuemin', domain[0])
+      .attr('aria-valuenow', value)
+      .attr(
+        'aria-orientation',
+        orientation === left || orientation === right
+          ? 'vertical'
+          : 'horizontal'
+      )
       .attr('focusable', 'true')
       .attr('tabindex', 0)
       .attr('fill', 'white')
       .attr('stroke', '#777')
-      .on('keydown', function() {
+      .on('keydown', function(d, i) {
         var change = step || (domain[1] - domain[0]) / KEYBOARD_NUMBER_STEPS;
+
+        // TODO: Don't need to loop over value because we know which element needs to change
+        function newValue(adjustedValue) {
+          return value.map(function(d, j) {
+            if (value.length === 2) {
+              return j === i
+                ? i === 0
+                  ? Math.min(adjustedValue, alignedValue(value[1]))
+                  : Math.max(adjustedValue, alignedValue(value[0]))
+                : d;
+            } else {
+              return j === i ? adjustedValue : d;
+            }
+          });
+        }
 
         switch (event.key) {
           case 'ArrowLeft':
           case 'ArrowDown':
+            slider.value(newValue(+value[i] - change));
+            event.preventDefault();
+            break;
           case 'PageDown':
-            slider.value(+value - change);
+            slider.value(newValue(+value[i] - 2 * change));
             event.preventDefault();
             break;
           case 'ArrowRight':
           case 'ArrowUp':
+            slider.value(newValue(+value[i] + change));
+            event.preventDefault();
+            break;
           case 'PageUp':
-            slider.value(+value + change);
+            slider.value(newValue(+value[i] + 2 * change));
             event.preventDefault();
             break;
           case 'Home':
-            slider.value(domain[0]);
+            slider.value(newValue(domain[0]));
             event.preventDefault();
             break;
           case 'End':
-            slider.value(domain[1]);
+            slider.value(newValue(domain[1]));
             event.preventDefault();
             break;
         }
@@ -270,11 +300,11 @@ function slider(orientation, scale) {
 
     context
       .select('.track')
-      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+      .attr(x + '2', scale.range()[1] + k * SLIDER_END_PADDING);
 
     context
       .select('.track-inset')
-      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+      .attr(x + '2', scale.range()[1] + k * SLIDER_END_PADDING);
 
     if (fill) {
       context
@@ -284,7 +314,7 @@ function slider(orientation, scale) {
 
     context
       .select('.track-overlay')
-      .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+      .attr(x + '2', scale.range()[1] + k * SLIDER_END_PADDING);
 
     context.select('.axis').call(
       axisFunction(scale)
@@ -481,6 +511,10 @@ function slider(orientation, scale) {
           .duration(UPDATE_DURATION)
           .attr('transform', function(d) {
             return transformAlong(scale(d));
+          })
+          .select('.handle')
+          .attr('aria-valuenow', function(d) {
+            return d;
           });
 
         if (fill) {
@@ -505,6 +539,10 @@ function slider(orientation, scale) {
           .data(newValue)
           .attr('transform', function(d) {
             return transformAlong(scale(d));
+          })
+          .select('.handle')
+          .attr('aria-valuenow', function(d) {
+            return d;
           });
 
         if (fill) {
