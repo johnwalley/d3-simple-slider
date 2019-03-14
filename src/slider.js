@@ -9,6 +9,7 @@ import 'd3-transition';
 
 var UPDATE_DURATION = 200;
 var SLIDER_END_PADDING = 8;
+var KEYBOARD_NUMBER_STEPS = 100;
 
 var top = 1;
 var right = 2;
@@ -224,7 +225,7 @@ function slider(orientation, scale) {
       .attr('fill', 'white')
       .attr('stroke', '#777')
       .on('keydown', function() {
-        var change = step || (domain[1] - domain[0]) / 100;
+        var change = step || (domain[1] - domain[0]) / KEYBOARD_NUMBER_STEPS;
 
         switch (event.key) {
           case 'ArrowLeft':
