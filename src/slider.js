@@ -104,10 +104,11 @@ function slider(orientation, scale) {
 
       scale = scale
         .domain(domain)
-        .range([
-          0,
-          orientation === top || orientation === bottom ? width : height,
-        ])
+        .range(
+          orientation === top || orientation === bottom
+            ? [0, width]
+            : [height, 0]
+        )
         .clamp(true);
     }
 
@@ -157,7 +158,7 @@ function slider(orientation, scale) {
     sliderEnter
       .append('line')
       .attr('class', 'track')
-      .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+      .attr(x + '1', scale.range()[0] - k * SLIDER_END_PADDING)
       .attr('stroke', '#bbb')
       .attr('stroke-width', 6)
       .attr('stroke-linecap', 'round');
@@ -165,7 +166,7 @@ function slider(orientation, scale) {
     sliderEnter
       .append('line')
       .attr('class', 'track-inset')
-      .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+      .attr(x + '1', scale.range()[0] - k * SLIDER_END_PADDING)
       .attr('stroke', '#eee')
       .attr('stroke-width', 4)
       .attr('stroke-linecap', 'round');
@@ -177,7 +178,7 @@ function slider(orientation, scale) {
         .attr(
           x + '1',
           value.length === 1
-            ? scale.range()[0] - SLIDER_END_PADDING
+            ? scale.range()[0] - k * SLIDER_END_PADDING
             : scale(value[0])
         )
         .attr('stroke', fill)
@@ -188,7 +189,7 @@ function slider(orientation, scale) {
     sliderEnter
       .append('line')
       .attr('class', 'track-overlay')
-      .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+      .attr(x + '1', scale.range()[0] - k * SLIDER_END_PADDING)
       .attr('stroke', 'transparent')
       .attr('stroke-width', 40)
       .attr('stroke-linecap', 'round')
@@ -459,7 +460,7 @@ function slider(orientation, scale) {
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[0] - SLIDER_END_PADDING
+                ? scale.range()[0] - k * SLIDER_END_PADDING
                 : scale(newValue[0])
             )
             .attr(
@@ -480,7 +481,7 @@ function slider(orientation, scale) {
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[0] - SLIDER_END_PADDING
+                ? scale.range()[0] - k * SLIDER_END_PADDING
                 : scale(newValue[0])
             )
             .attr(
