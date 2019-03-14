@@ -229,12 +229,22 @@ function slider(orientation, scale) {
         switch (event.key) {
           case 'ArrowLeft':
           case 'ArrowDown':
+          case 'PageDown':
             slider.value(+value - change);
             event.preventDefault();
             break;
           case 'ArrowRight':
           case 'ArrowUp':
+          case 'PageUp':
             slider.value(+value + change);
+            event.preventDefault();
+            break;
+          case 'Home':
+            slider.value(domain[0]);
+            event.preventDefault();
+            break;
+          case 'End':
+            slider.value(domain[1]);
             event.preventDefault();
             break;
         }
