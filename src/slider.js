@@ -356,6 +356,21 @@ function slider(orientation, scale) {
 
     fadeTickText();
 
+    function computeDragNewValue(pos) {
+      var adjustedValue = alignedValue(scale.invert(pos));
+      return value.map(function(d, i) {
+        if (value.length === 2) {
+          return i === handleIndex
+            ? handleIndex === 0
+            ? Math.min(adjustedValue, alignedValue(value[1]))
+            : Math.max(adjustedValue, alignedValue(value[0]))
+          : d;
+        } else {
+          return i === handleIndex ? adjustedValue : d;
+        }
+      });
+    }
+
     function dragstarted() {
       select(this).classed('active', true);
 
@@ -386,20 +401,7 @@ function slider(orientation, scale) {
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
       );
-
-      var adjustedValue = alignedValue(scale.invert(pos));
-
-      var newValue = value.map(function(d, i) {
-        if (value.length === 2) {
-          return i === handleIndex
-            ? handleIndex === 0
-              ? Math.min(adjustedValue, alignedValue(value[1]))
-              : Math.max(adjustedValue, alignedValue(value[0]))
-            : d;
-        } else {
-          return i === handleIndex ? adjustedValue : d;
-        }
-      });
+      var newValue = computeDragNewValue(pos);
 
       updateHandle(newValue);
       listeners.call(
@@ -416,10 +418,7 @@ function slider(orientation, scale) {
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
       );
-
-      var newValue = value.map(function(d, i) {
-        return i === handleIndex ? alignedValue(scale.invert(pos)) : d;
-      });
+      var newValue = computeDragNewValue(pos);
 
       updateHandle(newValue);
       listeners.call(
