@@ -624,7 +624,7 @@ function slider(orientation, scale) {
     }
 
     var toArray = Array.isArray(_) ? _ : [_];
-    toArray.sort((a, b) => a - b);
+    toArray.sort(function (a, b) { return a - b; });
     var pos = toArray.map(scale).map(identityClamped);
     var newValue = pos.map(scale.invert).map(alignedValue);
 
@@ -644,7 +644,7 @@ function slider(orientation, scale) {
     }
 
     var toArray = Array.isArray(_) ? _ : [_];
-    toArray.sort((a, b) => a - b);
+    toArray.sort(function (a, b) { return a - b; });
     var pos = toArray.map(scale).map(identityClamped);
     var newValue = pos.map(scale.invert).map(alignedValue);
 
@@ -665,7 +665,7 @@ function slider(orientation, scale) {
 
     var toArray = Array.isArray(_) ? _ : [_];
 
-    toArray.sort((a, b) => a - b);
+    toArray.sort(function (a, b) { return a - b; });
 
     defaultValue = toArray;
     value = toArray;
