@@ -8,3 +8,4 @@ example/
 .prettierrc
 .eslintrc
 rollup.config.js
+.prettierignore
