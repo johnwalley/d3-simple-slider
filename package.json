@@ -1,6 +1,6 @@
 {
   "name": "d3-simple-slider",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Renders an SVG slider",
   "keywords": [
     "d3",
@@ -54,7 +54,7 @@
     "tape": "^4.10.1"
   },
   "dependencies": {
-    "d3-array": "^2.0.0",
+    "d3-array": "^1.0.0",
     "d3-axis": "^1.0.8",
     "d3-dispatch": "^1.0.0",
     "d3-drag": "^1.0.0",
