@@ -362,9 +362,9 @@ function slider(orientation, scale) {
         if (value.length === 2) {
           return i === handleIndex
             ? handleIndex === 0
-            ? Math.min(adjustedValue, alignedValue(value[1]))
-            : Math.max(adjustedValue, alignedValue(value[0]))
-          : d;
+              ? Math.min(adjustedValue, alignedValue(value[1]))
+              : Math.max(adjustedValue, alignedValue(value[0]))
+            : d;
         } else {
           return i === handleIndex ? adjustedValue : d;
         }
@@ -378,11 +378,18 @@ function slider(orientation, scale) {
         orientation === bottom || orientation === top ? event.x : event.y
       );
 
-      handleIndex = scan(
-        value.map(function(d) {
-          return Math.abs(d - alignedValue(scale.invert(pos)));
-        })
-      );
+      // Handle cases where both handles are at the same end of the slider
+      if (value[0] === domain[0] && value[1] === domain[0]) {
+        handleIndex = 1;
+      } else if (value[0] === domain[1] && value[1] === domain[1]) {
+        handleIndex = 0;
+      } else {
+        handleIndex = scan(
+          value.map(function(d) {
+            return Math.abs(d - alignedValue(scale.invert(pos)));
+          })
+        );
+      }
 
       var newValue = value.map(function(d, i) {
         return i === handleIndex ? alignedValue(scale.invert(pos)) : d;
@@ -624,7 +631,9 @@ function slider(orientation, scale) {
     }
 
     var toArray = Array.isArray(_) ? _ : [_];
-    toArray.sort(function (a, b) { return a - b; });
+    toArray.sort(function(a, b) {
+      return a - b;
+    });
     var pos = toArray.map(scale).map(identityClamped);
     var newValue = pos.map(scale.invert).map(alignedValue);
 
@@ -644,7 +653,9 @@ function slider(orientation, scale) {
     }
 
     var toArray = Array.isArray(_) ? _ : [_];
-    toArray.sort(function (a, b) { return a - b; });
+    toArray.sort(function(a, b) {
+      return a - b;
+    });
     var pos = toArray.map(scale).map(identityClamped);
     var newValue = pos.map(scale.invert).map(alignedValue);
 
@@ -665,7 +676,9 @@ function slider(orientation, scale) {
 
     var toArray = Array.isArray(_) ? _ : [_];
 
-    toArray.sort(function (a, b) { return a - b; });
+    toArray.sort(function(a, b) {
+      return a - b;
+    });
 
     defaultValue = toArray;
     value = toArray;
