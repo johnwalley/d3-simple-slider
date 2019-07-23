@@ -1,0 +1,8 @@
+parserOptions:
+  ecmaVersion: 2015
+  sourceType: module
+
+extends: 'eslint:recommended'
+
+rules:
+  no-cond-assign: 0
