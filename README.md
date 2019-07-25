@@ -14,11 +14,11 @@ Examples:
 
 Inspired by The New York Times [Is It Better to Rent or Buy?](https://www.nytimes.com/interactive/2014/upshot/buy-rent-calculator.html)
 
-## Motivation
+## Why use d3-simple-slider?
 
-Include an interactive slider in an svg element. For example, use a slider in place of an axis in a chart.
+If you need to include a slider within an svg element this is for you. For example, use a slider in place of an axis in a chart.
 
-Can also be used by itself as a generic slider. However, there are many existing html-based components which may be better suited to your needs. Of course you might just love using d3!
+If you don't need to work inside an svg element then I would consider using one of the many excellent html-based components which may be better suited to your needs. Of course you might just love using d3!
 
 ## Installing
 
