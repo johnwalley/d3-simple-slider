@@ -46,8 +46,14 @@ tape('slider.default(value) sets the default range', function(test) {
 });
 
 tape('sliderVertical(selection) produces the expected result', function(test) {
-  var bodyActual = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window
-    .document.body;
+  var window = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window;
+  global.window = window;
+  global.document = window.document;
+  global.navigator = {
+    userAgent: 'node.js',
+  };
+  copyProps(window, global);
+  var bodyActual = window.document.body;
   var bodyExpected = new jsdom.JSDOM(file('slider-horizontal.html')).window
     .document.body;
 
@@ -62,8 +68,14 @@ tape('sliderVertical(selection) produces the expected result', function(test) {
 tape('sliderHorizontal(selection) produces the expected result', function(
   test
 ) {
-  var bodyActual = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window
-    .document.body;
+  var window = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window;
+  global.window = window;
+  global.document = window.document;
+  global.navigator = {
+    userAgent: 'node.js',
+  };
+  copyProps(window, global);
+  var bodyActual = window.document.body;
   var bodyExpected = new jsdom.JSDOM(file('slider-vertical.html')).window
     .document.body;
 
@@ -79,4 +91,11 @@ function file(file) {
   return fs
     .readFileSync(path.join(__dirname, file), 'utf8')
     .replace(/\n\s*/gm, '');
+}
+
+function copyProps(src, target) {
+  Object.defineProperties(target, {
+    ...Object.getOwnPropertyDescriptors(src),
+    ...Object.getOwnPropertyDescriptors(target),
+  });
 }
