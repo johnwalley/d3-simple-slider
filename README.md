@@ -99,12 +99,20 @@ Constructs a new vertical slider generator. Ticks to the left;
 
 Render the slider to the given _context_, which may be either a [selection](https://github.com/d3/d3-selection) of SVG containers (either SVG or G elements) or a corresponding [transition](https://github.com/d3/d3-transition).
 
-<a name="slider_ticks" href="#slider_ticks">#</a> <i>slider</i>.<b>ticks</b>(<i>count</i>) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L519 'Source')
+<a name="slider_ticks" href="#slider_ticks">#</a> <i>slider</i>.<b>ticks</b>([<i>count</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L519 'Source')
 
 To generate twenty ticks:
 
 ```js
 slider.ticks(20);
+```
+
+<a name="slider_tickValues" href="#slider_tickValues">#</a> <i>slider</i>.<b>tickValues</b>([<i>values</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L694 'Source')
+
+If a values array is specified, the specified values are used for ticks rather than using the sliders' automatic tick generator. If values is null, clears any previously-set explicit tick values and reverts back to the sliders' tick generator. If values is not specified, returns the current tick values, which defaults to null. For example, to generate ticks at specific values:
+
+```js
+slider.tickValues([1, 2, 3, 5, 8, 13, 21]);
 ```
 
 <a name="slider_tickFormat" href="#slider_tickFormat">#</a> <i>slider</i>.<b>tickFormat</b>([<i>format</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L522 'Source')
