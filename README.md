@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/d3-simple-slider.svg)](https://npmjs.com/package/d3-simple-slider)
 [![Build Status](https://travis-ci.org/johnwalley/d3-simple-slider.svg?branch=master)](https://travis-ci.org/johnwalley/d3-simple-slider)
+![](https://github.com/johnwalley/d3-simple-slider/workflows/Node%20CI/badge.svg)
 
 Render a simple interactive slider using SVG.
 
