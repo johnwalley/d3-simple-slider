@@ -7,7 +7,12 @@ import { min, max, range } from 'd3-array';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import { axisRight } from 'd3-axis';
 import { symbol, symbolCircle, symbolSquare } from 'd3-shape';
-import { sliderBottom, sliderLeft } from '../src/slider';
+import {
+  sliderBottom,
+  sliderLeft,
+  sliderRight,
+  sliderTop,
+} from '../src/slider';
 
 storiesOf('Basic functionality', module)
   .add('Simple', () => {
@@ -29,6 +34,30 @@ storiesOf('Basic functionality', module)
       .attr('height', 100)
       .append('g')
       .attr('transform', 'translate(30,30)');
+
+    g.call(slider);
+
+    return div;
+  })
+  .add('Simple Top', () => {
+    const div = document.createElement('div');
+
+    const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderTop()
+      .min(min(data))
+      .max(max(data))
+      .width(300)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default(0.015);
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,60)');
 
     g.call(slider);
 
@@ -174,6 +203,30 @@ storiesOf('Basic functionality', module)
       .attr('height', 400)
       .append('g')
       .attr('transform', 'translate(60,30)');
+
+    g.call(slider);
+
+    return div;
+  })
+  .add('Vertical Right', () => {
+    const div = document.createElement('div');
+
+    const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderRight()
+      .min(min(data1))
+      .max(max(data1))
+      .height(300)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default(0.015);
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 100)
+      .attr('height', 400)
+      .append('g')
+      .attr('transform', 'translate(10,30)');
 
     g.call(slider);
 

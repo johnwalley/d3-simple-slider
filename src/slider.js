@@ -49,6 +49,7 @@ function slider(orientation, scale) {
   var handleIndex = null;
 
   var k = orientation === top || orientation === left ? -1 : 1;
+  var j = orientation === left || orientation === right ? -1 : 1;
   var x = orientation === left || orientation === right ? 'y' : 'x';
   var y = orientation === left || orientation === right ? 'x' : 'y';
 
@@ -159,7 +160,7 @@ function slider(orientation, scale) {
     sliderEnter
       .append('line')
       .attr('class', 'track')
-      .attr(x + '1', scale.range()[0] - k * SLIDER_END_PADDING)
+      .attr(x + '1', scale.range()[0] - j * SLIDER_END_PADDING)
       .attr('stroke', '#bbb')
       .attr('stroke-width', 6)
       .attr('stroke-linecap', 'round');
@@ -167,7 +168,7 @@ function slider(orientation, scale) {
     sliderEnter
       .append('line')
       .attr('class', 'track-inset')
-      .attr(x + '1', scale.range()[0] - k * SLIDER_END_PADDING)
+      .attr(x + '1', scale.range()[0] - j * SLIDER_END_PADDING)
       .attr('stroke', '#eee')
       .attr('stroke-width', 4)
       .attr('stroke-linecap', 'round');
@@ -179,7 +180,7 @@ function slider(orientation, scale) {
         .attr(
           x + '1',
           value.length === 1
-            ? scale.range()[0] - k * SLIDER_END_PADDING
+            ? scale.range()[0] - j * SLIDER_END_PADDING
             : scale(value[0])
         )
         .attr('stroke', fill)
@@ -190,7 +191,7 @@ function slider(orientation, scale) {
     sliderEnter
       .append('line')
       .attr('class', 'track-overlay')
-      .attr(x + '1', scale.range()[0] - k * SLIDER_END_PADDING)
+      .attr(x + '1', scale.range()[0] - j * SLIDER_END_PADDING)
       .attr('stroke', 'transparent')
       .attr('stroke-width', 40)
       .attr('stroke-linecap', 'round')
@@ -300,11 +301,11 @@ function slider(orientation, scale) {
 
     context
       .select('.track')
-      .attr(x + '2', scale.range()[1] + k * SLIDER_END_PADDING);
+      .attr(x + '2', scale.range()[1] + j * SLIDER_END_PADDING);
 
     context
       .select('.track-inset')
-      .attr(x + '2', scale.range()[1] + k * SLIDER_END_PADDING);
+      .attr(x + '2', scale.range()[1] + j * SLIDER_END_PADDING);
 
     if (fill) {
       context
@@ -314,7 +315,7 @@ function slider(orientation, scale) {
 
     context
       .select('.track-overlay')
-      .attr(x + '2', scale.range()[1] + k * SLIDER_END_PADDING);
+      .attr(x + '2', scale.range()[1] + j * SLIDER_END_PADDING);
 
     context.select('.axis').call(
       axisFunction(scale)
