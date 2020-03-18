@@ -9,3 +9,5 @@ example/
 .eslintrc
 rollup.config.js
 .prettierignore
+.eslintrc.yaml              
+.github/workflows/nodejs.yml
