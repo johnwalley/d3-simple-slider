@@ -283,7 +283,7 @@ function slider(orientation, scale) {
         }
       });
 
-    if (displayValue && value.length === 1) {
+    if (displayValue) {
       handleEnter
         .append('text')
         .attr('font-size', 10) // TODO: Remove coupling to font-size in d3-axis
@@ -296,7 +296,9 @@ function slider(orientation, scale) {
             ? '.71em'
             : '.32em'
         )
-        .text(tickFormat(value[0]));
+        .text(function(d, idx) {
+          return tickFormat(value[idx]);
+        });
     }
 
     context
@@ -439,23 +441,26 @@ function slider(orientation, scale) {
       handleIndex = null;
     }
 
-    textSelection = selection.select('.parameter-value text');
+    textSelection = selection.selectAll('.parameter-value text');
     fillSelection = selection.select('.track-fill');
   }
 
   function fadeTickText() {
     if (selection) {
-      if (displayValue && value.length === 1) {
-        var distances = [];
+      if (displayValue) {
+        var indices = [];
+        value.forEach(function(val) {
+          var distances = [];
 
-        selection.selectAll('.axis .tick').each(function(d) {
-          distances.push(Math.abs(d - value[0]));
+          selection.selectAll('.axis .tick').each(function(d) {
+            distances.push(Math.abs(d - val));
+          });
+
+          indices.push(scan(distances));
         });
 
-        var index = scan(distances);
-
         selection.selectAll('.axis .tick text').attr('opacity', function(d, i) {
-          return i === index ? 0 : 1;
+          return ~indices.indexOf(i) ? 0 : 1;
         });
       }
     }
@@ -568,7 +573,9 @@ function slider(orientation, scale) {
       }
 
       if (displayValue) {
-        textSelection.text(displayFormat(newValue[0]));
+        textSelection.text(function(d, idx) {
+          return displayFormat(newValue[idx]);
+        });
       }
     }
   }
