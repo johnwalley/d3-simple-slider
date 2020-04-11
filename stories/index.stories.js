@@ -208,6 +208,30 @@ storiesOf('Basic functionality', module)
 
     return div;
   })
+  .add('Vertical Range', () => {
+    const div = document.createElement('div');
+
+    const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderLeft()
+      .min(min(data1))
+      .max(max(data1))
+      .height(300)
+      .tickFormat(format('.2%'))
+      .ticks(5)
+      .default([0.008, 0.019]);
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 100)
+      .attr('height', 400)
+      .append('g')
+      .attr('transform', 'translate(60,30)');
+
+    g.call(slider);
+
+    return div;
+  })
   .add('Vertical Right', () => {
     const div = document.createElement('div');
 

@@ -296,6 +296,7 @@ function slider(orientation, scale) {
             ? '.71em'
             : '.32em'
         )
+        .attr('transform', value.length > 1 ? 'translate(0,0)' : null)
         .text(function(d, idx) {
           return tickFormat(value[idx]);
         });
@@ -462,6 +463,33 @@ function slider(orientation, scale) {
         selection.selectAll('.axis .tick text').attr('opacity', function(d, i) {
           return ~indices.indexOf(i) ? 0 : 1;
         });
+
+        if (textSelection && value.length > 1) {
+          var rect,
+            shift,
+            pos = [],
+            size = [];
+          textSelection.nodes().forEach(function(d, i) {
+            rect = d.getBoundingClientRect();
+            shift = d
+              .getAttribute('transform')
+              .split(/[()]/)[1]
+              .split(',')[x === 'x' ? 0 : 1];
+            pos[i] = rect[x] - parseFloat(shift);
+            size[i] = rect[x === 'x' ? 'width' : 'height'];
+          });
+          if (x === 'x') {
+            shift = Math.max(0, (pos[0] + size[0] - pos[1]) / 2);
+            textSelection.attr('transform', function(d, i) {
+              return 'translate(' + (i ? shift : -shift) + ',0)';
+            });
+          } else {
+            shift = Math.max(0, (pos[1] + size[1] - pos[0]) / 2);
+            textSelection.attr('transform', function(d, i) {
+              return 'translate(0,' + (i ? -shift : shift) + ')';
+            });
+          }
+        }
       }
     }
   }
