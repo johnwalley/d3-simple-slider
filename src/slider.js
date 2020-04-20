@@ -120,11 +120,8 @@ function slider(orientation, scale) {
       .clamp(true);
 
     // Ensure value is valid
-    value = value.map(function(d) {
-      return scaleLinear()
-        .range(domain)
-        .domain(domain)
-        .clamp(true)(d);
+    value = value.map(function (d) {
+      return scaleLinear().range(domain).domain(domain).clamp(true)(d);
     });
 
     tickFormat = tickFormat || scale.tickFormat();
@@ -151,10 +148,7 @@ function slider(orientation, scale) {
           : 'ns-resize'
       )
       .call(
-        drag()
-          .on('start', dragstarted)
-          .on('drag', dragged)
-          .on('end', dragended)
+        drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
       );
 
     sliderEnter
@@ -203,7 +197,7 @@ function slider(orientation, scale) {
       .enter()
       .append('g')
       .attr('class', 'parameter-value')
-      .attr('transform', function(d) {
+      .attr('transform', function (d) {
         return transformAlong(scale(d));
       })
       .attr('font-family', 'sans-serif')
@@ -235,12 +229,12 @@ function slider(orientation, scale) {
       .attr('tabindex', 0)
       .attr('fill', 'white')
       .attr('stroke', '#777')
-      .on('keydown', function(d, i) {
+      .on('keydown', function (d, i) {
         var change = step || (domain[1] - domain[0]) / KEYBOARD_NUMBER_STEPS;
 
         // TODO: Don't need to loop over value because we know which element needs to change
         function newValue(adjustedValue) {
-          return value.map(function(d, j) {
+          return value.map(function (d, j) {
             if (value.length === 2) {
               return j === i
                 ? i === 0
@@ -297,7 +291,7 @@ function slider(orientation, scale) {
             : '.32em'
         )
         .attr('transform', value.length > 1 ? 'translate(0,0)' : null)
-        .text(function(d, idx) {
+        .text(function (d, idx) {
           return tickFormat(value[idx]);
         });
     }
@@ -320,18 +314,17 @@ function slider(orientation, scale) {
       .select('.track-overlay')
       .attr(x + '2', scale.range()[1] + j * SLIDER_END_PADDING);
 
-    context.select('.axis').call(
-      axisFunction(scale)
-        .tickFormat(tickFormat)
-        .ticks(ticks)
-        .tickValues(tickValues)
-    );
+    context
+      .select('.axis')
+      .call(
+        axisFunction(scale)
+          .tickFormat(tickFormat)
+          .ticks(ticks)
+          .tickValues(tickValues)
+      );
 
     // https://bl.ocks.org/mbostock/4323929
-    selection
-      .select('.axis')
-      .select('.domain')
-      .remove();
+    selection.select('.axis').select('.domain').remove();
 
     context.select('.axis').attr('transform', transformAcross(k * 7));
 
@@ -354,7 +347,7 @@ function slider(orientation, scale) {
 
     context.selectAll('.axis line').attr('stroke', '#aaa');
 
-    context.selectAll('.parameter-value').attr('transform', function(d) {
+    context.selectAll('.parameter-value').attr('transform', function (d) {
       return transformAlong(scale(d));
     });
 
@@ -362,7 +355,7 @@ function slider(orientation, scale) {
 
     function computeDragNewValue(pos) {
       var adjustedValue = alignedValue(scale.invert(pos));
-      return value.map(function(d, i) {
+      return value.map(function (d, i) {
         if (value.length === 2) {
           return i === handleIndex
             ? handleIndex === 0
@@ -389,13 +382,13 @@ function slider(orientation, scale) {
         handleIndex = 0;
       } else {
         handleIndex = scan(
-          value.map(function(d) {
+          value.map(function (d) {
             return Math.abs(d - alignedValue(scale.invert(pos)));
           })
         );
       }
 
-      var newValue = value.map(function(d, i) {
+      var newValue = value.map(function (d, i) {
         return i === handleIndex ? alignedValue(scale.invert(pos)) : d;
       });
 
@@ -450,43 +443,50 @@ function slider(orientation, scale) {
     if (selection) {
       if (displayValue) {
         var indices = [];
-        value.forEach(function(val) {
+        value.forEach(function (val) {
           var distances = [];
 
-          selection.selectAll('.axis .tick').each(function(d) {
+          selection.selectAll('.axis .tick').each(function (d) {
             distances.push(Math.abs(d - val));
           });
 
           indices.push(scan(distances));
         });
 
-        selection.selectAll('.axis .tick text').attr('opacity', function(d, i) {
-          return ~indices.indexOf(i) ? 0 : 1;
-        });
+        selection
+          .selectAll('.axis .tick text')
+          .attr('opacity', function (d, i) {
+            return ~indices.indexOf(i) ? 0 : 1;
+          });
 
         if (textSelection && value.length > 1) {
-          var rect,
-            shift,
-            pos = [],
-            size = [];
-          textSelection.nodes().forEach(function(d, i) {
+          var rect;
+          var shift;
+          var pos = [];
+          var size = [];
+
+          textSelection.nodes().forEach(function (d, i) {
             rect = d.getBoundingClientRect();
-            shift = d
-              .getAttribute('transform')
-              .split(/[()]/)[1]
-              .split(',')[x === 'x' ? 0 : 1];
+
+            shift = d.getAttribute('transform').split(/[()]/)[1].split(',')[
+              x === 'x' ? 0 : 1
+            ];
+
             pos[i] = rect[x] - parseFloat(shift);
             size[i] = rect[x === 'x' ? 'width' : 'height'];
           });
+
           if (x === 'x') {
             shift = Math.max(0, (pos[0] + size[0] - pos[1]) / 2);
-            textSelection.attr('transform', function(d, i) {
-              return 'translate(' + (i ? shift : -shift) + ',0)';
+
+            textSelection.attr('transform', function (d, i) {
+              return 'translate(' + (i === 1 ? shift : -shift) + ',0)';
             });
           } else {
             shift = Math.max(0, (pos[1] + size[1] - pos[0]) / 2);
-            textSelection.attr('transform', function(d, i) {
-              return 'translate(0,' + (i ? -shift : shift) + ')';
+
+            textSelection.attr('transform', function (d, i) {
+              return 'translate(0,' + (i === 1 ? -shift : shift) + ')';
             });
           }
         }
@@ -508,7 +508,7 @@ function slider(orientation, scale) {
 
     if (marks) {
       var index = scan(
-        marks.map(function(d) {
+        marks.map(function (d) {
           return Math.abs(newValue - d);
         })
       );
@@ -549,11 +549,11 @@ function slider(orientation, scale) {
           .transition()
           .ease(easeQuadOut)
           .duration(UPDATE_DURATION)
-          .attr('transform', function(d) {
+          .attr('transform', function (d) {
             return transformAlong(scale(d));
           })
           .select('.handle')
-          .attr('aria-valuenow', function(d) {
+          .attr('aria-valuenow', function (d) {
             return d;
           });
 
@@ -577,11 +577,11 @@ function slider(orientation, scale) {
         selection
           .selectAll('.parameter-value')
           .data(newValue)
-          .attr('transform', function(d) {
+          .attr('transform', function (d) {
             return transformAlong(scale(d));
           })
           .select('.handle')
-          .attr('aria-valuenow', function(d) {
+          .attr('aria-valuenow', function (d) {
             return d;
           });
 
@@ -601,63 +601,63 @@ function slider(orientation, scale) {
       }
 
       if (displayValue) {
-        textSelection.text(function(d, idx) {
+        textSelection.text(function (d, idx) {
           return displayFormat(newValue[idx]);
         });
       }
     }
   }
 
-  slider.min = function(_) {
+  slider.min = function (_) {
     if (!arguments.length) return domain[0];
     domain[0] = _;
     return slider;
   };
 
-  slider.max = function(_) {
+  slider.max = function (_) {
     if (!arguments.length) return domain[1];
     domain[1] = _;
     return slider;
   };
 
-  slider.domain = function(_) {
+  slider.domain = function (_) {
     if (!arguments.length) return domain;
     domain = _;
     return slider;
   };
 
-  slider.width = function(_) {
+  slider.width = function (_) {
     if (!arguments.length) return width;
     width = _;
     return slider;
   };
 
-  slider.height = function(_) {
+  slider.height = function (_) {
     if (!arguments.length) return height;
     height = _;
     return slider;
   };
 
-  slider.tickFormat = function(_) {
+  slider.tickFormat = function (_) {
     if (!arguments.length) return tickFormat;
     tickFormat = _;
     return slider;
   };
 
-  slider.displayFormat = function(_) {
+  slider.displayFormat = function (_) {
     if (!arguments.length) return displayFormat;
     displayFormat = _;
     return slider;
   };
 
-  slider.ticks = function(_) {
+  slider.ticks = function (_) {
     if (!arguments.length) return ticks;
 
     ticks = _;
     return slider;
   };
 
-  slider.value = function(_) {
+  slider.value = function (_) {
     if (!arguments.length) {
       if (value.length === 1) {
         return value[0];
@@ -667,7 +667,7 @@ function slider(orientation, scale) {
     }
 
     var toArray = Array.isArray(_) ? _ : [_];
-    toArray.sort(function(a, b) {
+    toArray.sort(function (a, b) {
       return a - b;
     });
     var pos = toArray.map(scale).map(identityClamped);
@@ -679,7 +679,7 @@ function slider(orientation, scale) {
     return slider;
   };
 
-  slider.silentValue = function(_) {
+  slider.silentValue = function (_) {
     if (!arguments.length) {
       if (value.length === 1) {
         return value[0];
@@ -689,7 +689,7 @@ function slider(orientation, scale) {
     }
 
     var toArray = Array.isArray(_) ? _ : [_];
-    toArray.sort(function(a, b) {
+    toArray.sort(function (a, b) {
       return a - b;
     });
     var pos = toArray.map(scale).map(identityClamped);
@@ -701,7 +701,7 @@ function slider(orientation, scale) {
     return slider;
   };
 
-  slider.default = function(_) {
+  slider.default = function (_) {
     if (!arguments.length) {
       if (defaultValue.length === 1) {
         return defaultValue[0];
@@ -712,7 +712,7 @@ function slider(orientation, scale) {
 
     var toArray = Array.isArray(_) ? _ : [_];
 
-    toArray.sort(function(a, b) {
+    toArray.sort(function (a, b) {
       return a - b;
     });
 
@@ -721,43 +721,43 @@ function slider(orientation, scale) {
     return slider;
   };
 
-  slider.step = function(_) {
+  slider.step = function (_) {
     if (!arguments.length) return step;
     step = _;
     return slider;
   };
 
-  slider.tickValues = function(_) {
+  slider.tickValues = function (_) {
     if (!arguments.length) return tickValues;
     tickValues = _;
     return slider;
   };
 
-  slider.marks = function(_) {
+  slider.marks = function (_) {
     if (!arguments.length) return marks;
     marks = _;
     return slider;
   };
 
-  slider.handle = function(_) {
+  slider.handle = function (_) {
     if (!arguments.length) return handle;
     handle = _;
     return slider;
   };
 
-  slider.displayValue = function(_) {
+  slider.displayValue = function (_) {
     if (!arguments.length) return displayValue;
     displayValue = _;
     return slider;
   };
 
-  slider.fill = function(_) {
+  slider.fill = function (_) {
     if (!arguments.length) return fill;
     fill = _;
     return slider;
   };
 
-  slider.on = function() {
+  slider.on = function () {
     var value = listeners.on.apply(listeners, arguments);
     return value === listeners ? slider : value;
   };
