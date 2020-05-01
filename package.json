@@ -51,7 +51,7 @@
     "pretty-quick": "^2.0.1",
     "rollup": "^1.27.3",
     "rollup-plugin-terser": "^5.1.2",
-    "tape": "^4.11.0"
+    "tape": "^5.0.0"
   },
   "dependencies": {
     "d3-array": "^1.0.0",
