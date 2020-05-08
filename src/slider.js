@@ -670,11 +670,16 @@ function slider(orientation, scale) {
     toArray.sort(function (a, b) {
       return a - b;
     });
-    var pos = toArray.map(scale).map(identityClamped);
-    var newValue = pos.map(scale.invert).map(alignedValue);
 
-    updateHandle(newValue, true);
-    updateValue(newValue, true);
+    if (scale) {
+      var pos = toArray.map(scale).map(identityClamped);
+      var newValue = pos.map(scale.invert).map(alignedValue);
+
+      updateHandle(newValue, false);
+      updateValue(newValue, false);
+    } else {
+      value = toArray;
+    }
 
     return slider;
   };
@@ -692,11 +697,16 @@ function slider(orientation, scale) {
     toArray.sort(function (a, b) {
       return a - b;
     });
-    var pos = toArray.map(scale).map(identityClamped);
-    var newValue = pos.map(scale.invert).map(alignedValue);
 
-    updateHandle(newValue, false);
-    updateValue(newValue, false);
+    if (scale) {
+      var pos = toArray.map(scale).map(identityClamped);
+      var newValue = pos.map(scale.invert).map(alignedValue);
+
+      updateHandle(newValue, false);
+      updateValue(newValue, false);
+    } else {
+      value = toArray;
+    }
 
     return slider;
   };
