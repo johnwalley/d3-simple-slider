@@ -40,7 +40,7 @@ If you use NPM, `npm install d3-simple-slider`. Otherwise, download the [latest 
     .step(1)
     .width(300)
     .displayValue(false)
-    .on('onchange', val => {
+    .on('onchange', (val) => {
       d3.select('#value').text(val);
     });
 
@@ -206,3 +206,11 @@ The _typenames_ is a string containing one or more _typename_ separated by white
 You might consider throttling `onchange` and `drag` events. For example using [`lodash.throttle`](https://lodash.com/docs/4.17.4#throttle).
 
 See [_dispatch_.on](https://github.com/d3/d3-dispatch#dispatch_on) for more.
+
+## 🤝 How to Contribute
+
+### A note on how this repository is developed
+
+The production source code does not make use of most modern syntax and runtime features. The exception is importing and exporting modules. This reflects the approach used by official d3 packages at the time this project was started.
+
+With newer versions of d3 modules now starting to use newer features, e.g. [d3-array](https://github.com/d3/d3-array) we may introduce new language features but it would be a breaking change and require a new major version.
