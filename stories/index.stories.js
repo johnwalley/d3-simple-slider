@@ -1,3 +1,4 @@
+/*eslint-env browser*/
 import { document } from 'global';
 import { storiesOf } from '@storybook/html';
 import { event, select } from 'd3-selection';
@@ -6,7 +7,7 @@ import { timeFormat } from 'd3-time-format';
 import { min, max, range } from 'd3-array';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import { axisRight } from 'd3-axis';
-import { symbol, symbolCircle, symbolSquare } from 'd3-shape';
+import { symbol, symbolCircle } from 'd3-shape';
 import {
   sliderBottom,
   sliderLeft,
@@ -14,7 +15,7 @@ import {
   sliderTop,
 } from '../src/slider';
 
-storiesOf('Basic functionality', module)
+storiesOf('Basic functionality')
   .add('Simple', () => {
     const div = document.createElement('div');
 
@@ -91,7 +92,7 @@ storiesOf('Basic functionality', module)
   .add('Time', () => {
     const div = document.createElement('div');
 
-    const data = range(0, 10).map(function(d) {
+    const data = range(0, 10).map(function (d) {
       return new Date(1995 + d, 10, 3);
     });
 
@@ -161,7 +162,7 @@ storiesOf('Basic functionality', module)
       .default(defaultValue)
       .fill('skyblue')
       .displayValue(true)
-      .on('onchange', val => {
+      .on('onchange', (val) => {
         p.text(val.map(format('.2%')).join('-'));
       });
 
@@ -174,7 +175,7 @@ storiesOf('Basic functionality', module)
 
     g.call(slider);
 
-    const button = select(div)
+    select(div)
       .append('button')
       .text('Reset')
       .on('click', () => {
@@ -257,7 +258,7 @@ storiesOf('Basic functionality', module)
     return div;
   });
 
-storiesOf('Extended functionality', module)
+storiesOf('Extended functionality')
   .add('Alternative handle', () => {
     const div = document.createElement('div');
 
@@ -270,11 +271,7 @@ storiesOf('Extended functionality', module)
       .tickFormat(format('.2%'))
       .ticks(5)
       .default(0.015)
-      .handle(
-        symbol()
-          .type(symbolCircle)
-          .size(200)()
-      );
+      .handle(symbol().type(symbolCircle).size(200)());
 
     const g = select(div)
       .append('svg')
@@ -312,15 +309,13 @@ storiesOf('Extended functionality', module)
 
     setInterval(() => {
       slider.width(Math.random() * 100 + 200);
-      g.transition()
-        .duration(200)
-        .call(slider);
+      g.transition().duration(200).call(slider);
     }, 1000);
 
     return div;
   });
 
-storiesOf('Examples', module)
+storiesOf('Examples')
   .add('New York Times', () => {
     const div = document.createElement('div');
 
@@ -328,7 +323,7 @@ storiesOf('Examples', module)
     const height = 120;
     const margin = { top: 20, right: 50, bottom: 50, left: 40 };
 
-    const data = range(1, 41).map(d => ({
+    const data = range(1, 41).map((d) => ({
       year: d,
       value: 10000 * Math.exp(-(d - 1) / 40),
     }));
@@ -341,12 +336,12 @@ storiesOf('Examples', module)
     const padding = 0.1;
 
     const xBand = scaleBand()
-      .domain(data.map(d => d.year))
+      .domain(data.map((d) => d.year))
       .range([margin.left, width - margin.right])
       .padding(padding);
 
     const xLinear = scaleLinear()
-      .domain([min(data, d => d.year), max(data, d => d.year)])
+      .domain([min(data, (d) => d.year), max(data, (d) => d.year)])
       .range([
         margin.left + xBand.bandwidth() / 2 + xBand.step() * padding - 0.5,
         width -
@@ -357,49 +352,42 @@ storiesOf('Examples', module)
       ]);
 
     const y = scaleLinear()
-      .domain([0, max(data, d => d.value)])
+      .domain([0, max(data, (d) => d.value)])
       .nice()
       .range([height - margin.bottom, margin.top]);
 
-    const yAxis = g =>
+    const yAxis = (g) =>
       g
         .attr('transform', `translate(${width - margin.right},0)`)
-        .call(
-          axisRight(y)
-            .tickValues([1e4])
-            .tickFormat(format('($.2s'))
-        )
-        .call(g => g.select('.domain').remove());
+        .call(axisRight(y).tickValues([1e4]).tickFormat(format('($.2s')))
+        .call((g) => g.select('.domain').remove());
 
-    const slider = g =>
+    const slider = (g) =>
       g.attr('transform', `translate(0,${height - margin.bottom})`).call(
         sliderBottom(xLinear)
           .step(1)
           .ticks(4)
           .default(9)
-          .on('onchange', value => draw(value))
+          .on('onchange', (value) => draw(value))
       );
 
-    const bars = svg
-      .append('g')
-      .selectAll('rect')
-      .data(data);
+    const bars = svg.append('g').selectAll('rect').data(data);
 
     const barsEnter = bars
       .enter()
       .append('rect')
-      .attr('x', d => xBand(d.year))
-      .attr('y', d => y(d.value))
-      .attr('height', d => y(0) - y(d.value))
+      .attr('x', (d) => xBand(d.year))
+      .attr('y', (d) => y(d.value))
+      .attr('height', (d) => y(0) - y(d.value))
       .attr('width', xBand.bandwidth());
 
     svg.append('g').call(yAxis);
     svg.append('g').call(slider);
 
-    const draw = selected => {
+    const draw = (selected) => {
       barsEnter
         .merge(bars)
-        .attr('fill', d => (d.year === selected ? '#bad80a' : '#e0e0e0'));
+        .attr('fill', (d) => (d.year === selected ? '#bad80a' : '#e0e0e0'));
     };
 
     draw(9);
@@ -407,9 +395,9 @@ storiesOf('Examples', module)
     return div;
   })
   .add('Color picker', () => {
-    const num2hex = rgb => {
+    const num2hex = (rgb) => {
       return rgb
-        .map(color => {
+        .map((color) => {
           let str = color.toString(16);
 
           if (str.length === 1) {
@@ -449,7 +437,7 @@ storiesOf('Examples', module)
         .default(rgb[i])
         .displayValue(false)
         .fill(colors[i])
-        .on('onchange', num => {
+        .on('onchange', (num) => {
           rgb[i] = num;
           box.attr('fill', `#${num2hex(rgb)}`);
         });
