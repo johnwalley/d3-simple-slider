@@ -605,18 +605,33 @@ function slider(orientation, scale) {
   slider.min = function (_) {
     if (!arguments.length) return domain[0];
     domain[0] = _;
+
+    if (scale) {
+      scale.domain(domain);
+    }
+
     return slider;
   };
 
   slider.max = function (_) {
     if (!arguments.length) return domain[1];
     domain[1] = _;
+
+    if (scale) {
+      scale.domain(domain);
+    }
+
     return slider;
   };
 
   slider.domain = function (_) {
     if (!arguments.length) return domain;
     domain = _;
+
+    if (scale) {
+      scale.domain(domain);
+    }
+
     return slider;
   };
 
@@ -656,7 +671,6 @@ function slider(orientation, scale) {
 
   slider.ticks = function (_) {
     if (!arguments.length) return ticks;
-
     ticks = _;
     return slider;
   };
