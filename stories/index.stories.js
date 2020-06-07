@@ -15,7 +15,8 @@ import {
   sliderTop,
 } from '../src/slider';
 
-storiesOf('Basic functionality')
+// eslint-disable-next-line no-undef
+storiesOf('Basic functionality', module)
   .add('Simple', () => {
     const div = document.createElement('div');
 
@@ -258,7 +259,8 @@ storiesOf('Basic functionality')
     return div;
   });
 
-storiesOf('Extended functionality')
+// eslint-disable-next-line no-undef
+storiesOf('Extended functionality', module)
   .add('Alternative handle', () => {
     const div = document.createElement('div');
 
@@ -313,9 +315,33 @@ storiesOf('Extended functionality')
     }, 1000);
 
     return div;
+  })
+  .add('Dynamic max and min', () => {
+    const div = document.createElement('div');
+
+    const slider = sliderBottom().min(2).max(15).width(300).step(1).default(5);
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+
+    g.call(slider);
+
+    setInterval(() => {
+      slider.max(Math.floor(Math.random() * 5) + 10);
+      slider.min(Math.floor(Math.random() * 5));
+
+      g.transition().duration(200).call(slider);
+    }, 3000);
+
+    return div;
   });
 
-storiesOf('Examples')
+// eslint-disable-next-line no-undef
+storiesOf('Examples', module)
   .add('New York Times', () => {
     const div = document.createElement('div');
 
