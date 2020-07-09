@@ -675,8 +675,8 @@ function slider(orientation, scale) {
       var pos = toArray.map(scale).map(identityClamped);
       var newValue = pos.map(scale.invert).map(alignedValue);
 
-      updateHandle(newValue, false);
-      updateValue(newValue, false);
+      updateHandle(newValue, true);
+      updateValue(newValue, true);
     } else {
       value = toArray;
     }
