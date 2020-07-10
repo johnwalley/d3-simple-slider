@@ -25,7 +25,7 @@ function translateY(y) {
 }
 
 function slider(orientation, scale) {
-  scale = typeof scale !== 'undefined' ? scale : null;
+  scale = typeof scale !== 'undefined' ? scale.copy() : null;
 
   var value = [0];
   var defaultValue = [0];
@@ -95,13 +95,7 @@ function slider(orientation, scale) {
   function slider(context) {
     selection = context.selection ? context.selection() : context;
 
-    if (scale) {
-      scale = scale.range([
-        min(scale.range()),
-        min(scale.range()) +
-          (orientation === top || orientation === bottom ? width : height),
-      ]);
-    } else {
+    if (!scale) {
       scale = domain[0] instanceof Date ? scaleTime() : scaleLinear();
 
       scale = scale
@@ -629,12 +623,22 @@ function slider(orientation, scale) {
   slider.width = function (_) {
     if (!arguments.length) return width;
     width = _;
+
+    if (scale) {
+      scale.range([scale.range()[0], scale.range()[0] + width]);
+    }
+
     return slider;
   };
 
   slider.height = function (_) {
     if (!arguments.length) return height;
     height = _;
+
+    if (scale) {
+      scale.range([scale.range()[0], scale.range()[0] + height]);
+    }
+
     return slider;
   };
 
