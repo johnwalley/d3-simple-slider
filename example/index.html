@@ -58,6 +58,11 @@
     <div class="col-sm-2"><p id="value-transition"></p></div>
     <div class="col-sm"><div id="slider-transition"></div></div>
   </div>
+  <h2>Drag to pan & zoom</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-drag-to-pan"></p></div>
+    <div class="col-sm"><div id="slider-drag-to-pan"></div></div>
+  </div>
   <h1>Examples</h1>
   <h2>New York Times</h2>
   <div class="row align-items-center">
@@ -454,4 +459,28 @@
   });
 
   d3.select('p#value-color-picker').text(`#${num2hex(rgb)}`);
+
+  var dragToPanSlider = d3
+    .sliderBottom()
+    .min(2)
+    .max(15)
+    .width(300)
+    .step(1)
+    .default(5)
+    .dragToPan(true)
+    .on('onchange', function (val) {
+      d3.select('p#value-drag-to-pan').text(val);
+    });
+
+  var dragToPanG = d3
+    .select('#slider-drag-to-pan')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  dragToPanG.call(dragToPanSlider);
+
+  d3.select('p#value-drag-to-pan').text(dragToPanSlider.value());
 </script>
