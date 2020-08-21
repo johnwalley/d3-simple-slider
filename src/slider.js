@@ -46,6 +46,7 @@ function slider(orientation, scale) {
   var lastAnimation = null;
   var dragModeFn = null;
   var dragToPan = false;
+  var diffValue = null;
 
   var listeners = dispatch(
     'onchange',
@@ -93,6 +94,7 @@ function slider(orientation, scale) {
   var handleSelection = null;
   var fillSelection = null;
   var textSelection = null;
+  var diffSelection = null;
 
   if (scale) {
     domain = [min(scale.domain()), max(scale.domain())];
@@ -334,6 +336,70 @@ function slider(orientation, scale) {
             break;
         }
       });
+
+    if (diffValue) {
+      diffSelection = sliderEnter
+        .selectAll('.diff-overlay')
+        .data([diffValue])
+
+      var diffEnter = diffSelection
+        .enter()
+        .insert('g', '.parameter-value')
+        .attr('class', 'diff-overlay')
+        .attr(
+          'text-anchor',
+          orientation === right
+            ? 'start'
+            : orientation === left
+            ? 'end'
+            : 'middle'
+        );
+
+      diffEnter
+        .append('line')
+        .attr('class', 'diff-highlight')
+        .attr('stroke', 'orange')
+        .attr('stroke-width', 4)
+        .attr('stroke-linecap', 'round')
+
+      diffEnter
+        .append('path')
+        .attr('transform', 'rotate(' + (orientation + 1) * 90 + ')')
+        .attr('class', 'diff-handle')
+        .attr('d', handle)
+        .attr('fill', 'orange')
+        .attr('stroke', '#777')
+
+      diffEnter
+        .append('text')
+        .attr('class', 'diff-value')
+        .attr('font-size', 10) // TODO: Remove coupling to font-size in d3-axis
+        .attr(y, k * 27)
+        .attr(
+          'dy',
+          orientation === top
+            ? '0em'
+            : orientation === bottom
+            ? '.71em'
+            : '.32em'
+        )
+
+      context
+        .select('.diff-highlight')
+        .attr(x + '1', scale(value[0]))
+        .attr(x + '2', scale(diffValue))
+
+      context
+        .select('.diff-handle')
+        .attr('transform', function() {
+          return transformAlong(scale(diffValue)) + ' rotate(' + (orientation + 1) * 90 + ')'
+        })
+
+      context
+        .select('.diff-value')
+        .attr('transform', transformAlong(scale(diffValue)))
+        .text(tickFormat(diffValue))
+    }
 
     if (displayValue) {
       handleEnter
@@ -642,7 +708,13 @@ function slider(orientation, scale) {
     if (selection) {
       if (displayValue) {
         var indices = [];
-        value.forEach(function (val) {
+        var targetValues = value;
+
+        if (diffValue) {
+          targetValues = value.concat(diffValue);
+        }
+
+        targetValues.forEach(function (val) {
           var distances = [];
 
           selection.selectAll('.axis .tick').each(function (d) {
@@ -803,6 +875,12 @@ function slider(orientation, scale) {
         textSelection.text(function (d, idx) {
           return displayFormat(newValue[idx]);
         });
+      }
+
+      if (diffValue) {
+        selection
+          .select('.diff-highlight')
+          .attr(x + '1', scale(value[0]))
       }
     }
   }
@@ -1000,6 +1078,12 @@ function slider(orientation, scale) {
     dragToPan = _;
     return slider;
   };
+
+  slider.showDiff = function(_) {
+    if (!arguments.length) return;
+    diffValue = _;
+    return slider;
+  }
 
   return slider;
 }

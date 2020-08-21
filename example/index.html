@@ -63,6 +63,11 @@
     <div class="col-sm-2"><p id="value-drag-to-pan"></p></div>
     <div class="col-sm"><div id="slider-drag-to-pan"></div></div>
   </div>
+  <h2>Show difference</h2>
+  <div class="row align-items-center">
+    <div class="col-sm-2"><p id="value-diff"></p></div>
+    <div class="col-sm"><div id="slider-diff"></div></div>
+  </div>
   <h1>Examples</h1>
   <h2>New York Times</h2>
   <div class="row align-items-center">
@@ -483,4 +488,29 @@
   dragToPanG.call(dragToPanSlider);
 
   d3.select('p#value-drag-to-pan').text(dragToPanSlider.value());
+
+  var showDiffSlider = d3
+    .sliderBottom()
+    .min(0)
+    .max(50)
+    .width(300)
+    .step(1)
+    .default(5)
+    .showDiff(10)
+    .default(25)
+    .on('onchange', function (val) {
+      d3.select('p#value-diff').text(val);
+    });
+
+  var showDiffWrapper = d3
+    .select('#slider-diff')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  showDiffWrapper.call(showDiffSlider);
+
+  d3.select('p#value-diff').text(showDiffSlider.value());
 </script>
