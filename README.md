@@ -202,10 +202,24 @@ The _typenames_ is a string containing one or more _typename_ separated by white
 - `start` - after a new pointer becomes active (on mousedown or touchstart).
 - `drag` - after an active pointer moves (on mousemove or touchmove).
 - `end` - after an active pointer becomes inactive (on mouseup, touchend or touchcancel).
+- `rangeChange` - after the range of the slider is changed
+- `rangeStart` - after mousedown on the ticks area
+- `rangeDrag` - after mousemove within the ticks area
+- `rangeEnd` - after the range adjustment is inactive (mouseup)
 
 You might consider throttling `onchange` and `drag` events. For example using [`lodash.throttle`](https://lodash.com/docs/4.17.4#throttle).
 
 See [_dispatch_.on](https://github.com/d3/d3-dispatch#dispatch_on) for more.
+
+<a href="#slider_dragToPan" name="slider_dragToPan">#</a> <i>slider</i>.<b>dragToPan</b>(<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L998 'Source')
+
+If _value_ is true, enables dragging on the ticks of the slider to change its range. 
+Dragging around the middle area for panning (moving both the minimum and the maximum).
+Dragging near the left edge allows adjusting only the minimum, and dragging around near the right edge allows adjusting only the maximum.
+The current slider knob—current value—is always kept within the range.
+By default, panning is disabled.
+
+
 
 ## 🤝 How to Contribute
 
