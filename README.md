@@ -220,6 +220,12 @@ The current slider knob—current value—is always kept within the range.
 By default, panning is disabled.
 
 
+<a href="#slider_showDiff" name="slider_showDiff">#</a> <i>slider</i>.<b>showDiff</b>(<i>value</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/master/src/slider.js#L1082 'Source')
+
+Highlights a difference between the current value and the provided _value_. 
+To remove the highlight, set _value_ to `null`.
+This feature is currently not supported for with a range slider.
+
 
 ## 🤝 How to Contribute
 
