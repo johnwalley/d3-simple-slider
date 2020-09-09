@@ -1,6 +1,6 @@
 {
   "name": "d3-simple-slider",
-  "version": "1.9.0",
+  "version": "2.0.0-rc.2",
   "description": "Renders an SVG slider",
   "keywords": [
     "d3",
@@ -65,7 +65,7 @@
     "d3-drag": "1 - 2",
     "d3-ease": "1 - 2",
     "d3-scale": "2 - 3",
-    "d3-selection": "1",
-    "d3-transition": "1"
+    "d3-selection": "2",
+    "d3-transition": "2"
   }
 }

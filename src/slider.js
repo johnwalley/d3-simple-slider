@@ -226,7 +226,7 @@ function slider(orientation, scale) {
       .attr('tabindex', 0)
       .attr('fill', 'white')
       .attr('stroke', '#777')
-      .on('keydown', function (d, i) {
+      .on('keydown', function (d, i, event) {
         var change = step || (domain[1] - domain[0]) / KEYBOARD_NUMBER_STEPS;
 
         // TODO: Don't need to loop over value because we know which element needs to change
@@ -366,7 +366,7 @@ function slider(orientation, scale) {
       });
     }
 
-    function dragstarted() {
+    function dragstarted(event) {
       select(this).classed('active', true);
 
       var pos = identityClamped(
@@ -399,7 +399,7 @@ function slider(orientation, scale) {
       updateValue(newValue, true);
     }
 
-    function dragged() {
+    function dragged(event) {
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
       );
@@ -414,7 +414,7 @@ function slider(orientation, scale) {
       updateValue(newValue, true);
     }
 
-    function dragended() {
+    function dragended(event) {
       select(this).classed('active', false);
 
       var pos = identityClamped(
