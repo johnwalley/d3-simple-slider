@@ -1,11 +1,13 @@
-import { min, max, scan } from 'd3-array';
-import { axisTop, axisRight, axisBottom, axisLeft } from 'd3-axis';
+import 'd3-transition';
+
+import { axisBottom, axisLeft, axisRight, axisTop } from 'd3-axis';
+import { max, min, scan } from 'd3-array';
+import { scaleLinear, scaleTime } from 'd3-scale';
+
 import { dispatch } from 'd3-dispatch';
 import { drag } from 'd3-drag';
 import { easeQuadOut } from 'd3-ease';
-import { scaleLinear, scaleTime } from 'd3-scale';
-import { event, select } from 'd3-selection';
-import 'd3-transition';
+import { select } from 'd3-selection';
 
 var UPDATE_DURATION = 200;
 var SLIDER_END_PADDING = 8;
@@ -223,7 +225,7 @@ function slider(orientation, scale) {
       .attr('tabindex', 0)
       .attr('fill', 'white')
       .attr('stroke', '#777')
-      .on('keydown', function (d, i) {
+      .on('keydown', function (d, i, event) {
         var change = step || (domain[1] - domain[0]) / KEYBOARD_NUMBER_STEPS;
 
         // TODO: Don't need to loop over value because we know which element needs to change
@@ -362,7 +364,7 @@ function slider(orientation, scale) {
       });
     }
 
-    function dragstarted() {
+    function dragstarted(event) {
       select(this).classed('active', true);
 
       var pos = identityClamped(
@@ -395,7 +397,7 @@ function slider(orientation, scale) {
       updateValue(newValue, true);
     }
 
-    function dragged() {
+    function dragged(event) {
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
       );
@@ -410,7 +412,7 @@ function slider(orientation, scale) {
       updateValue(newValue, true);
     }
 
-    function dragended() {
+    function dragended(event) {
       select(this).classed('active', false);
 
       var pos = identityClamped(
