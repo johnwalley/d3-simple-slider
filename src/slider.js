@@ -1,11 +1,13 @@
-import { min, max, scan } from 'd3-array';
-import { axisTop, axisRight, axisBottom, axisLeft } from 'd3-axis';
+import 'd3-transition';
+
+import { axisBottom, axisLeft, axisRight, axisTop } from 'd3-axis';
+import { event, select } from 'd3-selection';
+import { max, min, scan } from 'd3-array';
+import { scaleLinear, scaleTime } from 'd3-scale';
+
 import { dispatch } from 'd3-dispatch';
 import { drag } from 'd3-drag';
 import { easeQuadOut } from 'd3-ease';
-import { scaleLinear, scaleTime } from 'd3-scale';
-import { event, select } from 'd3-selection';
-import 'd3-transition';
 
 var UPDATE_DURATION = 200;
 var SLIDER_END_PADDING = 8;
@@ -36,6 +38,7 @@ function slider(orientation, scale) {
   var handle = 'M-5.5,-5.5v10l6,5.5l6,-5.5v-10z';
   var step = null;
   var tickValues = null;
+  var tickPadding = 3;
   var marks = null;
   var tickFormat = null;
   var ticks = null;
@@ -275,7 +278,7 @@ function slider(orientation, scale) {
       handleEnter
         .append('text')
         .attr('font-size', 10) // TODO: Remove coupling to font-size in d3-axis
-        .attr(y, k * 27)
+        .attr(y, k * (24 + tickPadding))
         .attr(
           'dy',
           orientation === top
@@ -315,6 +318,7 @@ function slider(orientation, scale) {
           .tickFormat(tickFormat)
           .ticks(ticks)
           .tickValues(tickValues)
+          .tickPadding(tickPadding)
       );
 
     // https://bl.ocks.org/mbostock/4323929
@@ -325,7 +329,7 @@ function slider(orientation, scale) {
     context
       .selectAll('.axis text')
       .attr('fill', '#aaa')
-      .attr(y, k * 20)
+      .attr(y, k * (17 + tickPadding))
       .attr(
         'dy',
         orientation === top ? '0em' : orientation === bottom ? '.71em' : '.32em'
@@ -758,6 +762,12 @@ function slider(orientation, scale) {
   slider.tickValues = function (_) {
     if (!arguments.length) return tickValues;
     tickValues = _;
+    return slider;
+  };
+
+  slider.tickPadding = function (_) {
+    if (!arguments.length) return tickPadding;
+    tickPadding = _;
     return slider;
   };
 
