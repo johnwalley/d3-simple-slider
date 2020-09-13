@@ -1,19 +1,20 @@
-/*eslint-env browser*/
-import { document } from 'global';
-import { storiesOf } from '@storybook/html';
 import { event, select } from 'd3-selection';
-import { format } from 'd3-format';
-import { timeFormat } from 'd3-time-format';
-import { min, max, range } from 'd3-array';
+import { max, min, range } from 'd3-array';
 import { scaleBand, scaleLinear } from 'd3-scale';
-import { axisRight } from 'd3-axis';
-import { symbol, symbolCircle } from 'd3-shape';
 import {
   sliderBottom,
   sliderLeft,
   sliderRight,
   sliderTop,
 } from '../src/slider';
+import { symbol, symbolCircle } from 'd3-shape';
+
+import { axisRight } from 'd3-axis';
+/*eslint-env browser*/
+import { document } from 'global';
+import { format } from 'd3-format';
+import { storiesOf } from '@storybook/html';
+import { timeFormat } from 'd3-time-format';
 
 // eslint-disable-next-line no-undef
 storiesOf('Basic functionality', module)
@@ -253,6 +254,31 @@ storiesOf('Basic functionality', module)
       .attr('height', 400)
       .append('g')
       .attr('transform', 'translate(10,30)');
+
+    g.call(slider);
+
+    return div;
+  })
+  .add('Padding', () => {
+    const div = document.createElement('div');
+
+    const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
+
+    const slider = sliderBottom()
+      .min(min(data))
+      .max(max(data))
+      .width(300)
+      .tickFormat(format('.2%'))
+      .tickPadding(12)
+      .ticks(5)
+      .default(0.015);
+
+    const g = select(div)
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
 
     g.call(slider);
 
