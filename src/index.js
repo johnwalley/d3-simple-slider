@@ -5,4 +5,4 @@ export {
   sliderRight,
   sliderBottom,
   sliderLeft,
-} from './src/slider.js';
+} from './slider.js';

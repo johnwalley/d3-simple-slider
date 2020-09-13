@@ -1,9 +1,10 @@
-import { terser } from 'rollup-plugin-terser';
 import * as meta from './package.json';
 
+import { terser } from 'rollup-plugin-terser';
+
 const config = {
-  input: 'index.js',
-  external: Object.keys(meta.dependencies || {}).filter(key =>
+  input: 'src/index.js',
+  external: Object.keys(meta.dependencies || {}).filter((key) =>
     /^d3-/.test(key)
   ),
   output: {
@@ -18,8 +19,8 @@ const config = {
     globals: Object.assign(
       {},
       ...Object.keys(meta.dependencies || {})
-        .filter(key => /^d3-/.test(key))
-        .map(key => ({ [key]: 'd3' }))
+        .filter((key) => /^d3-/.test(key))
+        .map((key) => ({ [key]: 'd3' }))
     ),
   },
   plugins: [],
