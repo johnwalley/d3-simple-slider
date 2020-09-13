@@ -21,6 +21,10 @@ If you need to include a slider within an svg element this is for you. For examp
 
 If you don't need to work inside an svg element then I would consider using one of the many excellent html-based components which may be better suited to your needs. Of course you might just love using d3!
 
+## Looking for d3 v6 support?
+
+There is a pre-release version of `d3-simple-slider` available [here](https://www.npmjs.com/package/d3-simple-slider/v/2.0.0-rc.1) which supports the latest version of d3.
+
 ## Installing
 
 If you use NPM, `npm install d3-simple-slider`. Otherwise, download the [latest release](https://github.com/johnwalley/d3-simple-slider/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3` global is exported:
