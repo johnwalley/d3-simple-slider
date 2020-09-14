@@ -8,7 +8,7 @@ import { select } from 'd3-selection';
 import { sliderBottom } from '../src/slider';
 
 export default {
-  title: 'Slider/Extended functionality',
+  title: 'Functionality/Extended functionality',
 };
 
 export const AlternativeHandle = () => {

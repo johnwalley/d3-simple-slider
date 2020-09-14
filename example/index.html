@@ -15,6 +15,14 @@
   crossorigin="anonymous"
 />
 
+<style>
+  .axis text,
+  .slider text {
+    font-size: 18px;
+    fill: red;
+  }
+</style>
+
 <div class="container">
   <h1>Basic functionality</h1>
   <h2>Simple</h2>
@@ -83,7 +91,7 @@
     .tickFormat(d3.format('.2%'))
     .ticks(5)
     .default(0.015)
-    .on('onchange', val => {
+    .on('onchange', (val) => {
       d3.select('p#value-simple').text(d3.format('.2%')(val));
     });
 
@@ -109,7 +117,7 @@
     .ticks(5)
     .step(0.005)
     .default(0.015)
-    .on('onchange', val => {
+    .on('onchange', (val) => {
       d3.select('p#value-step').text(d3.format('.2%')(val));
     });
 
@@ -126,7 +134,7 @@
   d3.select('p#value-step').text(d3.format('.2%')(sliderStep.value()));
 
   // Time
-  var dataTime = d3.range(0, 10).map(function(d) {
+  var dataTime = d3.range(0, 10).map(function (d) {
     return new Date(1995 + d, 10, 3);
   });
 
@@ -139,7 +147,7 @@
     .tickFormat(d3.timeFormat('%Y'))
     .tickValues(dataTime)
     .default(new Date(1998, 10, 3))
-    .on('onchange', val => {
+    .on('onchange', (val) => {
       d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
     });
 
@@ -165,7 +173,7 @@
     .ticks(5)
     .default(0.015)
     .fill('#2196f3')
-    .on('onchange', val => {
+    .on('onchange', (val) => {
       d3.select('p#value-fill').text(d3.format('.2%')(val));
     });
 
@@ -191,7 +199,7 @@
     .ticks(5)
     .default([0.015, 0.02])
     .fill('#2196f3')
-    .on('onchange', val => {
+    .on('onchange', (val) => {
       d3.select('p#value-range').text(val.map(d3.format('.2%')).join('-'));
     });
 
@@ -206,10 +214,7 @@
   gRange.call(sliderRange);
 
   d3.select('p#value-range').text(
-    sliderRange
-      .value()
-      .map(d3.format('.2%'))
-      .join('-')
+    sliderRange.value().map(d3.format('.2%')).join('-')
   );
 
   // Vertical
@@ -221,7 +226,7 @@
     .tickFormat(d3.format('.2%'))
     .ticks(5)
     .default(0.015)
-    .on('onchange', val => {
+    .on('onchange', (val) => {
       d3.select('p#value-vertical').text(d3.format('.2%')(val));
     });
 
@@ -246,13 +251,8 @@
     .tickFormat(d3.format('.2%'))
     .ticks(5)
     .default(0.015)
-    .handle(
-      d3
-        .symbol()
-        .type(d3.symbolCircle)
-        .size(200)()
-    )
-    .on('onchange', val => {
+    .handle(d3.symbol().type(d3.symbolCircle).size(200)())
+    .on('onchange', (val) => {
       d3.select('p#value-alternative-handle').text(d3.format('.2%')(val));
     });
 
@@ -277,7 +277,7 @@
     .tickFormat(d3.format('.2%'))
     .ticks(5)
     .default(0.015)
-    .on('onchange', val => {
+    .on('onchange', (val) => {
       d3.select('p#value-transition').text(d3.format('.2%')(val));
     });
 
@@ -294,10 +294,7 @@
   setInterval(() => {
     sliderTransition.width(Math.random() * 100 + 200);
 
-    gTransition
-      .transition()
-      .duration(200)
-      .call(sliderTransition);
+    gTransition.transition().duration(200).call(sliderTransition);
   }, 1000);
 
   d3.select('p#value-transition').text(
@@ -309,7 +306,7 @@
   var height = 120;
   var margin = { top: 20, right: 50, bottom: 50, left: 40 };
 
-  var dataNewYorkTimes = d3.range(1, 41).map(d => ({
+  var dataNewYorkTimes = d3.range(1, 41).map((d) => ({
     year: d,
     value: 10000 * Math.exp(-(d - 1) / 40),
   }));
@@ -324,15 +321,15 @@
 
   var xBand = d3
     .scaleBand()
-    .domain(dataNewYorkTimes.map(d => d.year))
+    .domain(dataNewYorkTimes.map((d) => d.year))
     .range([margin.left, width - margin.right])
     .padding(padding);
 
   var xLinear = d3
     .scaleLinear()
     .domain([
-      d3.min(dataNewYorkTimes, d => d.year),
-      d3.max(dataNewYorkTimes, d => d.year),
+      d3.min(dataNewYorkTimes, (d) => d.year),
+      d3.max(dataNewYorkTimes, (d) => d.year),
     ])
     .range([
       margin.left + xBand.bandwidth() / 2 + xBand.step() * padding - 0.5,
@@ -345,51 +342,43 @@
 
   var y = d3
     .scaleLinear()
-    .domain([0, d3.max(dataNewYorkTimes, d => d.value)])
+    .domain([0, d3.max(dataNewYorkTimes, (d) => d.value)])
     .nice()
     .range([height - margin.bottom, margin.top]);
 
-  var yAxis = g =>
+  var yAxis = (g) =>
     g
       .attr('transform', `translate(${width - margin.right},0)`)
-      .call(
-        d3
-          .axisRight(y)
-          .tickValues([1e4])
-          .tickFormat(d3.format('($.2s'))
-      )
-      .call(g => g.select('.domain').remove());
+      .call(d3.axisRight(y).tickValues([1e4]).tickFormat(d3.format('($.2s')))
+      .call((g) => g.select('.domain').remove());
 
-  var slider = g =>
+  var slider = (g) =>
     g.attr('transform', `translate(0,${height - margin.bottom})`).call(
       d3
         .sliderBottom(xLinear)
         .step(1)
         .ticks(4)
         .default(9)
-        .on('onchange', value => draw(value))
+        .on('onchange', (value) => draw(value))
     );
 
-  var bars = svg
-    .append('g')
-    .selectAll('rect')
-    .data(dataNewYorkTimes);
+  var bars = svg.append('g').selectAll('rect').data(dataNewYorkTimes);
 
   var barsEnter = bars
     .enter()
     .append('rect')
-    .attr('x', d => xBand(d.year))
-    .attr('y', d => y(d.value))
-    .attr('height', d => y(0) - y(d.value))
+    .attr('x', (d) => xBand(d.year))
+    .attr('y', (d) => y(d.value))
+    .attr('height', (d) => y(0) - y(d.value))
     .attr('width', xBand.bandwidth());
 
   svg.append('g').call(yAxis);
   svg.append('g').call(slider);
 
-  var draw = selected => {
+  var draw = (selected) => {
     barsEnter
       .merge(bars)
-      .attr('fill', d => (d.year === selected ? '#bad80a' : '#e0e0e0'));
+      .attr('fill', (d) => (d.year === selected ? '#bad80a' : '#e0e0e0'));
 
     d3.select('p#value-new-york-times').text(
       d3.format('$,.2r')(dataNewYorkTimes[selected - 1].value)
@@ -399,9 +388,9 @@
   draw(9);
 
   // Color picker
-  var num2hex = rgb => {
+  var num2hex = (rgb) => {
     return rgb
-      .map(color => {
+      .map((color) => {
         let str = color.toString(16);
 
         if (str.length === 1) {
@@ -441,7 +430,7 @@
       .default(rgb[i])
       .displayValue(false)
       .fill(colors[i])
-      .on('onchange', num => {
+      .on('onchange', (num) => {
         rgb[i] = num;
         box.attr('fill', `#${num2hex(rgb)}`);
         d3.select('p#value-color-picker').text(`#${num2hex(rgb)}`);
