@@ -7,6 +7,7 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import { dispatch } from 'd3-dispatch';
 import { drag } from 'd3-drag';
 import { easeQuadOut } from 'd3-ease';
+import { select } from 'd3-selection';
 
 var UPDATE_DURATION = 200;
 var SLIDER_END_PADDING = 8;
