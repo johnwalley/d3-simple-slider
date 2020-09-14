@@ -9,7 +9,7 @@ import { select } from 'd3-selection';
 import { sliderBottom } from '../src/slider';
 
 export default {
-  title: 'Slider/Examples',
+  title: 'Demos/Examples',
 };
 
 export const NewYorkTimes = () => {

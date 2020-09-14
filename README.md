@@ -58,6 +58,33 @@ If you use NPM, `npm install d3-simple-slider`. Otherwise, download the [latest 
 </script>
 ```
 
+## Styling
+
+To change the font size:
+
+```css
+.axis text,
+.slider text {
+  font-size: 18px;
+}
+```
+
+To change the tick text color:
+
+```css
+.axis text {
+  fill: red;
+}
+```
+
+To change the parameter value text color:
+
+```css
+.slider text {
+  fill: green;
+}
+```
+
 ## API Reference
 
 Regardless of orientation, sliders are always rendered at the origin. To change the position of the slider specify a [transform attribute](http://www.w3.org/TR/SVG/coords.html#TransformAttribute) on the containing element. For example:
