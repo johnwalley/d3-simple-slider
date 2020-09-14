@@ -1,7 +1,6 @@
 import 'd3-transition';
 
 import { axisBottom, axisLeft, axisRight, axisTop } from 'd3-axis';
-import { event, select } from 'd3-selection';
 import { max, min, scan } from 'd3-array';
 import { scaleLinear, scaleTime } from 'd3-scale';
 
