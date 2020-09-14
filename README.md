@@ -23,7 +23,7 @@ If you don't need to work inside an svg element then I would consider using one 
 
 ## Looking for d3 v6 support?
 
-There is a pre-release version of `d3-simple-slider` available [here](https://www.npmjs.com/package/d3-simple-slider/v/2.0.0-rc.1) which supports the latest version of d3.
+There is a pre-release version of `d3-simple-slider` available [here](https://www.npmjs.com/package/d3-simple-slider/v/2.0.0-rc.2) which supports the latest version of d3.
 
 ## Installing
 
