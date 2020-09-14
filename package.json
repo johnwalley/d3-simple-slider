@@ -62,7 +62,7 @@
     "d3-array": "1 - 2",
     "d3-axis": "1 - 2",
     "d3-dispatch": "1 - 2",
-    "d3-drag": "1 - 2",
+    "d3-drag": "2",
     "d3-ease": "1 - 2",
     "d3-scale": "2 - 3",
     "d3-selection": "2",
