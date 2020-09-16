@@ -367,6 +367,8 @@
   svg.append('g').call(yAxis);
   svg.append('g').call(slider);
 
+  svg.select('.track-overlay').attr('stroke-width', 120); // Ensure drag zone covers everything
+
   var draw = (selected) => {
     barsEnter
       .merge(bars)
