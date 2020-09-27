@@ -116,16 +116,7 @@ import * as d3 from 'd3';
 import { sliderBottom } from 'd3-simple-slider';
 
 const div = document.createElement('div');
-
-const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
-
-const slider = sliderBottom()
-  .min(min(data))
-  .max(max(data))
-  .width(300)
-  .tickFormat(format('.2%'))
-  .ticks(5)
-  .default(0.015);
+const slider = sliderBottom().min(0).max(10).step(1).width(300);
 
 const g = d3
   .select(div)
