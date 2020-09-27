@@ -13,7 +13,7 @@ import { format } from 'd3-format';
 import { timeFormat } from 'd3-time-format';
 
 export default {
-  title: 'Slider/Basic functionality',
+  title: 'Functionality/Basic functionality',
 };
 
 export const Simple = () => {
