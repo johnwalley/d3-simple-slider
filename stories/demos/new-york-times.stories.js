@@ -80,6 +80,8 @@ export const Demo = () => {
   svg.append('g').call(yAxis);
   svg.append('g').call(slider);
 
+  svg.select('.track-overlay').attr('stroke-width', 120); // Ensure drag zone covers everything
+
   const draw = (selected) => {
     barsEnter
       .merge(bars)

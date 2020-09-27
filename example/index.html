@@ -5,7 +5,7 @@
 />
 <title>d3-simple-slider</title>
 
-<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="../dist/d3-simple-slider.js"></script>
 
 <link
@@ -366,6 +366,8 @@
 
   svg.append('g').call(yAxis);
   svg.append('g').call(slider);
+
+  svg.select('.track-overlay').attr('stroke-width', 120); // Ensure drag zone covers everything
 
   var draw = (selected) => {
     barsEnter

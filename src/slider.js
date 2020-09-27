@@ -1,13 +1,14 @@
 import 'd3-transition';
 
 import { axisBottom, axisLeft, axisRight, axisTop } from 'd3-axis';
-import { event, select } from 'd3-selection';
 import { max, min, scan } from 'd3-array';
 import { scaleLinear, scaleTime } from 'd3-scale';
 
+import { adaptListener } from './d3-compat';
 import { dispatch } from 'd3-dispatch';
 import { drag } from 'd3-drag';
 import { easeQuadOut } from 'd3-ease';
+import { select } from 'd3-selection';
 
 var UPDATE_DURATION = 200;
 var SLIDER_END_PADDING = 8;
@@ -145,7 +146,10 @@ function slider(orientation, scale) {
           : 'ns-resize'
       )
       .call(
-        drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
+        drag()
+          .on('start', adaptListener(dragstarted))
+          .on('drag', adaptListener(dragged))
+          .on('end', adaptListener(dragended))
       );
 
     sliderEnter
@@ -188,14 +192,18 @@ function slider(orientation, scale) {
       .attr('stroke-linecap', 'round')
       .merge(sliderSelection.select('.track-overlay'));
 
-    handleSelection = sliderEnter.selectAll('.parameter-value').data(value);
+    handleSelection = sliderEnter.selectAll('.parameter-value').data(
+      value.map(function (d, i) {
+        return { value: d, index: i };
+      })
+    );
 
     var handleEnter = handleSelection
       .enter()
       .append('g')
       .attr('class', 'parameter-value')
       .attr('transform', function (d) {
-        return transformAlong(scale(d));
+        return transformAlong(scale(d.value));
       })
       .attr('font-family', 'sans-serif')
       .attr(
@@ -215,7 +223,9 @@ function slider(orientation, scale) {
       .attr('aria-label', 'handle')
       .attr('aria-valuemax', domain[1])
       .attr('aria-valuemin', domain[0])
-      .attr('aria-valuenow', value)
+      .attr('aria-valuenow', function (d) {
+        return d.value;
+      })
       .attr(
         'aria-orientation',
         orientation === left || orientation === right
@@ -226,53 +236,56 @@ function slider(orientation, scale) {
       .attr('tabindex', 0)
       .attr('fill', 'white')
       .attr('stroke', '#777')
-      .on('keydown', function (d, i) {
-        var change = step || (domain[1] - domain[0]) / KEYBOARD_NUMBER_STEPS;
+      .on(
+        'keydown',
+        adaptListener(function (event, datum) {
+          var change = step || (domain[1] - domain[0]) / KEYBOARD_NUMBER_STEPS;
 
-        // TODO: Don't need to loop over value because we know which element needs to change
-        function newValue(adjustedValue) {
-          return value.map(function (d, j) {
-            if (value.length === 2) {
-              return j === i
-                ? i === 0
-                  ? Math.min(adjustedValue, alignedValue(value[1]))
-                  : Math.max(adjustedValue, alignedValue(value[0]))
-                : d;
-            } else {
-              return j === i ? adjustedValue : d;
-            }
-          });
-        }
+          // TODO: Don't need to loop over value because we know which element needs to change
+          function newValue(adjustedValue) {
+            return value.map(function (d, j) {
+              if (value.length === 2) {
+                return j === datum.index
+                  ? datum.index === 0
+                    ? Math.min(adjustedValue, alignedValue(value[1]))
+                    : Math.max(adjustedValue, alignedValue(value[0]))
+                  : d;
+              } else {
+                return j === datum.index ? adjustedValue : d;
+              }
+            });
+          }
 
-        switch (event.key) {
-          case 'ArrowLeft':
-          case 'ArrowDown':
-            slider.value(newValue(+value[i] - change));
-            event.preventDefault();
-            break;
-          case 'PageDown':
-            slider.value(newValue(+value[i] - 2 * change));
-            event.preventDefault();
-            break;
-          case 'ArrowRight':
-          case 'ArrowUp':
-            slider.value(newValue(+value[i] + change));
-            event.preventDefault();
-            break;
-          case 'PageUp':
-            slider.value(newValue(+value[i] + 2 * change));
-            event.preventDefault();
-            break;
-          case 'Home':
-            slider.value(newValue(domain[0]));
-            event.preventDefault();
-            break;
-          case 'End':
-            slider.value(newValue(domain[1]));
-            event.preventDefault();
-            break;
-        }
-      });
+          switch (event.key) {
+            case 'ArrowLeft':
+            case 'ArrowDown':
+              slider.value(newValue(+value[datum.index] - change));
+              event.preventDefault();
+              break;
+            case 'PageDown':
+              slider.value(newValue(+value[datum.index] - 2 * change));
+              event.preventDefault();
+              break;
+            case 'ArrowRight':
+            case 'ArrowUp':
+              slider.value(newValue(+value[datum.index] + change));
+              event.preventDefault();
+              break;
+            case 'PageUp':
+              slider.value(newValue(+value[datum.index] + 2 * change));
+              event.preventDefault();
+              break;
+            case 'Home':
+              slider.value(newValue(domain[0]));
+              event.preventDefault();
+              break;
+            case 'End':
+              slider.value(newValue(domain[1]));
+              event.preventDefault();
+              break;
+          }
+        })
+      );
 
     if (displayValue) {
       handleEnter
@@ -346,7 +359,7 @@ function slider(orientation, scale) {
     context.selectAll('.axis line').attr('stroke', '#aaa');
 
     context.selectAll('.parameter-value').attr('transform', function (d) {
-      return transformAlong(scale(d));
+      return transformAlong(scale(d.value));
     });
 
     fadeTickText();
@@ -366,7 +379,7 @@ function slider(orientation, scale) {
       });
     }
 
-    function dragstarted() {
+    function dragstarted(event) {
       select(this).classed('active', true);
 
       var pos = identityClamped(
@@ -399,7 +412,7 @@ function slider(orientation, scale) {
       updateValue(newValue, true);
     }
 
-    function dragged() {
+    function dragged(event) {
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
       );
@@ -414,7 +427,7 @@ function slider(orientation, scale) {
       updateValue(newValue, true);
     }
 
-    function dragended() {
+    function dragended(event) {
       select(this).classed('active', false);
 
       var pos = identityClamped(
@@ -543,16 +556,20 @@ function slider(orientation, scale) {
       if (animate) {
         selection
           .selectAll('.parameter-value')
-          .data(newValue)
+          .data(
+            newValue.map(function (d, i) {
+              return { value: d, index: i };
+            })
+          )
           .transition()
           .ease(easeQuadOut)
           .duration(UPDATE_DURATION)
           .attr('transform', function (d) {
-            return transformAlong(scale(d));
+            return transformAlong(scale(d.value));
           })
           .select('.handle')
           .attr('aria-valuenow', function (d) {
-            return d;
+            return d.value;
           });
 
         if (fill) {
@@ -574,13 +591,17 @@ function slider(orientation, scale) {
       } else {
         selection
           .selectAll('.parameter-value')
-          .data(newValue)
+          .data(
+            newValue.map(function (d, i) {
+              return { value: d, index: i };
+            })
+          )
           .attr('transform', function (d) {
-            return transformAlong(scale(d));
+            return transformAlong(scale(d.value));
           })
           .select('.handle')
           .attr('aria-valuenow', function (d) {
-            return d;
+            return d.value;
           });
 
         if (fill) {
