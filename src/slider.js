@@ -241,6 +241,14 @@ function slider(orientation, scale) {
         adaptListener(function (event, datum) {
           var change = step || (domain[1] - domain[0]) / KEYBOARD_NUMBER_STEPS;
 
+          var index = marks
+            ? scan(
+                marks.map(function (d) {
+                  return Math.abs(value[datum.index] - d);
+                })
+              )
+            : null;
+
           // TODO: Don't need to loop over value because we know which element needs to change
           function newValue(adjustedValue) {
             return value.map(function (d, j) {
@@ -259,20 +267,44 @@ function slider(orientation, scale) {
           switch (event.key) {
             case 'ArrowLeft':
             case 'ArrowDown':
-              slider.value(newValue(+value[datum.index] - change));
+              if (marks) {
+                slider.value(newValue(marks[Math.max(0, index - 1)]));
+              } else {
+                slider.value(newValue(+value[datum.index] - change));
+              }
+
               event.preventDefault();
               break;
             case 'PageDown':
-              slider.value(newValue(+value[datum.index] - 2 * change));
+              if (marks) {
+                slider.value(newValue(marks[Math.max(0, index - 2)]));
+              } else {
+                slider.value(newValue(+value[datum.index] - 2 * change));
+              }
+
               event.preventDefault();
               break;
             case 'ArrowRight':
             case 'ArrowUp':
-              slider.value(newValue(+value[datum.index] + change));
+              if (marks) {
+                slider.value(
+                  newValue(marks[Math.min(marks.length - 1, index + 1)])
+                );
+              } else {
+                slider.value(newValue(+value[datum.index] + change));
+              }
+
               event.preventDefault();
               break;
             case 'PageUp':
-              slider.value(newValue(+value[datum.index] + 2 * change));
+              if (marks) {
+                slider.value(
+                  newValue(marks[Math.min(marks.length - 1, index + 2)])
+                );
+              } else {
+                slider.value(newValue(+value[datum.index] + 2 * change));
+              }
+
               event.preventDefault();
               break;
             case 'Home':
@@ -506,6 +538,16 @@ function slider(orientation, scale) {
   }
 
   function alignedValue(newValue) {
+    if (marks) {
+      var index = scan(
+        marks.map(function (d) {
+          return Math.abs(newValue - d);
+        })
+      );
+
+      return marks[index];
+    }
+
     if (step) {
       var valueModStep = (newValue - domain[0]) % step;
       var alignValue = newValue - valueModStep;
@@ -515,16 +557,6 @@ function slider(orientation, scale) {
       }
 
       return newValue instanceof Date ? new Date(alignValue) : alignValue;
-    }
-
-    if (marks) {
-      var index = scan(
-        marks.map(function (d) {
-          return Math.abs(newValue - d);
-        })
-      );
-
-      return marks[index];
     }
 
     return newValue;

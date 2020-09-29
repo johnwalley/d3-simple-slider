@@ -6,6 +6,7 @@ import { document } from 'global';
 import { format } from 'd3-format';
 import { select } from 'd3-selection';
 import { sliderBottom } from '../src/slider';
+import { timeFormat } from 'd3-time-format';
 
 export default {
   title: 'Functionality/Extended functionality',
@@ -88,6 +89,39 @@ export const DynamicMaxAndMin = () => {
 
     g.transition().duration(200).call(slider);
   }, 3000);
+
+  return div;
+};
+
+export const Marks = () => {
+  const div = document.createElement('div');
+
+  const data = [
+    new Date(1995, 1, 3),
+    new Date(1995, 3, 3),
+    new Date(1995, 4, 3),
+    new Date(1995, 5, 3),
+    new Date(1995, 9, 3),
+  ];
+
+  const slider = sliderBottom()
+    .min(min(data))
+    .max(max(data))
+    .width(500)
+    .tickFormat(timeFormat('%b %Y'))
+    .tickValues(data)
+    .marks(data)
+    .fill('#2196f3')
+    .default([data[1], data[2]]);
+
+  const g = select(div)
+    .append('svg')
+    .attr('width', 600)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)');
+
+  g.call(slider);
 
   return div;
 };
