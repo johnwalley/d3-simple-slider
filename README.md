@@ -23,7 +23,48 @@ If you don't need to work inside an svg element then I would consider using one 
 
 ## Installing
 
-If you use NPM, `npm install d3-simple-slider`. Otherwise, download the [latest release](https://github.com/johnwalley/d3-simple-slider/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3` global is exported:
+There are three ways to use this library.
+
+### Include the file directly
+
+You must include the [d3 library](http://d3js.org/) before including the slider file. Then you can add the [compiled js file](https://github.com/johnwalley/d3-simple-slider/releases/latest/download/d3-simple-slider.zip) to your website.
+
+The d3-simple-slider functionality is added to the `d3` global object.
+
+```html
+<script src="./d3.v6.js"></script>
+<script src="./d3-simple-slider.js"></script>
+
+<p id="value"></p>
+<div id="slider"></div>
+
+<script>
+  var slider = d3
+    .sliderHorizontal()
+    .min(0)
+    .max(10)
+    .step(1)
+    .width(300)
+    .displayValue(false)
+    .on('onchange', (val) => {
+      d3.select('#value').text(val);
+    });
+
+  d3.select('#slider')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)')
+    .call(slider);
+</script>
+```
+
+### Using a CDN
+
+You can add the latest version of [d3-simple-slider hosted on unpkg](https://unpkg.com/d3-simple-slider).
+
+The d3-simple-slider functionality is added to the `d3` global object.
 
 ```html
 <script src="https://d3js.org/d3.v6.js"></script>
@@ -52,6 +93,40 @@ If you use NPM, `npm install d3-simple-slider`. Otherwise, download the [latest 
     .attr('transform', 'translate(30,30)')
     .call(slider);
 </script>
+```
+
+### Using npm or yarn
+
+You can add d3-simple-slider as a node module by running
+
+```node
+npm install d3-simple-slider
+```
+
+or
+
+```node
+yarn add d3-simple-slider
+```
+
+You can then import any of the exported functions: `sliderHorizontal`, `sliderVertical`, `sliderTop`, `sliderRight`, `sliderBottom`, `sliderLeft`.
+
+```js
+import * as d3 from 'd3';
+import { sliderBottom } from 'd3-simple-slider';
+
+const div = document.createElement('div');
+const slider = sliderBottom().min(0).max(10).step(1).width(300);
+
+const g = d3
+  .select(div)
+  .append('svg')
+  .attr('width', 500)
+  .attr('height', 100)
+  .append('g')
+  .attr('transform', 'translate(30,30)');
+
+g.call(slider);
 ```
 
 ## Styling
