@@ -1,3 +1,4 @@
+/*global console*/
 let isv6;
 let event;
 
@@ -19,9 +20,7 @@ export function adaptListener(listener) {
   return function (a, b) {
     if (!isv6) {
       // d3@v5
-      try {
-        listener.call(this, event, a);
-      } catch (e) {}
+      listener.call(this, event, a);
     } else {
       // d3@v6
       listener.call(this, a, b);
