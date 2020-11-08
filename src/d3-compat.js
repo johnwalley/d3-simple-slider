@@ -1,14 +1,30 @@
-import * as selection from 'd3-selection';
+let isv6;
+let event;
+
+import('d3-selection')
+  .then(({ selection }) => {
+    if ('event' in selection) {
+      isv6 = false;
+      event = selection.event;
+    } else {
+      isv6 = true;
+    }
+  })
+  .catch((err) => {
+    console.error('Unable to import d3-selection module');
+    console.error(err);
+  });
 
 export function adaptListener(listener) {
-  const isv6 = !('event' in Object.getOwnPropertyNames(selection));
   return function (a, b) {
-    if (isv6) {
+    if (!isv6) {
+      // d3@v5
+      try {
+        listener.call(this, event, a);
+      } catch (e) {}
+    } else {
       // d3@v6
       listener.call(this, a, b);
-    } else {
-      // d3@v5
-      listener.call(this, selection.event, a);
     }
   };
 }
