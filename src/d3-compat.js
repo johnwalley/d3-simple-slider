@@ -1,7 +1,8 @@
 import * as selection from 'd3-selection';
 
+const isv6 = !Object.getOwnPropertyNames(selection).includes('event');
+
 export function adaptListener(listener) {
-  const isv6 = !('event' in Object.getOwnPropertyNames(selection));
   return function (a, b) {
     if (isv6) {
       // d3@v6
