@@ -1,0 +1,111 @@
+svg .slider .track {
+  stroke: #282828;
+}
+
+svg .slider .track-inset {
+  stroke: #535353;
+}
+
+@font-face {
+  font-family: 'glue1-spoticon';
+  src: url('https://open.scdn.co/cdn/fonts/spoticon_regular_2.d319d911.woff2')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.player-controls {
+  min-width: 620px;
+  background-color: #282828;
+  border-top: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  user-select: none;
+  color: #b3b3b3;
+  padding: 16px;
+  font-family: spotify-circular, spotify-circular-cyrillic,
+    spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica,
+    arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
+}
+
+.player-controls__buttons {
+  margin-bottom: 12px;
+  width: 224px;
+  justify-content: space-between;
+  flex-flow: row nowrap;
+  display: flex;
+}
+
+.playback-bar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.playback-bar__progress-time {
+  min-width: 40px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.control-button {
+  font-family: 'glue1-spoticon';
+  position: relative;
+  background-color: transparent;
+  border: none;
+  color: #b3b3b3;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+}
+
+.skip-back:before {
+  content: '\f146';
+  font-size: 16px;
+}
+
+.skip-forward:before {
+  content: '\f148';
+  font-size: 16px;
+}
+
+.pause:before {
+  content: '\f130';
+  font-size: 16px;
+}
+
+.pause:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 500px;
+  border: 1px solid hsla(0, 0%, 100%, 0.6);
+}
+
+.play:before {
+  content: '\f132';
+  font-size: 16px;
+}
+
+.play:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 500px;
+  border: 1px solid hsla(0, 0%, 100%, 0.6);
+}
