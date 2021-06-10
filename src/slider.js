@@ -45,8 +45,22 @@ function slider(orientation, scale) {
   var ticks = null;
   var displayFormat = null;
   var fill = null;
+  var minTravelDrag = 5;
+  var dragStartPos = null;
+  var lastAnimation = null;
+  var dragModeFn = null;
+  var dragToPan = false;
 
-  var listeners = dispatch('onchange', 'start', 'end', 'drag');
+  var listeners = dispatch(
+    'onchange',
+    'start',
+    'end',
+    'drag',
+    'rangeChange',
+    'rangeStart',
+    'rangeDrag',
+    'rangeEnd'
+  );
 
   var selection = null;
   var identityClamped = null;
@@ -112,6 +126,11 @@ function slider(orientation, scale) {
         .clamp(true);
     }
 
+    if (!step) {
+      step =
+        (domain[1] - domain[0]) / (ticks ? ticks : scale.ticks().length - 1);
+    }
+
     identityClamped = scaleLinear()
       .range(scale.range())
       .domain(scale.range())
@@ -132,6 +151,51 @@ function slider(orientation, scale) {
       .append('g')
       .attr('transform', transformAcross(k * 7))
       .attr('class', 'axis');
+
+    var rangePanning = selection
+      .selectAll('.range-panning')
+      .data(dragToPan ? [null] : []);
+
+    var rangePanningEnter = rangePanning
+      .enter()
+      .append('g')
+      .attr('class', 'range-panning')
+      .call(
+        dragToPan
+          ? drag()
+              .on('start', panZoomStart)
+              .on('drag', panZoomDrag)
+              .on('end', panZoomEnd)
+          : function () {}
+      );
+
+    rangePanningEnter
+      .append('rect')
+      .attr('x', function () {
+        return -SLIDER_END_PADDING;
+      })
+      .attr('width', function () {
+        if ([top, bottom].indexOf(orientation) !== -1) {
+          return scale.range()[1] + 2 * SLIDER_END_PADDING;
+        }
+
+        return 27;
+      })
+      .attr('height', function () {
+        if ([top, bottom].indexOf(orientation) === -1) {
+          return scale.range()[0] + 2 * SLIDER_END_PADDING;
+        }
+
+        return 27;
+      })
+      .attr('y', k * 27 * 0.5)
+      .attr('fill', 'transparent')
+      .attr(
+        'cursor',
+        orientation === top || orientation === bottom
+          ? 'ew-resize'
+          : 'ns-resize'
+      )
 
     var sliderSelection = selection.selectAll('.slider').data([null]);
 
@@ -476,6 +540,147 @@ function slider(orientation, scale) {
       updateValue(newValue, true);
 
       handleIndex = null;
+    }
+
+    function inc(val) {
+      return val instanceof Date
+        ? new Date(val.getTime() + getStep())
+        : val + getStep();
+    }
+
+    function subtract(val) {
+      return val instanceof Date
+        ? new Date(val.getTime() - getStep())
+        : val - getStep();
+    }
+
+    // allow zoom in and out domain based on drag direction relative to drag start position
+    function rangeZoom(dragStartPos) {
+      /**
+       * drag start position = right
+       */
+      var nextDomain;
+      if (dragStartPos.x > width * 0.5) {
+        nextDomain = dragStartPos.x < event.x ? inc(domain[1]) : subtract(domain[1])
+        domain = [
+          domain[0],
+          nextDomain < max(value) ? domain[1] : nextDomain,
+        ];
+      } else if (dragStartPos.x <= width * 0.5) {
+        /**
+         * drag start position = left
+         */
+        nextDomain = dragStartPos.x <= event.x ? inc(domain[0]) : subtract(domain[0])
+
+        domain = [
+          nextDomain > min(value) ? domain[0] : nextDomain,
+          domain[1],
+        ];
+      }
+    }
+
+    function rangePan(dragStartPos) {
+      // drag direction = left
+      if (dragStartPos.x > event.x) {
+        domain = [
+          domain[0] >= min(value) ? domain[0] : inc(domain[0]),
+          inc(domain[1]),
+        ];
+      } else {
+        domain = [
+          subtract(domain[0]),
+          domain[1] <= max(value) ? domain[1] : subtract(domain[1]),
+        ];
+      }
+
+      return domain;
+    }
+
+    function getStep() {
+      // Need to validate further about step calc if no step given
+      return step;
+    }
+
+    function panZoomStart() {
+      var zooming = event.x / width <= 0.33 || event.x / width >= 0.66;
+
+      dragModeFn = zooming ? rangeZoom : rangePan;
+      dragStartPos = event;
+
+      listeners.call('rangeStart', slider);
+    }
+
+    function panZoomDrag() {
+      if (Math.abs(dragStartPos.x - event.x) < minTravelDrag) return;
+
+      // prevent animation overlap
+      if (lastAnimation === null) {
+        lastAnimation = new Date();
+      }
+
+      listeners.call('rangeDrag', slider, event);
+
+      // only after previous animation completed
+      if (new Date() - lastAnimation >= UPDATE_DURATION) {
+        dragModeFn.call(this, dragStartPos);
+
+        scale.domain(domain);
+
+        listeners.call('rangeChange', slider, domain);
+
+        refreshAxis();
+
+        lastAnimation = null;
+      }
+    }
+
+    function panZoomEnd() {
+      dragStartPos = null;
+
+      listeners.call('rangeEnd', slider);
+    }
+
+    function refreshAxis() {
+      selection
+        .select('.axis')
+        .transition()
+        .ease(easeQuadOut)
+        .duration(UPDATE_DURATION)
+        .call(function (sel) {
+          sel.call(
+            axisFunction(scale)
+              .ticks(ticks)
+              .tickFormat(tickFormat)
+              .tickValues(tickValues)
+          );
+
+          sel
+            .selectAll('text')
+            .attr('fill', '#aaa')
+            .attr(y, k * 20)
+            .attr(
+              'dy',
+              orientation === top
+                ? '0em'
+                : orientation === bottom
+                ? '.71em'
+                : '.32em'
+            )
+            .attr(
+              'text-anchor',
+              orientation === right
+                ? 'start'
+                : orientation === left
+                ? 'end'
+                : 'middle'
+            );
+
+          updateHandle(value, true);
+        })
+        .on('start', function () {
+          selection.selectAll('.axis line').attr('stroke', '#aaa');
+          selection.select('.axis .domain').remove();
+        });
     }
 
     textSelection = selection.selectAll('.parameter-value text');
@@ -851,6 +1056,12 @@ function slider(orientation, scale) {
   slider.on = function () {
     var value = listeners.on.apply(listeners, arguments);
     return value === listeners ? slider : value;
+  };
+
+  slider.dragToPan = function (_) {
+    if (!arguments.length) return dragToPan;
+    dragToPan = _;
+    return slider;
   };
 
   return slider;
