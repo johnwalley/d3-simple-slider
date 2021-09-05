@@ -334,7 +334,7 @@ function slider(orientation, scale) {
         )
         .attr('transform', value.length > 1 ? 'translate(0,0)' : null)
         .text(function (d, idx) {
-          return tickFormat(value[idx]);
+          return displayFormat(value[idx]);
         });
     }
 
