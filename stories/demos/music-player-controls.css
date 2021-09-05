@@ -1,8 +1,8 @@
-svg .slider .track {
+.player-controls svg .slider .track {
   stroke: #282828;
 }
 
-svg .slider .track-inset {
+.player-controls svg .slider .track-inset {
   stroke: #535353;
 }
 
