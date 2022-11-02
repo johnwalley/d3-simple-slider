@@ -50,7 +50,7 @@
     "d3-shape": "2.0.0",
     "d3-time-format": "3.0.0",
     "eslint": "7.32.0",
-    "husky": "4.3.0",
+    "husky": "4.3.8",
     "jsdom": "16.7.0",
     "prettier": "2.7.1",
     "pretty-quick": "3.1.3",
