@@ -17,7 +17,7 @@ export default {
 };
 
 export const Simple = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
@@ -42,7 +42,7 @@ export const Simple = () => {
 };
 
 export const SimpleTop = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
@@ -67,7 +67,7 @@ export const SimpleTop = () => {
 };
 
 export const Step = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
@@ -93,7 +93,7 @@ export const Step = () => {
 };
 
 export const Time = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data = range(0, 10).map(function (d) {
     return new Date(1995 + d, 10, 3);
@@ -121,7 +121,7 @@ export const Time = () => {
 };
 
 export const Fill = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
@@ -148,7 +148,7 @@ export const Fill = () => {
 };
 
 export const Range = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
   const defaultValue = [0.015, 0.02];
@@ -192,7 +192,7 @@ export const Range = () => {
 };
 
 export const Vertical = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
@@ -217,7 +217,7 @@ export const Vertical = () => {
 };
 
 export const VerticalRange = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
@@ -242,7 +242,7 @@ export const VerticalRange = () => {
 };
 
 export const VerticalRight = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
@@ -267,7 +267,7 @@ export const VerticalRight = () => {
 };
 
 export const Padding = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 

@@ -13,7 +13,7 @@ export default {
 };
 
 export const AlternativeHandle = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data1 = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
@@ -39,7 +39,7 @@ export const AlternativeHandle = () => {
 };
 
 export const Transition = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data = [0, 0.005, 0.01, 0.015, 0.02, 0.025];
 
@@ -70,7 +70,7 @@ export const Transition = () => {
 };
 
 export const DynamicMaxAndMin = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const slider = sliderBottom().min(2).max(15).width(300).step(1).default(5);
 
@@ -94,7 +94,7 @@ export const DynamicMaxAndMin = () => {
 };
 
 export const Marks = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const data = [
     new Date(1995, 1, 3),

@@ -13,7 +13,7 @@ export default {
 };
 
 export const Demo = () => {
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const width = 565;
   const height = 120;

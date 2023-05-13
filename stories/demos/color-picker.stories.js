@@ -25,7 +25,7 @@ export const Demo = () => {
   let rgb = [100, 0, 0];
   const colors = ['red', 'green', 'blue'];
 
-  const div = document.createElement('div');
+  const div = window.document.createElement('div');
 
   const g = select(div)
     .append('svg')

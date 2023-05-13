@@ -19,14 +19,14 @@ const timeFormat = (seconds) => {
 };
 
 export const Demo = () => {
-  const playerControlsDiv = document.createElement('div');
+  const playerControlsDiv = window.document.createElement('div');
   playerControlsDiv.classList.add('player-controls');
 
-  const playerControlsButtonsDiv = document.createElement('div');
+  const playerControlsButtonsDiv = window.document.createElement('div');
   playerControlsButtonsDiv.classList.add('player-controls__buttons');
   playerControlsDiv.append(playerControlsButtonsDiv);
 
-  const playbackBarDiv = document.createElement('div');
+  const playbackBarDiv = window.document.createElement('div');
   playbackBarDiv.classList.add('playback-bar');
   playerControlsDiv.append(playbackBarDiv);
 
