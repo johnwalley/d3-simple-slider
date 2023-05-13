@@ -3,7 +3,7 @@ import { scaleBand, scaleLinear } from 'd3-scale';
 
 import { axisRight } from 'd3-axis';
 /*eslint-env browser*/
-import { document } from 'global';
+
 import { format } from 'd3-format';
 import { select } from 'd3-selection';
 import { sliderBottom } from '../../src';

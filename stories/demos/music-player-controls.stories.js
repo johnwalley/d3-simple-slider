@@ -4,7 +4,6 @@ import { extent, range } from 'd3-array';
 import { symbol, symbolCircle } from 'd3-shape';
 
 /*eslint-env browser*/
-import { document } from 'global';
 import { format } from 'd3-format';
 import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';

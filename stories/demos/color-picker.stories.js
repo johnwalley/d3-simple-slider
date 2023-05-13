@@ -1,5 +1,5 @@
 /*eslint-env browser*/
-import { document } from 'global';
+
 import { select } from 'd3-selection';
 import { sliderBottom } from '../../src';
 

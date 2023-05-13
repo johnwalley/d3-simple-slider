@@ -8,7 +8,7 @@ import {
 } from '../src/slider';
 
 /*eslint-env browser*/
-import { document } from 'global';
+
 import { format } from 'd3-format';
 import { timeFormat } from 'd3-time-format';
 
