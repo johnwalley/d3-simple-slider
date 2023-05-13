@@ -31,7 +31,7 @@ You must include the [d3 library](http://d3js.org/) before including the slider 
 The d3-simple-slider functionality is added to the `d3` global object.
 
 ```html
-<script src="./d3.v6.js"></script>
+<script src="./d3.v7.js"></script>
 <script src="./d3-simple-slider.js"></script>
 
 <p id="value"></p>
@@ -66,7 +66,7 @@ You can add the latest version of [d3-simple-slider hosted on unpkg](https://unp
 The d3-simple-slider functionality is added to the `d3` global object.
 
 ```html
-<script src="https://d3js.org/d3.v6.js"></script>
+<script src="https://d3js.org/d3.v7.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
 
 <p id="value"></p>

@@ -4,7 +4,7 @@ import { axisBottom, axisLeft, axisRight, axisTop } from 'd3-axis';
 import { max, min, scan } from 'd3-array';
 import { scaleLinear, scaleTime } from 'd3-scale';
 
-import { adaptListener } from './d3-compat';
+import { adaptListener } from './d3-compat.js';
 import { dispatch } from 'd3-dispatch';
 import { drag } from 'd3-drag';
 import { easeQuadOut } from 'd3-ease';
