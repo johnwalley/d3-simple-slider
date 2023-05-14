@@ -39,7 +39,7 @@ it('slider.default(value) sets the default range', () => {
   assert.deepEqual(s.default(), [4, 8]);
 });
 
-it('sliderVertical(selection) produces the expected result', () => {
+it('sliderHorizontal(selection) produces the expected result', () => {
   const window = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window;
   global.window = window;
   global.document = window.document;
@@ -56,7 +56,7 @@ it('sliderVertical(selection) produces the expected result', () => {
   assert.equal(bodyActual.outerHTML, bodyExpected.outerHTML);
 });
 
-it('sliderHorizontal(selection) produces the expected result', () => {
+it('sliderVertical(selection) produces the expected result', () => {
   const window = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window;
   global.window = window;
   global.document = window.document;
