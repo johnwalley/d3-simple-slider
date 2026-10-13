@@ -28,6 +28,15 @@ const config = {
 
 export default [
   config,
+  // Node's entry point: package.json has "type": "module", so the UMD build
+  // needs a .cjs extension to be loaded as CommonJS.
+  {
+    ...config,
+    output: {
+      ...config.output,
+      file: `dist/${meta.name}.cjs`,
+    },
+  },
   {
     ...config,
     output: {

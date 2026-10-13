@@ -15,7 +15,7 @@
     "url": "http://www.walley.org.uk"
   },
   "type": "module",
-  "main": "dist/d3-simple-slider.js",
+  "main": "dist/d3-simple-slider.cjs",
   "unpkg": "dist/d3-simple-slider.min.js",
   "jsdelivr": "dist/d3-simple-slider.min.js",
   "module": "src/index.js",
@@ -25,10 +25,12 @@
   },
   "files": [
     "dist/**/*.js",
+    "dist/**/*.cjs",
     "src/**/*.js"
   ],
   "scripts": {
     "build": "rollup -c",
+    "pretest": "npm run build",
     "test": "mocha 'test/**/*-test.js' && eslint src test",
     "prepublishOnly": "rm -rf dist && npm test && npm run build",
     "postpublish": "zip -j dist/${npm_package_name}.zip -- LICENSE README.md dist/${npm_package_name}.js dist/${npm_package_name}.min.js",
