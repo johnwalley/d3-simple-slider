@@ -612,7 +612,7 @@ function slider(orientation, scale) {
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[0] - k * SLIDER_END_PADDING
+                ? scale.range()[0] - j * SLIDER_END_PADDING
                 : scale(newValue[0])
             )
             .attr(
@@ -641,7 +641,7 @@ function slider(orientation, scale) {
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[0] - k * SLIDER_END_PADDING
+                ? scale.range()[0] - j * SLIDER_END_PADDING
                 : scale(newValue[0])
             )
             .attr(
