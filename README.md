@@ -185,11 +185,11 @@ Constructs a new vertical slider generator. _Note that this is equivalent to [`s
 
 Constructs a new horizontal slider generator. Ticks on top.
 
-<a name="sliderRight" href="#sliderRight">#</a> d3.<b>sliderRight</b>([<i>scale</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/main/src/slider.js#L839 'Source')
+<a name="sliderRight" href="#sliderRight">#</a> d3.<b>sliderRight</b>([<i>scale</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/main/src/slider.js#L871 'Source')
 
 Constructs a new vertical slider generator. Ticks to the right;
 
-<a name="sliderBottom" href="#sliderBottom">#</a> d3.<b>sliderBottom</b>([<i>scale</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/main/src/slider.js#L871 'Source')
+<a name="sliderBottom" href="#sliderBottom">#</a> d3.<b>sliderBottom</b>([<i>scale</i>]) [<>](https://github.com/johnwalley/d3-simple-slider/blob/main/src/slider.js#L875 'Source')
 
 Constructs a new horizontal slider generator. Ticks on the bottom.
 
