@@ -43,9 +43,6 @@ it('sliderHorizontal(selection) produces the expected result', () => {
   const window = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window;
   global.window = window;
   global.document = window.document;
-  global.navigator = {
-    userAgent: 'node.js',
-  };
   copyProps(window, global);
   const bodyActual = window.document.body;
   const bodyExpected = new jsdom.JSDOM(file('slider-horizontal.html')).window
@@ -60,9 +57,6 @@ it('sliderVertical(selection) produces the expected result', () => {
   const window = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window;
   global.window = window;
   global.document = window.document;
-  global.navigator = {
-    userAgent: 'node.js',
-  };
   copyProps(window, global);
   const bodyActual = window.document.body;
   const bodyExpected = new jsdom.JSDOM(file('slider-vertical.html')).window
