@@ -67,6 +67,28 @@ it('sliderVertical(selection) produces the expected result', () => {
   assert.equal(bodyActual.outerHTML, bodyExpected.outerHTML);
 });
 
+for (const [name, expectedX1] of [
+  ['sliderTop', -8],
+  ['sliderBottom', -8],
+  ['sliderLeft', 108],
+  ['sliderRight', 108],
+]) {
+  it(`${name}().fill() keeps the fill start fixed when the value changes`, () => {
+    const window = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window;
+    global.window = window;
+    global.document = window.document;
+    copyProps(window, global);
+
+    const s = d3[name]().fill('red');
+    const g = select(window.document.body).select('g').call(s);
+    const attr = name === 'sliderTop' || name === 'sliderBottom' ? 'x1' : 'y1';
+
+    assert.equal(+g.select('.track-fill').attr(attr), expectedX1);
+    s.silentValue(5);
+    assert.equal(+g.select('.track-fill').attr(attr), expectedX1);
+  });
+}
+
 function file(file) {
   const __dirname = resolve(
     dirname(fileURLToPath(new URL('./test', import.meta.url)))
