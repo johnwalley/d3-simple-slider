@@ -28,8 +28,9 @@
     "src/**/*.js"
   ],
   "scripts": {
+    "build": "rollup -c",
     "test": "mocha 'test/**/*-test.js' && eslint src test",
-    "prepublishOnly": "rm -rf dist && npm test && rollup -c",
+    "prepublishOnly": "rm -rf dist && npm test && npm run build",
     "postpublish": "zip -j dist/${npm_package_name}.zip -- LICENSE README.md dist/${npm_package_name}.js dist/${npm_package_name}.min.js",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
