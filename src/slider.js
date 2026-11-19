@@ -564,8 +564,9 @@ function slider(orientation, scale) {
 
   function updateValue(newValue, notifyListener) {
     if (
-      value[0] !== newValue[0] ||
-      (value.length > 1 && value[1] !== newValue[1])
+      value.some(function (d, i) {
+        return d !== newValue[i];
+      })
     ) {
       value = newValue;
 
