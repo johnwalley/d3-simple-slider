@@ -465,7 +465,10 @@ function slider(orientation, scale) {
       var pos = identityClamped(
         orientation === bottom || orientation === top ? event.x : event.y
       );
-      var newValue = computeDragNewValue(pos);
+      var newValue = computeDragNewValue(pos).map(function (d) {
+        var bounded = Math.max(+domain[0], Math.min(+domain[1], +d));
+        return d instanceof Date ? new Date(bounded) : bounded;
+      });
 
       updateHandle(newValue);
       listeners.call(
