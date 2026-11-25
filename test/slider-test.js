@@ -103,3 +103,44 @@ function copyProps(src, target) {
     ...Object.getOwnPropertyDescriptors(target),
   });
 }
+
+it('drag end keeps snapped values inside bounds changed during dragging', () => {
+  const window = new jsdom.JSDOM('<!DOCTYPE html><svg><g></g></svg>').window;
+  global.window = window;
+  global.document = window.document;
+  copyProps(window, global);
+  let released;
+  const control = d3
+    .sliderHorizontal()
+    .min(0)
+    .max(100)
+    .width(100)
+    .default(80)
+    .marks([0, 80, 100])
+    .displayValue(false)
+    .on('end', (value) => {
+      released = value;
+    });
+  select(window.document.querySelector('g')).call(control);
+  const handle = window.document.querySelector('.handle');
+  handle.dispatchEvent(
+    new window.MouseEvent('mousedown', {
+      view: window,
+      bubbles: true,
+      clientX: 80,
+      clientY: 0,
+      buttons: 1,
+    })
+  );
+  control.max(60);
+  window.dispatchEvent(
+    new window.MouseEvent('mouseup', {
+      view: window,
+      bubbles: true,
+      clientX: 80,
+      clientY: 0,
+    })
+  );
+  assert.equal(released, 60);
+  assert.equal(control.value(), 60);
+});
